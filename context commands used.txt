@@ -1,0 +1,30 @@
+To use a database-first approach, install the dotnet entity framework tool. 
+Open terminal in any directory and enter:
+  dotnet tool install --global dotnet-ef
+
+If the tool might already be installed on the computer, use the following command to confirm that it's installed:
+  dotnet ef
+You should see a unicorn ASCII picture. 
+
+To update, run:
+dotnet tool update --global dotnet-ef
+
+
+To set up the database context, first install the needed nuget packages:
+ - Microsoft.EntityFrameworkCore
+ - Microsoft.EntityFrameworkCore.SqlServer
+ - Microsoft.EntityFrameworkCore.Tools
+ - Microsoft.EntityFrameworkCore.Design
+Then restart Visual Studio!
+
+
+Open terminal and navigate to the project's directory.
+Use "dir" to check that you are in the same path as .csproj path. 
+One could also right-click on the project (not the solution, the project), e.g. "WPF_APP_NAME", and select "Open in Terminal".
+
+Then run the command:
+  dotnet ef dbcontext scaffold "Server=.\SQLEXPRESS;Database=Single_Stage_MVVM;Integrated Security=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer --output-dir Entities
+The connection string (the part of the command in quotes) may vary.
+
+To overwrite/update the context, use "-f" at the end of this command, e.g. when the database has been changed or expanded.
+Save and archive (commit) before updating the database context!

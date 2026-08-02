@@ -1,0 +1,13 @@
+__notes/
+private/
+bin/
+obj/
+.vs/
+dist/
+build/
+venv/
+__pycache__/
+*.log
+Publish/
+Properties/
+.github/

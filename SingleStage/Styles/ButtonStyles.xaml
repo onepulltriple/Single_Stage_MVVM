@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+   
+    <Style x:Key="MainWindowButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource {x:Type Button}}">
+        <!--<Setter Property="Background"           Value="Transparent"/>-->
+        <Setter Property="Background"               Value="Green"/>
+    </Style>
+
+    <Style x:Key="MainWindowRoundedButtonStyle"
+           TargetType="Button"
+           BasedOn="{StaticResource MainWindowButtonStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="mainWindowRoundedButtonStyleBorder"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="10"
+                        BorderThickness="0"
+                        >
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" 
+                                 Value="True">
+                            <Setter TargetName="mainWindowRoundedButtonStyleBorder"
+                                    Property="Background"
+                                    Value="LightGreen"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                                 Value="True">
+                            <Setter TargetName="mainWindowRoundedButtonStyleBorder"
+                                    Property="Background"
+                                    Value="DarkGreen"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

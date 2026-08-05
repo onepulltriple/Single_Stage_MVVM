@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterOwner"
         Title="Employee Login Window" 
         Width="450" Height="400" 
-        Background="CadetBlue"
+        Background="{StaticResource DefaultBackgroundBrush}"
         >
     <Grid Loaded="GridLoaded">
         <Grid.RowDefinitions>
@@ -29,6 +29,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Text="Employee Login"
+            Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
             >
         </TextBlock>
 
@@ -39,6 +40,7 @@
             Grid.Column="0" 
             Name="UI00" 
             Text="Username"
+            Style="{StaticResource PopUpWindowBodyTextStyle}"
             />
         <TextBox      
             Grid.Row="1" 
@@ -46,17 +48,21 @@
             Name="TB00" 
             Text="{Binding enteredUsername}"
             KeyDown="TB00KeyDownHandler"
+            Style="{StaticResource PopUpWindowTextBoxTextStyle}"
             />
         <TextBlock    
             Grid.Row="2" 
             Grid.Column="0" 
             Name="UI01" 
-            Text="Password"/>
+            Text="Password"
+            Style="{StaticResource PopUpWindowBodyTextStyle}"
+            />
         <PasswordBox  
             Grid.Row="2" 
             Grid.Column="1" 
             Name="PB00" 
             KeyDown="PB00KeyDownHandler"
+            Style="{StaticResource PopUpWindowPasswordBoxTextStyle}"
             />
 
         <!--lower section-->
@@ -64,6 +70,7 @@
                    Grid.Row="3" Grid.Column="0" 
                    Grid.ColumnSpan="2"
                    Text=""
+                   Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
                    />
 
         <!--bottom section-->
@@ -73,7 +80,9 @@
             Name="QuitButton" 
             Click="QuitButtonClicked" 
             >
-            <TextBlock Text="Quit"/>
+            <TextBlock Text="Quit"
+                       Style="{StaticResource PopUpWindowButtonTextStyle}"
+                       />
         </Button>
         <Button      
             Grid.Row="4" 
@@ -81,7 +90,9 @@
             Name="LoginButton" 
             Click="LoginButtonClicked" 
             >
-            <TextBlock Text="Login"/>
+            <TextBlock Text="Login"
+                       Style="{StaticResource PopUpWindowButtonTextStyle}"
+                       />
         </Button>
 
     </Grid>

@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--border styles-->
+    <!--Border is a visual container, which controls how things look-->
+
+    <Style x:Key="NoBorderStyle" 
+           TargetType="Border"
+           BasedOn="{StaticResource {x:Type Border}}">
+        <Setter Property="BorderThickness"      Value="0"/>
+        <Setter Property="Background"           Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="NoClippingBorderStyle" 
+           TargetType="Border"
+           BasedOn="{StaticResource NoBorderStyle}">
+        <Setter Property="ClipToBounds"         Value="False"/>
+    </Style>
+
+    <Style x:Key="NoClippingNoBackgroundBorderStyle" 
+           TargetType="Border"
+           BasedOn="{StaticResource NoClippingBorderStyle}">
+        <Setter Property="Background"           Value="{x:Null}"/>
+    </Style>
+
+    
+    <!--rounded border styles-->
+    <Style x:Key="RoundedBorderStyle" 
+           TargetType="Border"
+           BasedOn="{StaticResource {x:Type Border}}">
+        <Setter Property="BorderThickness"      Value="2"/>
+        <Setter Property="CornerRadius"         Value="10"/>
+        <Setter Property="Padding"              Value="0"/>
+        <Setter Property="ClipToBounds"         Value="True"/>
+    </Style>
+
+
+
+    <!--panel styles-->
+    <!--panels are layout containers that lay out their children, i.e. control where things go-->
+    <!--e.g. StackPanel, Grid, WrapPanel, DockPanel, Canvas-->
+    <!--these do not inherit from Border!-->
+
+    <!--sets the default StackPanel properties globally-->
+    <!--<Style TargetType="StackPanel">
+        <Setter Property="Margin"               Value="4"/>
+        <Setter Property="Orientation"          Value="Vertical"/>
+    </Style>
+
+    <Style x:Key="SpacedStackPanel"
+           TargetType="StackPanel"
+           BasedOn="{StaticResource {x:Type StackPanel}}">
+        <Setter Property="Margin"               Value="10"/>
+    </Style>-->
+    
+</ResourceDictionary>

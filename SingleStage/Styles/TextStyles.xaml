@@ -1,0 +1,99 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!--Body style-->
+    <!--inherit from the implicit style using e.g. BasedOn="{StaticResource {x:Type TextBlock}}"-->
+    <!--without this, a control's style will be replaced, not composed of multiple styles with inherited properties-->
+    <Style x:Key="BodyTextStyle" 
+           TargetType="TextBlock" 
+           BasedOn="{StaticResource {x:Type TextBlock}}">
+        <!--<Setter Property="FontFamily" Value="Ubuntu"/>-->
+        <!--<Setter Property="FontSize"   Value="14"      />-->
+        <!--<Setter Property="Foreground" Value="Black" />-->
+    </Style>
+
+    <!--Heading styles-->
+    <Style x:Key="TitleTextStyle" 
+           TargetType="TextBlock" 
+           BasedOn="{StaticResource BodyTextStyle}">
+        <!--<Setter Property="FontSize" Value="18"/>-->
+        <Setter Property="FontWeight"               Value="Bold"/>
+    </Style>
+
+    <!--POP-UP WINDOWS / DIALOGS-->
+    <!--Pop-up window/dialog TEXT style-->
+    <Style x:Key="PopUpWindowBodyTextStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="VerticalAlignment"        Value="Center"/>
+        <Setter Property="Margin"                   Value="6"/>
+        <!--<Setter Property="Foreground"               Value="{StaticResource BrightTextBrush}"/>-->
+    </Style>
+
+    <!--Pop-up window/dialog WARNING TEXT style-->
+    <Style x:Key="PopUpWindowWarningBodyTextStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource PopUpWindowBodyTextStyle}">
+        <Setter Property="Foreground"               Value="{StaticResource WarningTextBrush}"/>
+    </Style>
+
+    <!--Pop-up window/dialog HEADING style-->
+    <Style x:Key="PopUpWindowBodyHeadingTextStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource PopUpWindowBodyTextStyle}">
+        <Setter Property="HorizontalAlignment"      Value="Left"/>
+        <Setter Property="VerticalAlignment"        Value="Center"/>
+        <Setter Property="Margin"                   Value="20"/>
+        <Setter Property="FontSize"                 Value="20"/>
+    </Style>
+
+    <!--Pop-up window/dialog BUTTON text style-->
+    <Style x:Key="PopUpWindowButtonTextStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="VerticalAlignment"        Value="Center"/>
+        <Setter Property="Foreground"               Value="{StaticResource PrimaryTextBrush}"/>
+    </Style>
+
+    <!--Pop-up window/dialog TEXTBOX style-->
+    <Style x:Key="PopUpWindowTextBoxTextStyle"
+           TargetType="TextBox"
+           BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Margin"                   Value="10"/>
+        <Setter Property="Padding"                  Value="6"/>
+        <Setter Property="MinHeight"                Value="6"/>
+    </Style>
+
+    <!--Pop-up window/dialog PASSWORDBOX style-->
+    <Style x:Key="PopUpWindowPasswordBoxTextStyle"
+           TargetType="PasswordBox"
+           BasedOn="{StaticResource {x:Type PasswordBox}}">
+        <Setter Property="Margin"                   Value="10"/>
+        <Setter Property="Padding"                  Value="6"/>
+        <Setter Property="MinHeight"                Value="6"/>
+    </Style>
+
+    <!--MAIN WINDOW-->
+    <Style x:Key="MainWindowNormal"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="Foreground"               Value="{StaticResource BrightTextBrush}"/>
+        <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="VerticalAlignment"        Value="Center"/>
+        <Setter Property="Margin"                   Value="4"/>
+        <Setter Property="FontSize"                 Value="24"/>
+    </Style>
+    
+   
+    <!--Main window button TextBlock styles-->
+    <Style x:Key="MainWindowButtonTextBlockStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="Margin"                   Value="4"/>
+        <Setter Property="FontSize"                 Value="24"/>
+        <Setter Property="Foreground"               Value="{StaticResource BrightTextBrush}"/>
+    </Style>
+
+</ResourceDictionary>

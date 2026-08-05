@@ -1,4 +1,5 @@
-﻿using SingleStage.Entities;
+﻿using SingleStage.DAC;
+using SingleStage.Entities;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,7 +10,8 @@ namespace SingleStage.Windows
     /// </summary>
     public partial class EmployeeLoginWindow : Window
     {
-        readonly SingleStageMvvmContext _context;
+        //readonly SingleStageMvvmContext _context;
+        private readonly EmployeeDAC _employeeDAC;
 
         public string? enteredUsername { get; set; }
 
@@ -19,7 +21,9 @@ namespace SingleStage.Windows
         {
             InitializeComponent();
             DataContext = this;
-            _context = new SingleStageMvvmContext();
+            //_context = new SingleStageMvvmContext();
+            var context = new SingleStageMvvmContext();
+            _employeeDAC = new EmployeeDAC(context);
         }
 
         private void GridLoaded(object sender, RoutedEventArgs e)
@@ -33,25 +37,32 @@ namespace SingleStage.Windows
                 LoginButtonClicked(sender, e);
         }
 
-        private void PB00KeyDownHandler(object sender, KeyEventArgs e) => TB00KeyDownHandler(sender, e);
+        private void PB00KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+                Keyboard.Focus(LoginButton);
+            if (e.Key == Key.Enter)
+                LoginButtonClicked(sender, e);
+        }
 
         private void QuitButtonClicked(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }
 
-        private void LoginButtonClicked(object sender, RoutedEventArgs e)
+        private async void LoginButtonClicked(object sender, RoutedEventArgs e)
         {
             // check that all fields are filled out
             if (enteredUsername == null ||
                 PB00.Password == null)
             {
-                UIErrorMessage.Text ="Please fill out all fields.";
+                UIErrorMessage.Text = "Please fill out all fields.";
                 return;
             }
 
             // check the username exists
-            tempEmployee = _context.Employees.FirstOrDefault(employee => employee.Username == enteredUsername);
+            //tempEmployee = _context.Employees.FirstOrDefault(employee => employee.Username == enteredUsername);
+            tempEmployee = await _employeeDAC.GetFirstOrDefaultByUsernameAsync(enteredUsername);
 
             if (tempEmployee == null)
             {
@@ -64,7 +75,7 @@ namespace SingleStage.Windows
 
             if (!passwordOK)
             {
-                MessageBox.Show("Invalid credentials.");
+                UIErrorMessage.Text = "Invalid credentials.";
                 return;
             }
 

@@ -45,6 +45,7 @@
             Grid.Column="1" 
             Name="TB00" 
             Text="{Binding enteredUsername}"
+            KeyDown="TB00KeyDownHandler"
             />
         <TextBlock    
             Grid.Row="2" 
@@ -55,6 +56,7 @@
             Grid.Row="2" 
             Grid.Column="1" 
             Name="PB00" 
+            KeyDown="PB00KeyDownHandler"
             />
 
         <!--lower section-->

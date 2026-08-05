@@ -10,7 +10,6 @@ namespace SingleStage.Windows
     /// </summary>
     public partial class EmployeeLoginWindow : Window
     {
-        //readonly SingleStageMvvmContext _context;
         private readonly EmployeeDAC _employeeDAC;
 
         public string? enteredUsername { get; set; }
@@ -21,7 +20,7 @@ namespace SingleStage.Windows
         {
             InitializeComponent();
             DataContext = this;
-            //_context = new SingleStageMvvmContext();
+
             var context = new SingleStageMvvmContext();
             _employeeDAC = new EmployeeDAC(context);
         }
@@ -61,7 +60,6 @@ namespace SingleStage.Windows
             }
 
             // check the username exists
-            //tempEmployee = _context.Employees.FirstOrDefault(employee => employee.Username == enteredUsername);
             tempEmployee = await _employeeDAC.GetFirstOrDefaultByUsernameAsync(enteredUsername);
 
             if (tempEmployee == null)

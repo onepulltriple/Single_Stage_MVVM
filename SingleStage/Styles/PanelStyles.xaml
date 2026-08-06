@@ -62,6 +62,14 @@
         <views:CalendarShowView HorizontalAlignment="Stretch"/>
     </DataTemplate>
 
+    <!-- Calendar time scale -->
+    <Style x:Key="CalendarTimeScaleStyle"
+           TargetType="Canvas">
+        <Setter Property="Height"
+            Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
+        <Setter Property="Background"
+            Value="White"/>
+    </Style>
 
     <!--panel styles-->
     <!--panels are layout containers that lay out their children, i.e. control where things go-->

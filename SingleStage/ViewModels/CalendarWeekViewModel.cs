@@ -9,6 +9,8 @@ namespace SingleStage.ViewModels
     {
         public DateTime WeekStart { get; }
 
+        public ObservableCollection<CalendarHourViewModel> Hours { get; } = new();
+
         public ObservableCollection<CalendarShowViewModel> Monday { get; } = new();
 
         public ObservableCollection<CalendarShowViewModel> Tuesday { get; } = new();
@@ -23,8 +25,11 @@ namespace SingleStage.ViewModels
 
         public ObservableCollection<CalendarShowViewModel> Sunday { get; } = new();
 
+
         public CalendarWeekViewModel(DateTime weekStart, IEnumerable<Show> shows)
         {
+            CreateHours();
+
             WeekStart = weekStart.Date;
 
             foreach (Show show in shows)
@@ -61,6 +66,14 @@ namespace SingleStage.ViewModels
                         Sunday.Add(vm);
                         break;
                 }
+            }
+        }
+
+        private void CreateHours()
+        {
+            for (int i = 0; i < 24; i++)
+            {
+                Hours.Add(new CalendarHourViewModel(i));
             }
         }
     }

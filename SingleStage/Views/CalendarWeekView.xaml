@@ -13,6 +13,10 @@
         <Grid>
 
             <Grid.ColumnDefinitions>
+                <!-- time labels -->
+                <ColumnDefinition Width="50"/>
+
+                <!-- days -->
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -21,8 +25,36 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-
+            
             <Canvas Grid.Column="0"
+                    Style="{StaticResource CalendarTimeScaleStyle}">
+
+                <ItemsControl ItemsSource="{Binding Hours}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Canvas.Top"
+                        Value="{Binding Top}"/>
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Label}"
+                           Style="{StaticResource CalendarTimeLabelStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                </ItemsControl>
+
+            </Canvas>
+            
+            <Canvas Grid.Column="1"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Monday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -30,7 +62,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="1"
+            <Canvas Grid.Column="2"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Tuesday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -38,7 +70,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="2"
+            <Canvas Grid.Column="3"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Wednesday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -46,7 +78,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="3"
+            <Canvas Grid.Column="4"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Thursday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -54,7 +86,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="4"
+            <Canvas Grid.Column="5"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Friday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -62,7 +94,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="5"
+            <Canvas Grid.Column="6"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Saturday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"
@@ -70,7 +102,7 @@
                               ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <Canvas Grid.Column="6"
+            <Canvas Grid.Column="7"
                     Style="{StaticResource CalendarDayCanvasStyle}">
                 <ItemsControl ItemsSource="{Binding Sunday}"
                               ItemsPanel="{StaticResource CalendarItemsPanel}"

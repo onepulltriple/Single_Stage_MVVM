@@ -1,5 +1,6 @@
 ﻿using SingleStage.DAC;
 using SingleStage.Entities;
+using SingleStage.ViewModels;
 using System.Windows;
 using System.Windows.Input;
 
@@ -27,7 +28,7 @@ namespace SingleStage.Windows
 
         private void GridLoaded(object sender, RoutedEventArgs e)
         {
-            Keyboard.Focus(UI00);
+            Keyboard.Focus(TB00);
         }
 
         private void TB00KeyDownHandler(object sender, KeyEventArgs e)
@@ -77,9 +78,17 @@ namespace SingleStage.Windows
                 return;
             }
 
-            // if all checks pass, open main dashboard
-            MainWindow main = new();
-            main.Show();
+            // if all checks pass, open main window
+            SingleStageMvvmContext context = new();
+            ShowDAC showDAC = new(context);
+
+            MainWindowViewModel vm = new(showDAC);
+
+            await vm.InitializeAsync();
+
+            MainWindow mainWindow = new();
+            mainWindow.DataContext = vm;
+            mainWindow.Show();
             this.Close();
         }
     }

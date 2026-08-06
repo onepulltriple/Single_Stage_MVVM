@@ -6,6 +6,7 @@
              xmlns:view="clr-namespace:SingleStage.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="700">
+    
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
 
@@ -21,231 +22,64 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <!-- Monday -->
             <Canvas Grid.Column="0"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Monday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Monday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Tuesday -->
             <Canvas Grid.Column="1"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Tuesday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Tuesday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Wednesday -->
             <Canvas Grid.Column="2"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Wednesday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Wednesday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Thursday -->
             <Canvas Grid.Column="3"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Thursday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Thursday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Friday -->
             <Canvas Grid.Column="4"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Friday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Friday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Saturday -->
             <Canvas Grid.Column="5"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Saturday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                    Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                    Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Saturday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
-            <!-- Sunday -->
             <Canvas Grid.Column="6"
-                    Height="1440"
-                    Background="White">
-
-                <ItemsControl ItemsSource="{Binding Sunday}">
-
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                                Value="{Binding Top}" />
-                            <Setter Property="Canvas.Left"
-                                Value="2" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <view:CalendarShowView HorizontalAlignment="Stretch"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                    Style="{StaticResource CalendarDayCanvasStyle}">
+                <ItemsControl ItemsSource="{Binding Sunday}"
+                              ItemsPanel="{StaticResource CalendarItemsPanel}"
+                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
             </Canvas>
 
         </Grid>
 
     </ScrollViewer>
+    
 </UserControl>

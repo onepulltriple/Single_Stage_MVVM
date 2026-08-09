@@ -6,20 +6,105 @@
         xmlns:local="clr-namespace:SingleStage"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:SingleStage.Views"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="450" Width="800"
+        >
+    
+    <DockPanel>
+        <!--main menu-->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Manage">
+                <MenuItem Header="_Shows"
+                          Command="{Binding ManageShowsCommand}"/>
+                <MenuItem Header="_Artists"
+                          Command="{Binding ManageArtistsCommand}"/>
+                <MenuItem Header="_Employees"
+                          Command="{Binding ManageEmployeesCommand}"/>
+                <MenuItem Header="_Ticketholders"
+                          Command="{Binding ManageTicketholdersCommand}"/>
+            </MenuItem>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <MenuItem Header="_Tickets">
+                <MenuItem Header="_Sell Tickets"
+                          Command="{Binding SellTicketCommand}"/>
+            </MenuItem>
 
-        <!-- Toolbar/Menu goes here -->
+            <MenuItem Header="_Reports"
+                      Command="{Binding ReportsCommand}"/>
+            
+            <MenuItem Header="_Exit"
+                      Command="{Binding ExitCommand}"/>
+        </Menu>
 
-        <views:CalendarWeekView
-            Grid.Row="1"
-            DataContext="{Binding CalendarWeek}"
-            />
+        <!--main content-->
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-    </Grid>
+            <!--week navigation-->
+            <Grid Grid.Row="0"
+                  Margin="0,0,0,10">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Content="&lt; Previous Week"
+                        Command="{Binding PreviousWeekCommand}"
+                        Padding="10,5"/>
+                
+                <TextBlock Grid.Column="1"
+                           Text="{Binding WeekDisplayText}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="18"
+                           FontWeight="Bold"/>
+                
+                <Button Grid.Column="2"
+                        Content="Today"
+                        Command="{Binding TodayCommand}"
+                        Padding="10,5"/>
+
+                <Button Grid.Column="3"
+                        Content="Next Week &gt;"
+                        Command="{Binding NextWeekCommand}"
+                        Padding="10,5"/>
+            </Grid>
+            
+            <!--calendar view-->
+            <views:CalendarWeekView
+                Grid.Row="1"
+                DataContext="{Binding CalendarWeekViewModel}"
+                />
+
+            <!-- Selected show information -->
+            <Border Grid.Row="2"
+                    Margin="0,10,0,0"
+                    Padding="10"
+                    BorderBrush="Gray"
+                    BorderThickness="1">
+
+                <StackPanel>
+
+                    <TextBlock Text="Selected Show"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Margin="0,0,0,8"/>
+
+                    <TextBlock Text="{Binding CalendarWeekViewModel.SelectedShow.Name,
+                                              TargetNullValue=No show selected}"
+                               FontSize="15"/>
+
+                </StackPanel>
+
+            </Border>
+        </Grid>
+    </DockPanel>
+
 </Window>

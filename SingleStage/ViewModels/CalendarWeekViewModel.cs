@@ -7,7 +7,29 @@ namespace SingleStage.ViewModels
 {
     public class CalendarWeekViewModel : ViewModelBase
     {
-        public DateTime WeekStart { get; }
+        private readonly List<Show> _shows;
+
+        private DateTime _weekStart;
+
+        public DateTime WeekStart
+        {
+            get => _weekStart;
+            set
+            {
+                DateTime newWeekStart = value.Date;
+
+                if (_weekStart == newWeekStart)
+                    return;
+
+                _weekStart = newWeekStart;
+
+                RefreshShows();
+
+                OnPropertyChanged(nameof(WeekStart));
+            }
+        }
+
+        public Show? SelectedShow { get; set; }
 
         public ObservableCollection<CalendarHourViewModel> Hours { get; } = new();
 
@@ -28,11 +50,33 @@ namespace SingleStage.ViewModels
 
         public CalendarWeekViewModel(DateTime weekStart, IEnumerable<Show> shows)
         {
+            _shows = shows.ToList();
+
             CreateHours();
 
-            WeekStart = weekStart.Date;
+            _weekStart = weekStart.Date;
 
-            foreach (Show show in shows)
+            RefreshShows();
+        }
+
+        private void RefreshShows()
+        {
+            Monday.Clear();
+            Tuesday.Clear();
+            Wednesday.Clear();
+            Thursday.Clear();
+            Friday.Clear();
+            Saturday.Clear();
+            Sunday.Clear();
+
+            DateTime weekEnd = _weekStart.AddDays(7);
+
+            IEnumerable<Show> showsThisWeek =
+                _shows.Where(show =>
+                show.StartTime >= _weekStart &&
+                show.StartTime < weekEnd);
+
+            foreach (Show show in showsThisWeek)
             {
                 var vm = new CalendarShowViewModel(show);
 

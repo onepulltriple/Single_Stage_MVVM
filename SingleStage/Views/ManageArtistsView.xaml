@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="SingleStage.Views.ManageArtistsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:shared="clr-namespace:SingleStage.Views.Shared"
+             xmlns:editorviewmodels="clr-namespace:SingleStage.ViewModels.EditorViewModels"
+             mc:Ignorable="d"
+             >
+
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!-- Header -->
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   FontSize="20"
+                   Margin="6"
+                   VerticalAlignment="Center"
+                   Text="Manage Artists"/>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
+                   Margin="6"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Text="Select an artist to manage or click Create Artist."/>
+
+
+
+        <!-- Artist list -->
+
+        <DataGrid Grid.Row="1"
+                  Grid.Column="0"
+                  Margin="6"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="True"
+                  ItemsSource="{Binding ListOfArtists}"
+                  SelectedItem="{Binding SelectedArtist, Mode=TwoWay}"/>
+
+
+
+        <!-- Artist editor -->
+
+        <Grid Grid.Row="1"
+              Grid.Column="1"
+              Margin="6">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Margin="6"
+                       VerticalAlignment="Center"
+                       Text="Name"/>
+
+            <TextBox Grid.Row="0"
+                     Grid.Column="1"
+                     Margin="6"
+                     Text="{Binding Editor.Artist.Name,
+                                    UpdateSourceTrigger=PropertyChanged}"/>
+
+        </Grid>
+
+
+
+        <!-- CRUD action bar -->
+        <shared:CrudActionBarView Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  />
+
+    </Grid>
+
+</UserControl>

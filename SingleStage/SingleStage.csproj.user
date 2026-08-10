@@ -8,7 +8,16 @@
     <Compile Update="Views\CalendarWeekView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ManageArtistsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Shared\CrudActionBarView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\EmployeeLoginWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\ManageArtistsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

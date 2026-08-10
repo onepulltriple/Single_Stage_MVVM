@@ -1,6 +1,7 @@
-﻿using SingleStage.Infrastructure;
-using SingleStage.DAC;
+﻿using SingleStage.DAC;
 using SingleStage.Entities;
+using SingleStage.Infrastructure;
+using SingleStage.Windows;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ namespace SingleStage.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly ShowDAC _showDAC;
+        private readonly ArtistDAC _artistDAC;
+
+        //private readonly WindowService _windowService;
 
         public CalendarWeekViewModel? CalendarWeekViewModel { get; private set; }
 
@@ -49,10 +53,14 @@ namespace SingleStage.ViewModels
 
 
         // Constructor
-        public MainWindowViewModel(ShowDAC showDAC)
+        public MainWindowViewModel(ShowDAC showDAC, ArtistDAC artistDAC)
         {
             ArgumentNullException.ThrowIfNull(showDAC);
+            ArgumentNullException.ThrowIfNull(artistDAC);
+            //ArgumentNullException.ThrowIfNull(windowService);
             _showDAC = showDAC;
+            _artistDAC = artistDAC;
+            //_windowService = windowService;
 
             ManageShowsCommand =
                 new RelayCommand(ManageShows);
@@ -83,6 +91,8 @@ namespace SingleStage.ViewModels
 
             TodayCommand =
                 new RelayCommand(Today);
+
+            ManageArtistsCommand = new RelayCommand(ManageArtists);
         }
 
         // Initialization
@@ -146,7 +156,17 @@ namespace SingleStage.ViewModels
 
         private void ManageArtists()
         {
-            MessageBox.Show("Manage Artists");
+            //_windowService.ShowManageArtists();
+            ManageArtistsViewModel manageArtistsViewModel =
+                new ManageArtistsViewModel(_artistDAC);
+
+            ManageArtistsWindow window =
+                new ManageArtistsWindow
+                {
+                    DataContext = manageArtistsViewModel
+                };
+
+            window.ShowDialog();
         }
 
         private void ManageEmployees()

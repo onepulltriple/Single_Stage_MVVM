@@ -1,5 +1,6 @@
 ﻿using SingleStage.DAC;
 using SingleStage.Entities;
+using SingleStage.Infrastructure;
 using SingleStage.ViewModels;
 using System.Windows;
 using System.Windows.Input;
@@ -80,15 +81,18 @@ namespace SingleStage.Windows
 
             // if all checks pass, open main window
             SingleStageMvvmContext context = new();
-            ShowDAC showDAC = new(context);
 
-            MainWindowViewModel vm = new(showDAC);
+            ShowDAC showDAC = new(context);
+            ArtistDAC artistDAC = new(context);
+
+            MainWindowViewModel vm = new(showDAC, artistDAC);
 
             await vm.InitializeAsync();
 
             MainWindow mainWindow = new();
             mainWindow.DataContext = vm;
             mainWindow.Show();
+
             this.Close();
         }
     }

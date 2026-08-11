@@ -1,12 +1,11 @@
 ﻿using SingleStage.Entities;
 using SingleStage.Infrastructure;
 
+// manages/represents the artist currently being edited, i.e. owns the working copy
 namespace SingleStage.ViewModels.EditorViewModels
 {
     public class ArtistEditorViewModel : ViewModelBase
     {
-        // the editor owns the working copy
-
         private Artist? _artist;
 
         public Artist? Artist
@@ -23,14 +22,14 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginCreate()
         {
-            Artist = new Artist();
+            this.Artist = new Artist();
 
             OnPropertyChanged(nameof(IsEditing));
         }
 
         public void BeginEdit(Artist artist)
         {
-            Artist = new Artist
+            this.Artist = new Artist
             {
                 Id = artist.Id,
                 Name = artist.Name,
@@ -41,7 +40,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void Cancel()
         {
-            Artist = null;
+            this.Artist = null;
             OnPropertyChanged(nameof(IsEditing));
         }
     }

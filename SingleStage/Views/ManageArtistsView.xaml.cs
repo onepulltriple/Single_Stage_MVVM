@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SingleStage.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SingleStage.Views
 {
@@ -23,6 +12,14 @@ namespace SingleStage.Views
         public ManageArtistsView()
         {
             InitializeComponent();
+        }
+
+        private async void ManageArtistsView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is ManageArtistsViewModel viewModel)
+            {
+                await viewModel.InitialiseAsync();
+            }
         }
     }
 }

@@ -10,7 +10,11 @@ using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
 
-
+// manages the artist-management screen as a whole
+// owns the list of artists
+// owns the currently selected row
+// owns the commands for the screen
+// responds to CRUD button clicks
 namespace SingleStage.ViewModels
 {
     public class ManageArtistsViewModel : ViewModelBase
@@ -56,6 +60,7 @@ namespace SingleStage.ViewModels
             DeleteCommand   = new RelayCommand(_ => DeleteArtist(), CanDeleteArtist);
         }
 
+        // loads the list
         public async Task InitialiseAsync()
         {
             var artists = await _artistDAC.GetAllAsync();

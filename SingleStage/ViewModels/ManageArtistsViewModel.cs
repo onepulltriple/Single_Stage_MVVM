@@ -35,7 +35,11 @@ namespace SingleStage.ViewModels
                 _selectedArtist = value;
                 OnPropertyChanged(nameof(SelectedArtist));
 
+                // changing the selected artist cancels any artist currently being edited.
+                Editor.Cancel();
+
                 EditCommand.RaiseCanExecuteChanged();
+                SaveCommand.RaiseCanExecuteChanged();
                 DeleteCommand.RaiseCanExecuteChanged();
             }
         }
@@ -76,6 +80,7 @@ namespace SingleStage.ViewModels
         private void CreateArtist()
         {
             Editor.BeginCreate();
+            SaveCommand.RaiseCanExecuteChanged();
         }
 
         private void EditArtist()
@@ -84,21 +89,56 @@ namespace SingleStage.ViewModels
                 return;
 
             Editor.BeginEdit(SelectedArtist);
+            SaveCommand.RaiseCanExecuteChanged();
         }
 
         private async void SaveArtist()
         {
             // fill out more later
-            await Task.CompletedTask;
+            //await Task.CompletedTask;
+
+            if (Editor.Artist is null)
+                return;
+
+            if (string.IsNullOrWhiteSpace(Editor.Artist.Name))
+                return;
+
+            if (Editor.Artist.Id == 0)
+            {
+                // New artist
+                await _artistDAC.AddAsync(Editor.Artist);
+            }
+            else
+            {
+                // Existing artist
+                await _artistDAC.UpdateAsync(Editor.Artist);
+            }
+
+            await InitialiseAsync();
+
+            Editor.Cancel();
+
+            SelectedArtist = null;
         }
 
         private async void DeleteArtist()
         {
+            //if (SelectedArtist is null)
+            //    return;
+
+            //// fill out more later
+            //await Task.CompletedTask;
+
             if (SelectedArtist is null)
                 return;
 
-            // fill out more later
-            await Task.CompletedTask;
+            await _artistDAC.DeleteAsync(SelectedArtist.Id);
+
+            await InitialiseAsync();
+
+            Editor.Cancel();
+
+            SelectedArtist = null;
         }
 
         private bool CanEditArtist(object? parameter)

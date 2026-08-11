@@ -20,7 +20,9 @@ namespace SingleStage.DAC
         // read all
         public virtual Task<List<TEntity>> GetAllAsync()
         {
-            return _context.Set<TEntity>().ToListAsync();
+            return _context.Set<TEntity>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         // read one
@@ -34,6 +36,8 @@ namespace SingleStage.DAC
         {
             _context.Set<TEntity>().Add(entity);
             await _context.SaveChangesAsync();
+
+            _context.Entry(entity).State = EntityState.Detached;
         }
 
         // update
@@ -41,6 +45,8 @@ namespace SingleStage.DAC
         {
             _context.Set<TEntity>().Update(entity);
             await _context.SaveChangesAsync();
+
+            _context.Entry(entity).State = EntityState.Detached;
         }
 
         // delete

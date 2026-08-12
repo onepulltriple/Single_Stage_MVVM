@@ -14,6 +14,7 @@ namespace SingleStage.ViewModels
     {
         private readonly ShowDAC _showDAC;
         private readonly ArtistDAC _artistDAC;
+        private readonly TicketholderDAC _ticketholderDAC;
 
         //private readonly WindowService _windowService;
 
@@ -28,14 +29,14 @@ namespace SingleStage.ViewModels
             $"{CurrentWeek:MMMM d} - {CurrentWeek.AddDays(6):MMMM d}";
 
 
-        // Menu commands
+        // menu commands
         public ICommand ManageShowsCommand { get; }
 
         public ICommand ManageArtistsCommand { get; }
 
         public ICommand ManageEmployeesCommand { get; }
 
-        public ICommand ManageTicketHoldersCommand { get; }
+        public ICommand ManageTicketholdersCommand { get; }
 
         public ICommand SellTicketCommand { get; }
 
@@ -44,7 +45,7 @@ namespace SingleStage.ViewModels
         public ICommand ExitCommand { get; }
 
 
-        // Calendar commands
+        // calendar commands
         public ICommand PreviousWeekCommand { get; }
 
         public ICommand NextWeekCommand { get; }
@@ -52,16 +53,16 @@ namespace SingleStage.ViewModels
         public ICommand TodayCommand { get; }
 
 
-        // Constructor
-        public MainWindowViewModel(ShowDAC showDAC, ArtistDAC artistDAC)
+        // constructor
+        public MainWindowViewModel(ShowDAC showDAC, ArtistDAC artistDAC, TicketholderDAC ticketholderDAC)
         {
             ArgumentNullException.ThrowIfNull(showDAC);
             ArgumentNullException.ThrowIfNull(artistDAC);
-            //ArgumentNullException.ThrowIfNull(windowService);
             _showDAC = showDAC;
             _artistDAC = artistDAC;
-            //_windowService = windowService;
+            _ticketholderDAC = ticketholderDAC;
 
+            #region menu commands
             ManageShowsCommand =
                 new RelayCommand(ManageShows);
 
@@ -71,7 +72,7 @@ namespace SingleStage.ViewModels
             ManageEmployeesCommand =
                 new RelayCommand(ManageEmployees);
 
-            ManageTicketHoldersCommand =
+            ManageTicketholdersCommand =
                 new RelayCommand(ManageTicketholders);
 
             SellTicketCommand =
@@ -83,6 +84,8 @@ namespace SingleStage.ViewModels
             ExitCommand =
                 new RelayCommand(Exit);
 
+            #endregion
+
             PreviousWeekCommand =
                 new RelayCommand(PreviousWeek);
 
@@ -91,11 +94,9 @@ namespace SingleStage.ViewModels
 
             TodayCommand =
                 new RelayCommand(Today);
-
-            ManageArtistsCommand = new RelayCommand(ManageArtists);
         }
 
-        // Initialization
+        // initialization
         public async Task InitializeAsync()
         {
             List<Show> shows = await _showDAC.GetAllAsync();
@@ -123,7 +124,7 @@ namespace SingleStage.ViewModels
             return date.Date.AddDays(-(day - 1));
         }
 
-        // Calendar navigation
+        // calendar navigation
         private void PreviousWeek()
         {
             Calendar.WeekStart = Calendar.WeekStart.AddDays(-7);
@@ -148,7 +149,7 @@ namespace SingleStage.ViewModels
             OnPropertyChanged(nameof(WeekDisplayText));
         }
 
-        // Menu actions
+        // menu actions
         private void ManageShows()
         {
             MessageBox.Show("Manage Shows");
@@ -156,7 +157,6 @@ namespace SingleStage.ViewModels
 
         private void ManageArtists()
         {
-            //_windowService.ShowManageArtists();
             ManageArtistsViewModel manageArtistsViewModel =
                 new ManageArtistsViewModel(_artistDAC);
 
@@ -176,7 +176,16 @@ namespace SingleStage.ViewModels
 
         private void ManageTicketholders()
         {
-            MessageBox.Show("Manage Ticket Holders");
+            ManageTicketholdersViewModel manageTicketholdersViewModel =
+                new ManageTicketholdersViewModel(_ticketholderDAC);
+
+            ManageTicketholdersWindow window =
+                new ManageTicketholdersWindow
+                {
+                    DataContext = manageTicketholdersViewModel
+                };
+
+            window.ShowDialog();
         }
 
         private void SellTicket()

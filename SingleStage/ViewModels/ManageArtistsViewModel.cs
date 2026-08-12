@@ -29,7 +29,7 @@ namespace SingleStage.ViewModels
                 _selectedArtist = value;
                 OnPropertyChanged(nameof(SelectedArtist));
 
-                // changing the selected artist cancels any artist currently being edited.
+                // changing the selected artist cancels any changes currently being made
                 Editor.Cancel();
 
                 EditCommand.RaiseCanExecuteChanged();

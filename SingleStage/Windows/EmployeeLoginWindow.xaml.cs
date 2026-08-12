@@ -84,8 +84,9 @@ namespace SingleStage.Windows
 
             ShowDAC showDAC = new(context);
             ArtistDAC artistDAC = new(context);
+            TicketholderDAC ticketholderDAC = new(context);
 
-            MainWindowViewModel vm = new(showDAC, artistDAC);
+            MainWindowViewModel vm = new(showDAC, artistDAC, ticketholderDAC);
 
             await vm.InitializeAsync();
 

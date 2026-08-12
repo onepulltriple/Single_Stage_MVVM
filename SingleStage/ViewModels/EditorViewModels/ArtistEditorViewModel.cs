@@ -1,5 +1,4 @@
 ﻿using SingleStage.Entities;
-using SingleStage.Infrastructure;
 
 // manages/represents the artist currently being edited, i.e. owns the working copy
 namespace SingleStage.ViewModels.EditorViewModels
@@ -7,7 +6,6 @@ namespace SingleStage.ViewModels.EditorViewModels
     public class ArtistEditorViewModel : ViewModelBase
     {
         private Artist? _artist;
-
         public Artist? Artist
         {
             get => _artist;

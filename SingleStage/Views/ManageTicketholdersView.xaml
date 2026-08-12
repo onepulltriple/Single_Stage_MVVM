@@ -1,16 +1,16 @@
-﻿<UserControl x:Class="SingleStage.Views.ManageArtistsView"
+﻿<UserControl x:Class="SingleStage.Views.ManageTicketholdersView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:shared="clr-namespace:SingleStage.Views.Shared"
-             mc:Ignorable="d"
+             xmlns:local="clr-namespace:SingleStage.Views"
+             mc:Ignorable="d" 
              Background="{StaticResource DefaultBackgroundBrush}"
-             Loaded="ManageArtistsView_Loaded"
-             PreviewKeyDown="ManageArtistsView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800"
-             >
-
+             Loaded="ManageTicketholdersView_Loaded"
+             PreviewKeyDown="ManageTicketholdersView_PreviewKeyDown"
+             d:DesignHeight="450" d:DesignWidth="800">
+    
     <Grid Margin="6">
 
         <Grid.RowDefinitions>
@@ -29,25 +29,25 @@
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
-                   Text="Manage Artists"/>
+                   Text="Manage Ticketholders"/>
 
         <TextBlock Grid.Row="0"
                    Grid.Column="1"
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Select an artist to edit or create a new artist"/>
+                   Text="Select a ticketholder to edit or create a new ticketholder"/>
 
 
-        <!-- artist list -->
+        <!-- ticketholder list -->
         <DataGrid Grid.Row="1"
                   Grid.Column="0"
                   Style="{StaticResource DefaultDataGridStyle}"
                   IsReadOnly="True"
                   AutoGenerateColumns="True"
-                  ItemsSource="{Binding ListOfArtists}"
-                  SelectedItem="{Binding SelectedArtist, Mode=TwoWay}"/>
+                  ItemsSource="{Binding ListOfTicketholders}"
+                  SelectedItem="{Binding SelectedTicketholder, Mode=TwoWay}"/>
 
 
-        <!-- artist editor -->
+        <!-- ticketholder editor -->
         <Grid Grid.Row="1"
               Grid.Column="1"
               Margin="20,0,0,0"
@@ -72,7 +72,7 @@
             <TextBox Grid.Row="0"
                      Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Artist.Name,
+                     Text="{Binding Editor.Ticketholder.Name,
                                     UpdateSourceTrigger=PropertyChanged}"/>
 
         </Grid>
@@ -85,5 +85,5 @@
                                   />
 
     </Grid>
-
+    
 </UserControl>

@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              >
 
-    <Grid Margin="6">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -16,27 +16,27 @@
         </Grid.ColumnDefinitions>
 
         <Button Grid.Column="0"
-                Margin="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
                 Content="Cancel"
                 Command="{Binding CancelCommand}"/>
 
         <Button Grid.Column="1"
-                Margin="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
                 Content="Create"
                 Command="{Binding CreateCommand}"/>
 
         <Button Grid.Column="2"
-                Margin="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
                 Content="Edit"
                 Command="{Binding EditCommand}"/>
 
         <Button Grid.Column="3"
-                Margin="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
                 Content="Save"
                 Command="{Binding SaveCommand}"/>
 
         <Button Grid.Column="4"
-                Margin="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
                 Content="Delete"
                 Command="{Binding DeleteCommand}"/>
 

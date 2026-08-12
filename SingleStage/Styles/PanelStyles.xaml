@@ -26,32 +26,18 @@
     </Style>
 
     
-    <!--rounded border styles-->
-    <Style x:Key="RoundedBorderStyle" 
-           TargetType="Border"
-           BasedOn="{StaticResource {x:Type Border}}">
-        <Setter Property="BorderThickness"      Value="2"/>
-        <Setter Property="CornerRadius"         Value="10"/>
-        <Setter Property="Padding"              Value="0"/>
-        <Setter Property="ClipToBounds"         Value="True"/>
-    </Style>
-
-    
     <!-- Calendar -->
     <Style x:Key="CalendarDayCanvasStyle"
        TargetType="Canvas">
-        <Setter Property="Height"
-            Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
-        <Setter Property="Background"
-            Value="White"/>
+        <Setter Property="Height"               Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
+        <!--<Setter Property="Background"           Value="White"/>-->
+        <Setter Property="Background"           Value="{StaticResource DefaultBackgroundBrush}"/>
     </Style>
 
     <Style x:Key="CalendarShowPresenterStyle"
        TargetType="ContentPresenter">
-        <Setter Property="Canvas.Top"
-            Value="{Binding Top}"/>
-        <Setter Property="Canvas.Left"
-            Value="2"/>
+        <Setter Property="Canvas.Top"           Value="{Binding Top}"/>
+        <Setter Property="Canvas.Left"          Value="2"/>
     </Style>
 
     <ItemsPanelTemplate x:Key="CalendarItemsPanel">
@@ -65,10 +51,8 @@
     <!-- Calendar time scale -->
     <Style x:Key="CalendarTimeScaleStyle"
            TargetType="Canvas">
-        <Setter Property="Height"
-            Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
-        <Setter Property="Background"
-            Value="White"/>
+        <Setter Property="Height"               Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
+        <Setter Property="Background"           Value="{StaticResource DefaultBackgroundBrush}"/>
     </Style>
 
     <!--panel styles-->

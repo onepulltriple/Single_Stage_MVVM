@@ -5,11 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:SingleStage.Views.Shared"
              mc:Ignorable="d"
+             Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageArtistsView_Loaded"
              PreviewKeyDown="ManageArtistsView_PreviewKeyDown"
              >
 
-    <Grid Margin="10">
+    <Grid Margin="6">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -23,41 +24,32 @@
         </Grid.ColumnDefinitions>
 
 
-        <!-- Header -->
-
+        <!-- header -->
         <TextBlock Grid.Row="0"
                    Grid.Column="0"
-                   FontSize="20"
-                   Margin="6"
-                   VerticalAlignment="Center"
+                   Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
                    Text="Manage Artists"/>
 
         <TextBlock Grid.Row="0"
                    Grid.Column="1"
-                   Margin="6"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Text="Select an artist to manage or click Create Artist."/>
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Select an artist to edit or create a new artist"/>
 
 
-
-        <!-- Artist list -->
-
+        <!-- artist list -->
         <DataGrid Grid.Row="1"
                   Grid.Column="0"
-                  Margin="6"
+                  Style="{StaticResource DefaultDataGridStyle}"
                   IsReadOnly="True"
                   AutoGenerateColumns="True"
                   ItemsSource="{Binding ListOfArtists}"
                   SelectedItem="{Binding SelectedArtist, Mode=TwoWay}"/>
 
 
-
-        <!-- Artist editor -->
-
+        <!-- artist editor -->
         <Grid Grid.Row="1"
               Grid.Column="1"
-              Margin="6"
+              Margin="20,0,0,0"
               IsEnabled="{Binding Editor.IsEditing}">
 
             <Grid.RowDefinitions>
@@ -73,18 +65,16 @@
 
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
-                       Margin="6"
-                       VerticalAlignment="Center"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Name"/>
 
             <TextBox Grid.Row="0"
                      Grid.Column="1"
-                     Margin="6"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding Editor.Artist.Name,
                                     UpdateSourceTrigger=PropertyChanged}"/>
 
         </Grid>
-
 
 
         <!-- CRUD action bar -->

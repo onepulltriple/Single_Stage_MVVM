@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:SingleStage"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:SingleStage.Views"
-        Title="MainWindow" Height="450" Width="800"
+        Title="Single Stage Week Overview"
+        Height="650" Width="800"
+        Background="{StaticResource DefaultBackgroundBrush}"
         >
     
     <DockPanel>
@@ -36,7 +38,7 @@
         </Menu>
 
         <!--main content-->
-        <Grid Margin="10">
+        <Grid Margin="6">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -55,11 +57,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
+                        Style="{StaticResource MainWindowButtonStyle}"
                         Content="&lt; Previous Week"
                         Command="{Binding PreviousWeekCommand}"
-                        Padding="10,5"/>
+                        />
                 
                 <TextBlock Grid.Column="1"
+                           Style="{StaticResource BodyTextStyle}"
                            Text="{Binding WeekDisplayText}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
@@ -67,14 +71,16 @@
                            FontWeight="Bold"/>
                 
                 <Button Grid.Column="2"
+                        Style="{StaticResource MainWindowButtonStyle}"
                         Content="Today"
                         Command="{Binding TodayCommand}"
-                        Padding="10,5"/>
+                        />
 
                 <Button Grid.Column="3"
+                        Style="{StaticResource MainWindowButtonStyle}"
                         Content="Next Week &gt;"
                         Command="{Binding NextWeekCommand}"
-                        Padding="10,5"/>
+                        />
             </Grid>
             
             <!--calendar view-->

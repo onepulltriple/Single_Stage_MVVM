@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
@@ -41,6 +35,7 @@ namespace SingleStage.ViewModels
                 EditCommand.RaiseCanExecuteChanged();
                 SaveCommand.RaiseCanExecuteChanged();
                 DeleteCommand.RaiseCanExecuteChanged();
+                CancelCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -50,6 +45,7 @@ namespace SingleStage.ViewModels
         public RelayCommand EditCommand { get; }
         public RelayCommand SaveCommand { get; }
         public RelayCommand DeleteCommand { get; }
+        public RelayCommand CancelCommand { get; }
 
         public ManageArtistsViewModel(ArtistDAC artistDAC)
         {
@@ -59,9 +55,10 @@ namespace SingleStage.ViewModels
             Editor = new ArtistEditorViewModel();
 
             CreateCommand   = new RelayCommand(CreateArtist);
-            EditCommand     = new RelayCommand(_ => EditArtist(), CanEditArtist);
-            SaveCommand     = new RelayCommand(_ => SaveArtist(), CanSaveArtist);
+            EditCommand     = new RelayCommand(_ => EditArtist(),   CanEditArtist);
+            SaveCommand     = new RelayCommand(_ => SaveArtist(),   CanSaveArtist);
             DeleteCommand   = new RelayCommand(_ => DeleteArtist(), CanDeleteArtist);
+            CancelCommand   = new RelayCommand(_ => CancelEdit(),   CanCancelEdit);
         }
 
         // loads the list
@@ -80,7 +77,9 @@ namespace SingleStage.ViewModels
         private void CreateArtist()
         {
             Editor.BeginCreate();
+
             SaveCommand.RaiseCanExecuteChanged();
+            CancelCommand.RaiseCanExecuteChanged();
         }
 
         private void EditArtist()
@@ -89,14 +88,13 @@ namespace SingleStage.ViewModels
                 return;
 
             Editor.BeginEdit(SelectedArtist);
+
             SaveCommand.RaiseCanExecuteChanged();
+            CancelCommand.RaiseCanExecuteChanged();
         }
 
         private async void SaveArtist()
         {
-            // fill out more later
-            //await Task.CompletedTask;
-
             if (Editor.Artist is null)
                 return;
 
@@ -105,12 +103,12 @@ namespace SingleStage.ViewModels
 
             if (Editor.Artist.Id == 0)
             {
-                // New artist
+                // new artist
                 await _artistDAC.AddAsync(Editor.Artist);
             }
             else
             {
-                // Existing artist
+                // existing artist
                 await _artistDAC.UpdateAsync(Editor.Artist);
             }
 
@@ -123,12 +121,6 @@ namespace SingleStage.ViewModels
 
         private async void DeleteArtist()
         {
-            //if (SelectedArtist is null)
-            //    return;
-
-            //// fill out more later
-            //await Task.CompletedTask;
-
             if (SelectedArtist is null)
                 return;
 
@@ -139,6 +131,14 @@ namespace SingleStage.ViewModels
             Editor.Cancel();
 
             SelectedArtist = null;
+        }
+
+        private void CancelEdit()
+        {
+            Editor.Cancel();
+
+            SaveCommand.RaiseCanExecuteChanged();
+            CancelCommand.RaiseCanExecuteChanged();
         }
 
         private bool CanEditArtist(object? parameter)
@@ -154,6 +154,11 @@ namespace SingleStage.ViewModels
         private bool CanDeleteArtist(object? parameter)
         {
             return SelectedArtist is not null;
+        }
+
+        private bool CanCancelEdit(object? parameter)
+        {
+            return Editor.IsEditing;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace SingleStage.UnitTests
+namespace SingleStage.Tests
 {
     public class Tests
     {

@@ -72,7 +72,7 @@
             <TextBox Grid.Row="0"
                      Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Artist.Name,
+                     Text="{Binding Editor.Name,
                                     UpdateSourceTrigger=PropertyChanged}"/>
 
         </Grid>

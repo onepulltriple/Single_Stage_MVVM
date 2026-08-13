@@ -95,21 +95,21 @@ namespace SingleStage.ViewModels
 
         private async void SaveTicketholder()
         {
-            if (Editor.Ticketholder is null)
+            if (Editor.WorkingCopyTicketholder is null)
                 return;
 
-            if (string.IsNullOrWhiteSpace(Editor.Ticketholder.Name))
+            if (string.IsNullOrWhiteSpace(Editor.WorkingCopyTicketholder.Name))
                 return;
 
-            if (Editor.Ticketholder.Id == 0)
+            if (Editor.WorkingCopyTicketholder.Id == 0)
             {
                 // new ticketholder
-                await _ticketholderDAC.AddAsync(Editor.Ticketholder);
+                await _ticketholderDAC.AddAsync(Editor.WorkingCopyTicketholder);
             }
             else
             {
                 // existing ticketholder
-                await _ticketholderDAC.UpdateAsync(Editor.Ticketholder);
+                await _ticketholderDAC.UpdateAsync(Editor.WorkingCopyTicketholder);
             }
 
             await InitialiseAsync();
@@ -148,7 +148,7 @@ namespace SingleStage.ViewModels
 
         private bool CanSaveTicketholder(object? parameter)
         {
-            return Editor.Ticketholder is not null;
+            return Editor.WorkingCopyTicketholder is not null;
         }
 
         private bool CanDeleteTicketholder(object? parameter)

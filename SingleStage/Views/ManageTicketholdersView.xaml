@@ -56,6 +56,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -72,9 +74,41 @@
             <TextBox Grid.Row="0"
                      Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Ticketholder.Name,
+                     Text="{Binding Editor.Name,
                                     UpdateSourceTrigger=PropertyChanged}"/>
 
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Birthdate"/>
+
+            <DatePicker Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedDate="{Binding Editor.Birthdate, 
+                                               UpdateSourceTrigger=PropertyChanged}"/>
+                        <!--Style="{StaticResource PopUpWindowTextBoxTextStyle}"-->
+            
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Email"/>
+
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Editor.Email,
+                                    UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Grid.Row="3"
+                       Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Discount"/>
+
+            <CheckBox Grid.Row="3"
+                      Grid.Column="1"
+                      IsChecked="{Binding Editor.Discount, 
+                                          UpdateSourceTrigger=PropertyChanged}"
+                      />
         </Grid>
 
 

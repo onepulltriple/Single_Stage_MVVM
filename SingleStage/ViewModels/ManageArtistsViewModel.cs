@@ -95,21 +95,21 @@ namespace SingleStage.ViewModels
 
         private async void SaveArtist()
         {
-            if (Editor.Artist is null)
+            if (Editor.WorkingCopyArtist is null)
                 return;
 
-            if (string.IsNullOrWhiteSpace(Editor.Artist.Name))
+            if (string.IsNullOrWhiteSpace(Editor.WorkingCopyArtist.Name))
                 return;
 
-            if (Editor.Artist.Id == 0)
+            if (Editor.WorkingCopyArtist.Id == 0)
             {
                 // new artist
-                await _artistDAC.AddAsync(Editor.Artist);
+                await _artistDAC.AddAsync(Editor.WorkingCopyArtist);
             }
             else
             {
                 // existing artist
-                await _artistDAC.UpdateAsync(Editor.Artist);
+                await _artistDAC.UpdateAsync(Editor.WorkingCopyArtist);
             }
 
             await InitialiseAsync();
@@ -148,7 +148,7 @@ namespace SingleStage.ViewModels
 
         private bool CanSaveArtist(object? parameter)
         {
-            return Editor.Artist is not null;
+            return Editor.WorkingCopyArtist is not null;
         }
 
         private bool CanDeleteArtist(object? parameter)

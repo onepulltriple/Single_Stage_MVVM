@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         xmlns:views="clr-namespace:SingleStage.Views"
         Title="Single Stage Week Overview"
-        Height="650" Width="800"
         Background="{StaticResource DefaultBackgroundBrush}"
+        Style="{StaticResource MainWindowStyle}"
         >
     
     <DockPanel>

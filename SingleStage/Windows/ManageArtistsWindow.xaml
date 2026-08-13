@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:SingleStage.Windows"
         xmlns:views="clr-namespace:SingleStage.Views"
         mc:Ignorable="d"
-        Title="ManageArtistsWindow" Height="450" Width="800">
+        Title="ManageArtistsWindow"
+        Style="{StaticResource PopUpWindowOrDialogStyle}"
+        >
     <views:ManageArtistsView/>
 </Window>

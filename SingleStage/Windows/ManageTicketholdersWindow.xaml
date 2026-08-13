@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:SingleStage.Windows"
         xmlns:views="clr-namespace:SingleStage.Views"
         mc:Ignorable="d"
-        Title="ManageTicketholdersWindow" Height="450" Width="800"
+        Title="ManageTicketholdersWindow"
+        Style="{StaticResource PopUpWindowOrDialogStyle}"
         >
     <views:ManageTicketholdersView/>
 </Window>

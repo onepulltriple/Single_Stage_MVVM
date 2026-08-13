@@ -20,8 +20,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
 
@@ -42,9 +42,19 @@
                   Grid.Column="0"
                   Style="{StaticResource DefaultDataGridStyle}"
                   IsReadOnly="True"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   ItemsSource="{Binding ListOfArtists}"
-                  SelectedItem="{Binding SelectedArtist, Mode=TwoWay}"/>
+                  SelectedItem="{Binding SelectedArtist, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                    Binding="{Binding Name}"
+                                    Width="*"/>
+                <!--<DataGridTextColumn Header="Appearance"
+                                    Binding="{Binding Appearance}"
+                                    Width="*"/>-->
+            </DataGrid.Columns>
+        </DataGrid>
 
 
         <!-- artist editor -->

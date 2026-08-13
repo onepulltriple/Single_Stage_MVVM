@@ -13,4 +13,7 @@
     <SolidColorBrush x:Key="PrimaryBorderBrush"             Color="#FF2D2D30"/>
     <SolidColorBrush x:Key="DefaultBackgroundBrush"         Color="AliceBlue"/>
 
+    <!--INPUTS-->
+    <SolidColorBrush x:Key="InputBorderBrush"               Color="#FFABADB3"/>
+    
 </ResourceDictionary>

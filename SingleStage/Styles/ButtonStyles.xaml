@@ -5,15 +5,14 @@
            TargetType="Button"
            BasedOn="{StaticResource {x:Type Button}}">
         <!--<Setter Property="Background"           Value="Transparent"/>-->
-        <!--<Setter Property="Background"           Value="{StaticResource DefaultBackgroundBrush}"/>-->
-        <Setter Property="Padding"                  Value="10,5"/>
         <Setter Property="MinWidth"                 Value="60"/>
     </Style>
 
     <Style x:Key="CrudActionBarButtonStyle"
            TargetType="Button"
            BasedOn="{StaticResource MainWindowButtonStyle}">
-        <!--<Setter Property="Padding"                  Value="6"/>-->
+        <Setter Property="MinWidth"                 Value="200"/>
+        <Setter Property="MinHeight"                Value="80"/>
     </Style>
 
     <Style x:Key="MainWindowRoundedButtonStyle"

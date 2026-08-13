@@ -9,7 +9,8 @@
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageTicketholdersView_Loaded"
              PreviewKeyDown="ManageTicketholdersView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
     
     <Grid Margin="6">
 
@@ -20,8 +21,8 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
 
@@ -42,9 +43,32 @@
                   Grid.Column="0"
                   Style="{StaticResource DefaultDataGridStyle}"
                   IsReadOnly="True"
-                  AutoGenerateColumns="True"
+                  AutoGenerateColumns="False"
                   ItemsSource="{Binding ListOfTicketholders}"
-                  SelectedItem="{Binding SelectedTicketholder, Mode=TwoWay}"/>
+                  SelectedItem="{Binding SelectedTicketholder, Mode=TwoWay}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                    Binding="{Binding Name}"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Birthdate"
+                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                    Binding="{Binding Birthdate, StringFormat={}{0:yyyy-MM-dd}}"
+                                    Width="0.5*"/>
+                
+                <DataGridTextColumn Header="Email"
+                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                    Binding="{Binding Email}"
+                                    Width="*"/>
+                
+                <DataGridCheckBoxColumn Header="Discount"
+                                        ElementStyle="{StaticResource DefaultDataGridCheckBoxStyle}"
+                                        Binding="{Binding Discount}"
+                                        Width="0.5*"/>
+                
+            </DataGrid.Columns>
+        </DataGrid>
 
 
         <!-- ticketholder editor -->
@@ -84,9 +108,9 @@
 
             <DatePicker Grid.Row="1"
                         Grid.Column="1"
+                        Style="{StaticResource PopUpWindowDatePickerStyle}"
                         SelectedDate="{Binding Editor.Birthdate, 
                                                UpdateSourceTrigger=PropertyChanged}"/>
-                        <!--Style="{StaticResource PopUpWindowTextBoxTextStyle}"-->
             
             <TextBlock Grid.Row="2"
                        Grid.Column="0"
@@ -106,9 +130,9 @@
 
             <CheckBox Grid.Row="3"
                       Grid.Column="1"
+                      Style="{StaticResource PopUpWindowCheckBoxStyle}"
                       IsChecked="{Binding Editor.Discount, 
-                                          UpdateSourceTrigger=PropertyChanged}"
-                      />
+                                          UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
 
 

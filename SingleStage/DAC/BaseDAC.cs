@@ -3,8 +3,8 @@ using SingleStage.Entities;
 
 namespace SingleStage.DAC
 {
-    //              class ClassName<T>     : SomeInterface<T>   where T : constraint
-    public abstract class BaseDAC<TEntity> : IDAC<TEntity>      where TEntity : class
+    //              class ClassName<T>     : SomeInterface<T>       where T : constraint
+    public abstract class BaseDAC<TEntity> : IBaseDAC<TEntity>      where TEntity : class
 
     {
         protected readonly SingleStageMvvmContext _context;

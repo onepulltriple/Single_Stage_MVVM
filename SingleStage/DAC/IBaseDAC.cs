@@ -1,6 +1,6 @@
 ﻿namespace SingleStage.DAC
 {
-    public interface IDAC<TEntity>
+    public interface IBaseDAC<TEntity>
     {
         Task<List<TEntity>> GetAllAsync();
         Task<TEntity?> GetByIdAsync(int id);

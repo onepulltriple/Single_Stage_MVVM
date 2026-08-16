@@ -2,6 +2,8 @@
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -13,18 +15,23 @@ namespace SingleStage.Windows
     public partial class EmployeeLoginWindow : Window
     {
         private readonly EmployeeDAC _employeeDAC;
+        private readonly IServiceProvider _serviceProvider;
 
         public string? enteredUsername { get; set; }
 
         public Employee? tempEmployee { get; set; }
 
-        public EmployeeLoginWindow()
+        // constructor receives required services from DI
+        public EmployeeLoginWindow(EmployeeDAC employeeDAC, IServiceProvider serviceProvider)
         {
             InitializeComponent();
             DataContext = this;
 
-            var context = new SingleStageMvvmContext();
-            _employeeDAC = new EmployeeDAC(context);
+            //var context = new SingleStageMvvmContext();
+            //_employeeDAC = new EmployeeDAC(context);
+
+            _employeeDAC = employeeDAC ?? throw new ArgumentNullException(nameof(employeeDAC));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
         private void GridLoaded(object sender, RoutedEventArgs e)
@@ -79,19 +86,27 @@ namespace SingleStage.Windows
                 return;
             }
 
-            // if all checks pass, open main window
-            SingleStageMvvmContext context = new();
+            //SingleStageMvvmContext context = new();
 
-            ShowDAC showDAC = new(context);
-            ArtistDAC artistDAC = new(context);
-            TicketholderDAC ticketholderDAC = new(context);
+            //ShowDAC showDAC = new(context);
+            //ArtistDAC artistDAC = new(context);
+            //TicketholderDAC ticketholderDAC = new(context);
 
-            MainWindowViewModel vm = new(showDAC, artistDAC, ticketholderDAC);
+            //MainWindowViewModel vm = new(showDAC, artistDAC, ticketholderDAC);
 
-            await vm.InitializeAsync();
+            //await vm.InitializeAsync();
 
-            MainWindow mainWindow = new();
-            mainWindow.DataContext = vm;
+            //MainWindow mainWindow = new();
+            //mainWindow.DataContext = vm;
+            //mainWindow.Show();
+            
+            
+            // if all checks pass, resolve the main window/viewmodel using DI
+            var viewmodel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            await viewmodel.InitializeAsync();
+
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.DataContext = viewmodel;
             mainWindow.Show();
 
             this.Close();

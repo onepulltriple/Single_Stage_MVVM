@@ -11,7 +11,7 @@ namespace SingleStage.Windows
         public ManageArtistsWindow(ManageArtistsViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = viewModel 
+            DataContext = viewModel
                 ?? throw new ArgumentNullException(nameof(viewModel));
         }
     }

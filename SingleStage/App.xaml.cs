@@ -4,7 +4,6 @@ using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.ViewModels;
 using SingleStage.Windows;
-using System;
 using System.Windows;
 
 namespace SingleStage
@@ -24,15 +23,15 @@ namespace SingleStage
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) =>
                 {
-                    // DbContext is transient by default to get a new context instance per resolve
-                    services.AddDbContext<SingleStageMvvmContext>();
+                    // DbContext was made transient to get a new context instance per resolve
+                    services.AddTransient<SingleStageMvvmContext>();
 
                     // DACs - register concrete types (constructor takes SingleStageMvvmContext)
-                    services.AddScoped<AppearanceDAC>();
-                    services.AddScoped<ArtistDAC>();
-                    services.AddScoped<EmployeeDAC>();
-                    services.AddScoped<ShowDAC>();
-                    services.AddScoped<TicketholderDAC>();
+                    services.AddTransient<AppearanceDAC>();
+                    services.AddTransient<ArtistDAC>();
+                    services.AddTransient<EmployeeDAC>();
+                    services.AddTransient<ShowDAC>();
+                    services.AddTransient<TicketholderDAC>();
 
                     // ViewModels and Windows
                     services.AddTransient<MainWindowViewModel>();
@@ -55,13 +54,13 @@ namespace SingleStage
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
-
             if (_host != null)
             {
                 await _host.StopAsync();
                 _host.Dispose();
             }
+
+            base.OnExit(e);
         }
     }
 

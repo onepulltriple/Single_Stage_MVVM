@@ -24,20 +24,25 @@ namespace SingleStage
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((_, services) =>
                 {
-                    // DbContext: transient to get a new context instance per resolve
-                    services.AddTransient<SingleStageMvvmContext>();
+                    // DbContext is transient by default to get a new context instance per resolve
+                    services.AddDbContext<SingleStageMvvmContext>();
 
                     // DACs - register concrete types (constructor takes SingleStageMvvmContext)
+                    services.AddScoped<AppearanceDAC>();
                     services.AddScoped<ArtistDAC>();
+                    services.AddScoped<EmployeeDAC>();
                     services.AddScoped<ShowDAC>();
                     services.AddScoped<TicketholderDAC>();
-                    services.AddScoped<EmployeeDAC>();
 
                     // ViewModels and Windows
                     services.AddTransient<MainWindowViewModel>();
+                    services.AddTransient<ManageArtistsViewModel>();
                     services.AddTransient<ManageTicketholdersViewModel>();
+
                     services.AddTransient<EmployeeLoginWindow>();
                     services.AddTransient<MainWindow>();
+                    services.AddTransient<ManageArtistsWindow>();
+                    services.AddTransient<ManageTicketholdersWindow>();
                 })
                 .Build();
             

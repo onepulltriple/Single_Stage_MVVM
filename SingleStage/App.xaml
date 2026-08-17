@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SingleStage"
              >
-             <!--x:Class="SingleStage.App"-->
              <!-- StartupUri removed; App.xaml.cs will control startup -->
              <!--StartupUri="Windows/EmployeeLoginWindow.xaml"-->
     

@@ -1,6 +1,5 @@
 ﻿using SingleStage.DAC;
 using SingleStage.Entities;
-using SingleStage.Infrastructure;
 using SingleStage.ViewModels;
 using System;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,9 +25,6 @@ namespace SingleStage.Windows
         {
             InitializeComponent();
             DataContext = this;
-
-            //var context = new SingleStageMvvmContext();
-            //_employeeDAC = new EmployeeDAC(context);
 
             _employeeDAC = employeeDAC ?? throw new ArgumentNullException(nameof(employeeDAC));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -86,21 +82,6 @@ namespace SingleStage.Windows
                 return;
             }
 
-            //SingleStageMvvmContext context = new();
-
-            //ShowDAC showDAC = new(context);
-            //ArtistDAC artistDAC = new(context);
-            //TicketholderDAC ticketholderDAC = new(context);
-
-            //MainWindowViewModel vm = new(showDAC, artistDAC, ticketholderDAC);
-
-            //await vm.InitializeAsync();
-
-            //MainWindow mainWindow = new();
-            //mainWindow.DataContext = vm;
-            //mainWindow.Show();
-            
-            
             // if all checks pass, resolve the main window/viewmodel using DI
             var viewmodel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
             await viewmodel.InitializeAsync();

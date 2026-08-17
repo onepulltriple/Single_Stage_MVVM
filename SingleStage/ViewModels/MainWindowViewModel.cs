@@ -1,4 +1,5 @@
-﻿using SingleStage.DAC;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.Windows;
@@ -13,10 +14,9 @@ namespace SingleStage.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly ShowDAC _showDAC;
-        private readonly ArtistDAC _artistDAC;
-        private readonly TicketholderDAC _ticketholderDAC;
 
-        //private readonly WindowService _windowService;
+        private readonly IServiceProvider _serviceProvider; // used to resolve windows on demand
+
 
         public CalendarWeekViewModel? CalendarWeekViewModel { get; private set; }
 
@@ -54,13 +54,17 @@ namespace SingleStage.ViewModels
 
 
         // constructor
-        public MainWindowViewModel(ShowDAC showDAC, ArtistDAC artistDAC, TicketholderDAC ticketholderDAC)
+        public MainWindowViewModel(
+            ShowDAC showDAC, 
+            IServiceProvider serviceProvider
+            )
         {
-            ArgumentNullException.ThrowIfNull(showDAC);
-            ArgumentNullException.ThrowIfNull(artistDAC);
-            _showDAC = showDAC;
-            _artistDAC = artistDAC;
-            _ticketholderDAC = ticketholderDAC;
+            _serviceProvider = serviceProvider 
+                ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+            _showDAC = showDAC  
+                ?? throw new ArgumentNullException(nameof(showDAC));
+
 
             #region menu commands
             ManageShowsCommand =
@@ -124,7 +128,7 @@ namespace SingleStage.ViewModels
             return date.Date.AddDays(-(day - 1));
         }
 
-        // calendar navigation
+        #region calendar navigation
         private void PreviousWeek()
         {
             Calendar.WeekStart = Calendar.WeekStart.AddDays(-7);
@@ -148,6 +152,7 @@ namespace SingleStage.ViewModels
             OnPropertyChanged(nameof(CurrentWeek));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
+        #endregion
 
         // menu actions
         private void ManageShows()
@@ -157,15 +162,7 @@ namespace SingleStage.ViewModels
 
         private void ManageArtists()
         {
-            ManageArtistsViewModel manageArtistsViewModel =
-                new ManageArtistsViewModel(_artistDAC);
-
-            ManageArtistsWindow window =
-                new ManageArtistsWindow
-                {
-                    DataContext = manageArtistsViewModel
-                };
-
+            var window = _serviceProvider.GetRequiredService<ManageArtistsWindow>();
             window.ShowDialog();
         }
 
@@ -176,15 +173,7 @@ namespace SingleStage.ViewModels
 
         private void ManageTicketholders()
         {
-            ManageTicketholdersViewModel manageTicketholdersViewModel =
-                new ManageTicketholdersViewModel(_ticketholderDAC);
-
-            ManageTicketholdersWindow window =
-                new ManageTicketholdersWindow
-                {
-                    DataContext = manageTicketholdersViewModel
-                };
-
+            var window = _serviceProvider.GetRequiredService<ManageTicketholdersWindow>();
             window.ShowDialog();
         }
 

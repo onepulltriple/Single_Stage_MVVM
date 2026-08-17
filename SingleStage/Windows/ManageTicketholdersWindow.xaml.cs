@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using SingleStage.ViewModels;
 
 namespace SingleStage.Windows
 {
@@ -7,9 +8,11 @@ namespace SingleStage.Windows
     /// </summary>
     public partial class ManageTicketholdersWindow : Window
     {
-        public ManageTicketholdersWindow()
+        public ManageTicketholdersWindow(ManageTicketholdersViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel
+                ?? throw new ArgumentException(nameof(viewModel));
         }
     }
 }

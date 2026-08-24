@@ -17,11 +17,6 @@ namespace SingleStage.Views
 
         private async void ManageArtistsView_Loaded(object sender, RoutedEventArgs e)
         {
-            //if (DataContext is ManageArtistsViewModel viewModel)
-            //{
-            //    await viewModel.InitialiseAsync();
-            //}
-
             if (DataContext is ManageArtistsViewModel viewModel)
             {
                 try

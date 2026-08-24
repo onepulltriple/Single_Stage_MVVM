@@ -34,11 +34,13 @@ namespace SingleStage
                     services.AddTransient<TicketholderDAC>();
 
                     // ViewModels and Windows
+                    services.AddTransient<EmployeeLoginViewModel>();
                     services.AddTransient<MainWindowViewModel>();
                     services.AddTransient<ManageArtistsViewModel>();
                     services.AddTransient<ManageTicketholdersViewModel>();
 
                     services.AddTransient<EmployeeLoginWindow>();
+                    services.AddTransient<EmployeeLoginWindow01>();
                     services.AddTransient<MainWindow>();
                     services.AddTransient<ManageArtistsWindow>();
                     services.AddTransient<ManageTicketholdersWindow>();
@@ -48,7 +50,7 @@ namespace SingleStage
             _host.Start();
 
             // resolve the login window via DI so its constructor dependencies are injected
-            var loginWindow = _host.Services.GetRequiredService<EmployeeLoginWindow>();
+            var loginWindow = _host.Services.GetRequiredService<EmployeeLoginWindow01>();
             loginWindow.Show();
         }
 
@@ -63,5 +65,4 @@ namespace SingleStage
             base.OnExit(e);
         }
     }
-
 }

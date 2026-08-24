@@ -57,7 +57,7 @@ namespace SingleStage.Windows
         private async void LoginButtonClicked(object sender, RoutedEventArgs e)
         {
             // check that all fields are filled out
-            if (enteredUsername == null ||
+            if (string.IsNullOrWhiteSpace(enteredUsername) ||
                 PB00.Password == null)
             {
                 UIErrorMessage.Text = "Please fill out all fields.";

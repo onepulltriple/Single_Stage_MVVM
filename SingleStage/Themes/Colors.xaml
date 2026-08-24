@@ -15,5 +15,8 @@
 
     <!--INPUTS-->
     <SolidColorBrush x:Key="InputBorderBrush"               Color="#FFABADB3"/>
-    
+
+    <!--BORDERS-->
+    <SolidColorBrush x:Key="CalendarDayBorderBrush"         Color="#FFE5E5E5"/>
+
 </ResourceDictionary>

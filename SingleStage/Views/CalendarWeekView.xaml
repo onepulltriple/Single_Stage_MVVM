@@ -4,21 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:view="clr-namespace:SingleStage.Views"
+             xmlns:designtimeviewmodels="clr-namespace:SingleStage.ViewModels.DesignTimeViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="700"
+             d:DesignHeight="750" d:DesignWidth="1400"
+             d:DataContext="{d:DesignInstance Type=designtimeviewmodels:CalendarWeekDesignTimeViewModel, IsDesignTimeCreatable=True}"
              >
     
     <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled"
-                  >
+                  HorizontalScrollBarVisibility="Disabled">
 
         <Grid>
-
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
                 <!-- time labels -->
                 <ColumnDefinition Width="50"/>
 
-                <!-- days -->
+                <!-- day headers -->
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -27,93 +32,167 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="0"
+                    Grid.Column="0"
+                    Style="{StaticResource CalendarDayBorderStyle}"/>
+
+            <Border Grid.Row="0"
+                    Grid.Column="1"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding MondayHeader}"
+                               Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="2"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding TuesdayHeader}"
+                                Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="3"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding WednesdayHeader}"
+                                Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="4"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding ThursdayHeader}"
+                               Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="5"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding FridayHeader}"
+                               Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="6"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding SaturdayHeader}"
+                               Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
+
+            <Border Grid.Row="0"
+                    Grid.Column="7"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <TextBlock Text="{Binding SundayHeader}"
+                                Style="{StaticResource CalendarDayHeaderStyle}"/>
+            </Border>
             
-            <Canvas Grid.Column="0"
-                    Style="{StaticResource CalendarTimeScaleStyle}">
+            <!-- time scale at left -->
+            <Border Grid.Row="1"
+                    Grid.Column="0"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                    <Canvas Style="{StaticResource CalendarTimeScaleStyle}">
 
-                <ItemsControl ItemsSource="{Binding Hours}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                    <ItemsControl ItemsSource="{Binding Hours}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Canvas.Top"
-                        Value="{Binding Top}"/>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Top"   Value="{Binding Top}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Label}"
-                           Style="{StaticResource CalendarTimeLabelStyle}"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Label}"
+                                           Style="{StaticResource CalendarTimeLabelStyle}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
 
-                </ItemsControl>
+                    </ItemsControl>
+                </Canvas>
+            </Border>
 
-            </Canvas>
-            
-            <Canvas Grid.Column="1"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Monday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Monday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="2"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Tuesday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="2"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Tuesday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="3"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Wednesday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="3"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Wednesday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="4"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Thursday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="4"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Thursday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="5"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Friday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="5"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Friday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="6"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Saturday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="6"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Saturday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
-            <Canvas Grid.Column="7"
-                    Style="{StaticResource CalendarDayCanvasStyle}">
-                <ItemsControl ItemsSource="{Binding Sunday}"
-                              ItemsPanel="{StaticResource CalendarItemsPanel}"
-                              ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
-                              ItemTemplate="{StaticResource CalendarShowTemplate}"/>
-            </Canvas>
+            <Border Grid.Row="1"
+                    Grid.Column="7"
+                    Style="{StaticResource CalendarDayBorderStyle}">
+                <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
+                    <ItemsControl ItemsSource="{Binding Sunday}"
+                                  ItemsPanel="{StaticResource CalendarItemsPanel}"
+                                  ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
+                                  ItemTemplate="{StaticResource CalendarShowTemplate}"/>
+                </Canvas>
+            </Border>
 
         </Grid>
-
     </ScrollViewer>
-    
 </UserControl>

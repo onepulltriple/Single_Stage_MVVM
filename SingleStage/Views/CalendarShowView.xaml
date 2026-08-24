@@ -4,25 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SingleStage.Views"
+             xmlns:designtimeviewmodels="clr-namespace:SingleStage.ViewModels.DesignTimeViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="100" 
+             d:DesignWidth="250"
+             d:DataContext="{d:DesignInstance Type=designtimeviewmodels:CalendarShowDesignTimeViewModel, IsDesignTimeCreatable=True}"
+             >
     <Border
         Height="{Binding Height}"
-        Background="CornflowerBlue"
-        BorderBrush="Black"
-        BorderThickness="1"
-        CornerRadius="4"
-        Padding="4">
+        d:Height="80"
+        Style="{StaticResource CalendarShowBorderStyle}">
 
         <StackPanel>
 
             <TextBlock
                 FontWeight="Bold"
-                Text="{Binding Name}" />
+                Text="{Binding Name}" 
+                />
 
             <TextBlock
                 FontSize="11"
-                Text="{Binding TimeText}" />
+                Text="{Binding TimeText}" 
+                />
 
         </StackPanel>
 

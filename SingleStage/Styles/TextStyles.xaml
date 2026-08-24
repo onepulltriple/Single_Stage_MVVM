@@ -101,10 +101,19 @@
     <Style x:Key="CalendarTimeLabelStyle"
        TargetType="TextBlock"
        BasedOn="{StaticResource BodyTextStyle}">
-        <Setter Property="Width" Value="45"/>
-        <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="TextAlignment" Value="Right"/>
-        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Width"                    Value="45"/>
+        <Setter Property="HorizontalAlignment"      Value="Right"/>
+        <Setter Property="TextAlignment"            Value="Right"/>
+        <Setter Property="FontSize"                 Value="11"/>
+    </Style>
+
+    <!-- Calendar day headers -->
+    <Style x:Key="CalendarDayHeaderStyle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource BodyTextStyle}">
+        <Setter Property="FontWeight"               Value="Bold"/>
+        <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="TextWrapping"             Value="NoWrap"/>
     </Style>
 
 </ResourceDictionary>

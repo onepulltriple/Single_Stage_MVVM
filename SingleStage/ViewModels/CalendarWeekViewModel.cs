@@ -26,6 +26,13 @@ namespace SingleStage.ViewModels
                 RefreshShows();
 
                 OnPropertyChanged(nameof(WeekStart));
+                OnPropertyChanged(nameof(MondayHeader));
+                OnPropertyChanged(nameof(TuesdayHeader));
+                OnPropertyChanged(nameof(WednesdayHeader));
+                OnPropertyChanged(nameof(ThursdayHeader));
+                OnPropertyChanged(nameof(FridayHeader));
+                OnPropertyChanged(nameof(SaturdayHeader));
+                OnPropertyChanged(nameof(SundayHeader));
             }
         }
 
@@ -48,6 +55,24 @@ namespace SingleStage.ViewModels
         public ObservableCollection<CalendarShowViewModel> Sunday { get; } = new();
 
 
+        #region calendar day headers
+        public string MondayHeader =>       _weekStart.ToString("ddd dd MMM");
+
+        public string TuesdayHeader =>      _weekStart.AddDays(1).ToString("ddd dd MMM");
+
+        public string WednesdayHeader =>    _weekStart.AddDays(2).ToString("ddd dd MMM");
+
+        public string ThursdayHeader =>     _weekStart.AddDays(3).ToString("ddd dd MMM");
+
+        public string FridayHeader =>       _weekStart.AddDays(4).ToString("ddd dd MMM");
+
+        public string SaturdayHeader =>     _weekStart.AddDays(5).ToString("ddd dd MMM");
+
+        public string SundayHeader =>       _weekStart.AddDays(6).ToString("ddd dd MMM");
+        #endregion
+
+
+        // constructor
         public CalendarWeekViewModel(DateTime weekStart, IEnumerable<Show> shows)
         {
             _shows = shows.ToList();

@@ -1,0 +1,96 @@
+﻿using SingleStage.DAC;
+using SingleStage.Entities;
+using SingleStage.ViewModels;
+using System;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using System.Windows.Input;
+
+namespace SingleStage.Windows
+{
+    /// <summary>
+    /// Interaction logic for EmployeeLoginWindowNoMVVM.xaml
+    /// </summary>
+    public partial class EmployeeLoginWindowNoMVVM : Window
+    {
+        private readonly EmployeeDAC _employeeDAC;
+        private readonly IServiceProvider _serviceProvider;
+
+        public string? enteredUsername { get; set; }
+
+        public Employee? tempEmployee { get; set; }
+
+        // constructor receives required services from DI
+        public EmployeeLoginWindowNoMVVM(EmployeeDAC employeeDAC, IServiceProvider serviceProvider)
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            _employeeDAC = employeeDAC ?? throw new ArgumentNullException(nameof(employeeDAC));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        private void GridLoaded(object sender, RoutedEventArgs e)
+        {
+            Keyboard.Focus(TB00);
+        }
+
+        private void TB00KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                LoginButtonClicked(sender, e);
+        }
+
+        private void PB00KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+                Keyboard.Focus(LoginButton);
+            if (e.Key == Key.Enter)
+                LoginButtonClicked(sender, e);
+        }
+
+        private void QuitButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private async void LoginButtonClicked(object sender, RoutedEventArgs e)
+        {
+            // check that all fields are filled out
+            if (string.IsNullOrWhiteSpace(enteredUsername) ||
+                string.IsNullOrWhiteSpace(PB00.Password)   )
+            {
+                UIErrorMessage.Text = "Please fill out all fields.";
+                return;
+            }
+
+            // check the username exists
+            tempEmployee = await _employeeDAC.GetFirstOrDefaultByUsernameAsync(enteredUsername);
+
+            if (tempEmployee == null)
+            {
+                UIErrorMessage.Text = "Invalid credentials.";
+                return;
+            }
+
+            // check that entered password matches password in the database
+            bool passwordOK = BCrypt.Net.BCrypt.Verify(PB00.Password, tempEmployee.Password);
+
+            if (!passwordOK)
+            {
+                UIErrorMessage.Text = "Invalid credentials.";
+                return;
+            }
+
+            // if all checks pass, resolve the main window/viewmodel using DI
+            var viewmodel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
+            await viewmodel.InitializeAsync();
+
+            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+            mainWindow.DataContext = viewmodel;
+            mainWindow.Show();
+
+            this.Close();
+        }
+    }
+}

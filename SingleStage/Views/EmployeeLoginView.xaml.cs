@@ -1,5 +1,4 @@
-﻿using SingleStage.Infrastructure;
-using SingleStage.ViewModels;
+﻿using SingleStage.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

@@ -1,10 +1,5 @@
-﻿using SingleStage.DAC;
-using SingleStage.Entities;
-using SingleStage.ViewModels;
-using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using SingleStage.ViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace SingleStage.Windows
 {
@@ -13,84 +8,35 @@ namespace SingleStage.Windows
     /// </summary>
     public partial class EmployeeLoginWindow : Window
     {
-        private readonly EmployeeDAC _employeeDAC;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly EmployeeLoginViewModel _viewModel;
 
-        public string? enteredUsername { get; set; }
-
-        public Employee? tempEmployee { get; set; }
-
-        // constructor receives required services from DI
-        public EmployeeLoginWindow(EmployeeDAC employeeDAC, IServiceProvider serviceProvider)
+        public EmployeeLoginWindow(EmployeeLoginViewModel viewModel)
         {
             InitializeComponent();
-            DataContext = this;
 
-            _employeeDAC = employeeDAC ?? throw new ArgumentNullException(nameof(employeeDAC));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
+            _viewModel = viewModel
+                ?? throw new ArgumentNullException(nameof(viewModel));
 
-        private void GridLoaded(object sender, RoutedEventArgs e)
-        {
-            Keyboard.Focus(TB00);
-        }
+            this.DataContext = _viewModel;
 
-        private void TB00KeyDownHandler(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-                LoginButtonClicked(sender, e);
-        }
+            _viewModel.LoginSucceeded += ViewModel_LoginSucceeded;
 
-        private void PB00KeyDownHandler(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Tab)
-                Keyboard.Focus(LoginButton);
-            if (e.Key == Key.Enter)
-                LoginButtonClicked(sender, e);
-        }
-
-        private void QuitButtonClicked(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
-        private async void LoginButtonClicked(object sender, RoutedEventArgs e)
-        {
-            // check that all fields are filled out
-            if (string.IsNullOrWhiteSpace(enteredUsername) ||
-                PB00.Password == null)
+            this.Loaded += (_, _) =>
             {
-                UIErrorMessage.Text = "Please fill out all fields.";
-                return;
-            }
+                MinWidth = ActualWidth;
+                MinHeight = ActualHeight;
+            };
+        }
 
-            // check the username exists
-            tempEmployee = await _employeeDAC.GetFirstOrDefaultByUsernameAsync(enteredUsername);
+        private void ViewModel_LoginSucceeded(object? sender, EventArgs e)
+        {
+            Close();
+        }
 
-            if (tempEmployee == null)
-            {
-                UIErrorMessage.Text = "Invalid credentials.";
-                return;
-            }
-
-            // check that entered password matches password in the database
-            bool passwordOK = BCrypt.Net.BCrypt.Verify(PB00.Password, tempEmployee.Password);
-
-            if (!passwordOK)
-            {
-                UIErrorMessage.Text = "Invalid credentials.";
-                return;
-            }
-
-            // if all checks pass, resolve the main window/viewmodel using DI
-            var viewmodel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
-            await viewmodel.InitializeAsync();
-
-            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = viewmodel;
-            mainWindow.Show();
-
-            this.Close();
+        protected override void OnClosed(EventArgs e)
+        {
+            _viewModel.LoginSucceeded -= ViewModel_LoginSucceeded;
+            base.OnClosed(e);
         }
     }
 }

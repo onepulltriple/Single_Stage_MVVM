@@ -1,6 +1,7 @@
 ﻿using SingleStage.DAC;
 using SingleStage.Infrastructure;
 using SingleStage.Entities;
+using SingleStage.Windows;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SingleStage.ViewModels

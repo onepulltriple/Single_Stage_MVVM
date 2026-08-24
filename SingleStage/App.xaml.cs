@@ -40,17 +40,19 @@ namespace SingleStage
                     services.AddTransient<ManageTicketholdersViewModel>();
 
                     services.AddTransient<EmployeeLoginWindow>();
-                    services.AddTransient<EmployeeLoginWindow01>();
                     services.AddTransient<MainWindow>();
                     services.AddTransient<ManageArtistsWindow>();
                     services.AddTransient<ManageTicketholdersWindow>();
+                    
+                    // depricated
+                    services.AddTransient<EmployeeLoginWindowNoMVVM>();
                 })
                 .Build();
             
             _host.Start();
 
             // resolve the login window via DI so its constructor dependencies are injected
-            var loginWindow = _host.Services.GetRequiredService<EmployeeLoginWindow01>();
+            var loginWindow = _host.Services.GetRequiredService<EmployeeLoginWindow>();
             loginWindow.Show();
         }
 

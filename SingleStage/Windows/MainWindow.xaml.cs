@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace SingleStage
+namespace SingleStage.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

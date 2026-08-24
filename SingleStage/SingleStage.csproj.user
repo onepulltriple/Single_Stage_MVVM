@@ -20,10 +20,10 @@
     <Compile Update="Views\Shared\CrudActionBarView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Windows\EmployeeLoginWindow.xaml.cs">
+    <Compile Update="Windows\EmployeeLoginWindowNoMVVM.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Windows\EmployeeLoginWindow01.xaml.cs">
+    <Compile Update="Windows\EmployeeLoginWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Windows\ManageArtistsWindow.xaml.cs">

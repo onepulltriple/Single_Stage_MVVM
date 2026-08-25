@@ -115,10 +115,12 @@
                     </ItemsControl>
                 </Canvas>
             </Border>
-
+            
+            <!-- day columns -->
             <Border Grid.Row="1"
                     Grid.Column="1"
                     Style="{StaticResource CalendarDayBorderStyle}">
+                
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
                     <ItemsControl ItemsSource="{Binding Monday}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"

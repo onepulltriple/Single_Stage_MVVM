@@ -8,7 +8,7 @@
         <Setter Property="Background"           Value="{StaticResource DefaultBackgroundBrush}"/>
         <Setter Property="Left"                 Value="100"/>
         <Setter Property="Top"                  Value="100"/>
-        <Setter Property="MinWidth"             Value="1000"/>
+        <Setter Property="MinWidth"             Value="1378"/>
         <Setter Property="MinHeight"            Value="800"/>
     </Style>
 

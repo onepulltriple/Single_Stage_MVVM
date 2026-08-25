@@ -13,7 +13,9 @@
     
     <DockPanel>
         <!--main menu-->
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top"
+              Height="22"
+              >
             <MenuItem Header="_Manage">
                 <MenuItem Header="_Shows"
                           Command="{Binding ManageShowsCommand}"/>

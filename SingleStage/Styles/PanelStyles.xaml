@@ -3,26 +3,21 @@
                     xmlns:views="clr-namespace:SingleStage.Views"
                     xmlns:calendar="clr-namespace:SingleStage.Calendar">
 
-    <!--border styles-->
-    <!--Border is a visual container, which controls how things look-->
+    <!--PANEL STYLES-->
+    <!--panels are layout containers that lay out their children, i.e. control where things go-->
+    <!--e.g. StackPanel, Grid, WrapPanel, DockPanel, Canvas-->
+    <!--these do not inherit from Border!-->
 
-    <Style x:Key="NoBorderStyle" 
-           TargetType="Border"
-           BasedOn="{StaticResource {x:Type Border}}">
-        <Setter Property="BorderThickness"          Value="0"/>
-        <Setter Property="Background"               Value="Transparent"/>
+    <!--sets the default StackPanel properties globally-->
+    <!--<Style TargetType="StackPanel">
+        <Setter Property="Margin"                   Value="4"/>
+        <Setter Property="Orientation"              Value="Vertical"/>
     </Style>
 
-    <!--<Style x:Key="NoClippingBorderStyle" 
-           TargetType="Border"
-           BasedOn="{StaticResource NoBorderStyle}">
-        <Setter Property="ClipToBounds"             Value="False"/>
-    </Style>
-
-    <Style x:Key="NoClippingNoBackgroundBorderStyle" 
-           TargetType="Border"
-           BasedOn="{StaticResource NoClippingBorderStyle}">
-        <Setter Property="Background"               Value="{x:Null}"/>
+    <Style x:Key="SpacedStackPanel"
+           TargetType="StackPanel"
+           BasedOn="{StaticResource {x:Type StackPanel}}">
+        <Setter Property="Margin"                   Value="10"/>
     </Style>-->
 
     
@@ -31,13 +26,6 @@
            TargetType="Canvas">
         <Setter Property="Height"                   Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
         <Setter Property="Background"               Value="{StaticResource DefaultBackgroundBrush}"/>
-    </Style>
-
-    <Style x:Key="CalendarDayBorderStyle"
-           TargetType="Border"
-           BasedOn="{StaticResource NoBorderStyle}">
-        <Setter Property="BorderBrush"              Value="{StaticResource CalendarDayBorderBrush}"/>
-        <Setter Property="BorderThickness"          Value="0,0,1,0"/>
     </Style>
 
     <Style x:Key="CalendarShowPresenterStyle"
@@ -61,34 +49,5 @@
         <Setter Property="Height"                   Value="{x:Static calendar:CalendarLayout.TotalHeight}"/>
         <Setter Property="Background"               Value="{StaticResource DefaultBackgroundBrush}"/>
     </Style>
-
-    <!-- Calendar show border -->
-    <Style x:Key="CalendarShowBorderStyle" 
-           TargetType="Border"
-           BasedOn="{StaticResource {x:Type Border}}">
-        <Setter Property="BorderThickness"          Value="1"/>
-        <Setter Property="CornerRadius"             Value="4"/>
-        <Setter Property="Background"               Value="CornflowerBlue"/>
-        <Setter Property="BorderBrush"              Value="Black"/>
-        <Setter Property="Padding"                  Value="4"/>
-    </Style>
-        <!--<Setter Property="Margin"                   Value="0,0,2,0"/>-->
-
-    <!--panel styles-->
-    <!--panels are layout containers that lay out their children, i.e. control where things go-->
-    <!--e.g. StackPanel, Grid, WrapPanel, DockPanel, Canvas-->
-    <!--these do not inherit from Border!-->
-
-    <!--sets the default StackPanel properties globally-->
-    <!--<Style TargetType="StackPanel">
-        <Setter Property="Margin"                   Value="4"/>
-        <Setter Property="Orientation"              Value="Vertical"/>
-    </Style>
-
-    <Style x:Key="SpacedStackPanel"
-           TargetType="StackPanel"
-           BasedOn="{StaticResource {x:Type StackPanel}}">
-        <Setter Property="Margin"                   Value="10"/>
-    </Style>-->
     
 </ResourceDictionary>

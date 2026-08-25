@@ -16,7 +16,6 @@
         Style="{StaticResource CalendarShowBorderStyle}">
 
         <StackPanel>
-
             <TextBlock
                 FontWeight="Bold"
                 Text="{Binding Name}" 
@@ -26,9 +25,6 @@
                 FontSize="11"
                 Text="{Binding TimeText}" 
                 />
-
         </StackPanel>
-
     </Border>
-
 </UserControl>

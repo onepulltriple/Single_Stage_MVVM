@@ -4,7 +4,6 @@
     <!--FOREGROUNDS-->
     <!--for brushes, colors, and visual constants-->
     <SolidColorBrush x:Key="PrimaryTextBrush"               Color="#FF222222"/>
-    <SolidColorBrush x:Key="BrightTextBrush"                Color="#FFFFFFFF"/>
     <SolidColorBrush x:Key="WarningTextBrush"               Color="#FFF8C537"/>
 
     <!--BACKGROUNDS-->
@@ -17,6 +16,13 @@
     <SolidColorBrush x:Key="InputBorderBrush"               Color="#FFABADB3"/>
 
     <!--BORDERS-->
+    <SolidColorBrush x:Key="PrimaryButtonBorderBrush"       Color="#FF707070"/>
     <SolidColorBrush x:Key="CalendarDayBorderBrush"         Color="#FFE5E5E5"/>
+    <SolidColorBrush x:Key="ButtonIsDisabledBorderBrush"    Color="#FFE5E5E5"/>
+
+    <!--BUTTONS-->
+    <SolidColorBrush x:Key="ButtonIsMouseOverBackground"    Color="#FFD6EAF8"/>
+    <SolidColorBrush x:Key="ButtonIsPressedBackground"      Color="#FFA9CCE3"/>
+    <SolidColorBrush x:Key="ButtonIsDisabledBackground"     Color="#FFF4F4F4"/>
 
 </ResourceDictionary>

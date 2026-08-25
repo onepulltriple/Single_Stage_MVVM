@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Themes/Colors.xaml"/>
                 <ResourceDictionary Source="Styles/NormalStyles.xaml"/>
                 <ResourceDictionary Source="Styles/TextStyles.xaml"/>
+                <ResourceDictionary Source="Styles/BorderStyles.xaml"/>
                 <ResourceDictionary Source="Styles/PanelStyles.xaml"/>
                 <ResourceDictionary Source="Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="Styles/WindowStyles.xaml"/>

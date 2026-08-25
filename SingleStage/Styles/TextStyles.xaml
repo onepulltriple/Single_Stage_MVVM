@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:calendar="clr-namespace:SingleStage.Calendar">
     
-    <!--Body style-->
+    <!--BODY TEXT STYLE-->
     <!--inherit from the implicit style using e.g. BasedOn="{StaticResource {x:Type TextBlock}}"-->
     <!--without this, a control's style will be replaced, not composed of multiple styles with inherited properties-->
     <Style x:Key="BodyTextStyle" 
@@ -13,7 +13,7 @@
         <!--<Setter Property="Foreground" Value="Black" />-->
     </Style>
 
-    <!--Heading styles-->
+    <!--HEADING STYLE-->
     <Style x:Key="TitleTextStyle" 
            TargetType="TextBlock" 
            BasedOn="{StaticResource BodyTextStyle}">
@@ -79,16 +79,10 @@
 
     <!-- ####################################################################################### -->
     <!--MAIN WINDOW-->
-    <Style x:Key="MainWindowNormal"
+    <!--<Style x:Key="MainWindowNormal"
            TargetType="TextBlock"
            BasedOn="{StaticResource BodyTextStyle}">
-        <!--<Setter Property="Foreground"               Value="{StaticResource BrightTextBrush}"/>
-        <Setter Property="HorizontalAlignment"      Value="Center"/>
-        <Setter Property="VerticalAlignment"        Value="Center"/>
-        <Setter Property="Margin"                   Value="4"/>
-        <Setter Property="FontSize"                 Value="24"/>-->
-    </Style>
-    
+    </Style>-->
    
     <!--Main window button TextBlock styles-->
     <Style x:Key="MainWindowButtonTextBlockStyle"
@@ -113,6 +107,7 @@
            BasedOn="{StaticResource BodyTextStyle}">
         <Setter Property="FontWeight"               Value="Bold"/>
         <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="VerticalAlignment"        Value="Center"/>
         <Setter Property="TextWrapping"             Value="NoWrap"/>
     </Style>
 

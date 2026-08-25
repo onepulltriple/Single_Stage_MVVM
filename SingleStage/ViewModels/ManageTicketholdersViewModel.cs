@@ -32,10 +32,7 @@ namespace SingleStage.ViewModels
                 // changing the selected ticketholder cancels any changes currently being made
                 Editor.Cancel();
 
-                EditCommand.RaiseCanExecuteChanged();
-                SaveCommand.RaiseCanExecuteChanged();
-                DeleteCommand.RaiseCanExecuteChanged();
-                CancelCommand.RaiseCanExecuteChanged();
+                UpdateCommandStates();
             }
         }
 
@@ -54,7 +51,7 @@ namespace SingleStage.ViewModels
 
             Editor = new TicketholderEditorViewModel();
 
-            CreateCommand   = new RelayCommand(CreateTicketholder);
+            CreateCommand   = new RelayCommand(_ => CreateTicketholder(),   CanCreateTicketholder);
             EditCommand     = new RelayCommand(_ => EditTicketholder(),     CanEditTicketholder);
             SaveCommand     = new RelayCommand(_ => SaveTicketholder(),     CanSaveTicketholder);
             DeleteCommand   = new RelayCommand(_ => DeleteTicketholder(),   CanDeleteTicketholder);
@@ -78,8 +75,7 @@ namespace SingleStage.ViewModels
         {
             Editor.BeginCreate();
 
-            SaveCommand.RaiseCanExecuteChanged();
-            CancelCommand.RaiseCanExecuteChanged();
+            UpdateCommandStates();
         }
 
         private void EditTicketholder()
@@ -89,8 +85,7 @@ namespace SingleStage.ViewModels
 
             Editor.BeginEdit(SelectedTicketholder);
 
-            SaveCommand.RaiseCanExecuteChanged();
-            CancelCommand.RaiseCanExecuteChanged();
+            UpdateCommandStates();
         }
 
         private async void SaveTicketholder()
@@ -117,6 +112,8 @@ namespace SingleStage.ViewModels
             Editor.Cancel();
 
             SelectedTicketholder = null;
+
+            UpdateCommandStates();
         }
 
         private async void DeleteTicketholder()
@@ -137,8 +134,12 @@ namespace SingleStage.ViewModels
         {
             Editor.Cancel();
 
-            SaveCommand.RaiseCanExecuteChanged();
-            CancelCommand.RaiseCanExecuteChanged();
+            UpdateCommandStates();
+        }
+
+        private bool CanCreateTicketholder(object? arg)
+        {
+            return !Editor.IsEditing;
         }
 
         private bool CanEditTicketholder(object? parameter)
@@ -159,6 +160,14 @@ namespace SingleStage.ViewModels
         private bool CanCancelEdit(object? parameter)
         {
             return Editor.IsEditing;
+        }
+        private void UpdateCommandStates()
+        {
+            CreateCommand.RaiseCanExecuteChanged();
+            EditCommand.RaiseCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
+            DeleteCommand.RaiseCanExecuteChanged();
+            CancelCommand.RaiseCanExecuteChanged();
         }
     }
 }

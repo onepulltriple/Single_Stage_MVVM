@@ -18,6 +18,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 OnPropertyChanged(nameof(WorkingCopyArtist));
                 OnPropertyChanged(nameof(IsEditing));
+                OnPropertyChanged(nameof(Name));
             }
         }
 

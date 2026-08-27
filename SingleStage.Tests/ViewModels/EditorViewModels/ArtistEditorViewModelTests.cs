@@ -29,27 +29,7 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
         }
 
         [Test]
-        public void BeginEdit_CreatesWorkingCopy()
-        {
-            // arrange
-            var viewModel =  new ArtistEditorViewModel();
-            var artist = new Artist
-            {
-                Id = 15,
-                Name = "Sonny Koufax"
-            };
-
-            // act
-            viewModel.BeginEdit(artist);
-
-            // assert
-            viewModel.WorkingCopyArtist.Should().NotBeNull();
-            viewModel.WorkingCopyArtist.Should().NotBeSameAs(artist);
-            viewModel.IsEditing.Should().BeTrue();
-        }
-
-        [Test]
-        public void BeginEdit_CopiesArtistIdAndName()
+        public void BeginEdit_CreatesWorkingCopyHavingPropertiesFromArtist()
         {
             // arrange
             var viewModel = new ArtistEditorViewModel();
@@ -63,8 +43,28 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
             viewModel.BeginEdit(artist);
 
             // assert
+            viewModel.WorkingCopyArtist.Should().NotBeNull();
+            viewModel.WorkingCopyArtist.Should().NotBeSameAs(artist);
             viewModel.WorkingCopyArtist!.Id.Should().Be(15);
             viewModel.WorkingCopyArtist.Name.Should().Be("Sonny Koufax");
+            viewModel.IsEditing.Should().BeTrue();
+        }
+
+        [Test]
+        public void BeginEdit_SetViewModelPropertiesToThoseFromArtist()
+        {
+            // arrange
+            var viewModel = new ArtistEditorViewModel();
+            var artist = new Artist
+            {
+                Id = 15,
+                Name = "Sonny Koufax"
+            };
+
+            // act
+            viewModel.BeginEdit(artist);
+
+            // assert
             viewModel.Name.Should().Be("Sonny Koufax");
         }
 
@@ -160,6 +160,11 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
             viewModel.IsEditing.Should().BeFalse();
             viewModel.Name.Should().BeEmpty();
         }
+
+        // to test INotifyPropertyChanged events:
+        // - subscribe to PropertyChanged in the test
+        // - perform the action
+        // - inspect which property name(s) was(were) reported
 
         [Test]
         public void BeginCreate_RaisesExpectedPropertyChangedNotifications()

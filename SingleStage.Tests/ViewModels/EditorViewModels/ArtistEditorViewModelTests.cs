@@ -46,7 +46,7 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
             viewModel.WorkingCopyArtist.Should().NotBeNull();
             viewModel.WorkingCopyArtist.Should().NotBeSameAs(artist);
             viewModel.WorkingCopyArtist!.Id.Should().Be(15);
-            viewModel.WorkingCopyArtist.Name.Should().Be("Sonny Koufax");
+            viewModel.WorkingCopyArtist!.Name.Should().Be("Sonny Koufax");
             viewModel.IsEditing.Should().BeTrue();
         }
 
@@ -66,6 +66,7 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
 
             // assert
             viewModel.Name.Should().Be("Sonny Koufax");
+            viewModel.IsEditing.Should().BeTrue();
         }
 
         [Test]
@@ -125,11 +126,13 @@ namespace SingleStage.Tests.ViewModels.EditorViewModels
             var viewModel = new ArtistEditorViewModel();
 
             // act
+            // do not call BeginCreate();
             viewModel.Name = "John Smith";
 
             // assert
             viewModel.WorkingCopyArtist.Should().BeNull();
             viewModel.Name.Should().BeEmpty();
+            viewModel.IsEditing.Should().BeFalse();
         }
 
         [Test]

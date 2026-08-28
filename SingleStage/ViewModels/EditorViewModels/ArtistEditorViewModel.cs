@@ -17,8 +17,11 @@ namespace SingleStage.ViewModels.EditorViewModels
                 _workingCopyArtist = value;
 
                 OnPropertyChanged(nameof(WorkingCopyArtist));
-                OnPropertyChanged(nameof(IsEditing));
+
+                // working copy changed, so notify the properties that expose its values, i.e. properties derived from Artist
                 OnPropertyChanged(nameof(Name));
+
+                OnPropertyChanged(nameof(IsEditing));
             }
         }
 

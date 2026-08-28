@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SingleStage.DAC;
+using SingleStage.DAC.Interfaces;
 using SingleStage.Entities;
 using SingleStage.ViewModels;
 using SingleStage.Windows;
@@ -28,7 +29,7 @@ namespace SingleStage
 
                     // DACs - register concrete types (constructor takes SingleStageMvvmContext)
                     services.AddTransient<AppearanceDAC>();
-                    services.AddTransient<ArtistDAC>();
+                    services.AddTransient<IArtistDAC, ArtistDAC>(); // whenever something asks for an IArtistDAC, give it an ArtistDAC
                     services.AddTransient<EmployeeDAC>();
                     services.AddTransient<ShowDAC>();
                     services.AddTransient<TicketholderDAC>();

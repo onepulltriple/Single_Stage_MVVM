@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using SingleStage.DAC;
+using SingleStage.DAC.Interfaces;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
@@ -13,7 +14,7 @@ namespace SingleStage.ViewModels
 {
     public class ManageArtistsViewModel : ViewModelBase
     {
-        private readonly ArtistDAC _artistDAC;
+        private readonly IArtistDAC _artistDAC;
 
         public ObservableCollection<Artist> ListOfArtists { get; } = new();
 
@@ -40,11 +41,11 @@ namespace SingleStage.ViewModels
 
         public RelayCommand CreateCommand { get; }
         public RelayCommand EditCommand { get; }
-        public RelayCommand SaveCommand { get; }
-        public RelayCommand DeleteCommand { get; }
+        public AsyncRelayCommand SaveCommand { get; }
+        public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
 
-        public ManageArtistsViewModel(ArtistDAC artistDAC)
+        public ManageArtistsViewModel(IArtistDAC artistDAC)
         {
             ArgumentNullException.ThrowIfNull(artistDAC);
             _artistDAC = artistDAC;
@@ -53,8 +54,8 @@ namespace SingleStage.ViewModels
 
             CreateCommand   = new RelayCommand(_ => CreateArtist(), CanCreateArtist);
             EditCommand     = new RelayCommand(_ => EditArtist(),   CanEditArtist);
-            SaveCommand     = new RelayCommand(_ => SaveArtist(),   CanSaveArtist);
-            DeleteCommand   = new RelayCommand(_ => DeleteArtist(), CanDeleteArtist);
+            SaveCommand     = new AsyncRelayCommand(_ => SaveArtist(),   CanSaveArtist);
+            DeleteCommand   = new AsyncRelayCommand(_ => DeleteArtist(), CanDeleteArtist);
             CancelCommand   = new RelayCommand(_ => CancelEdit(),   CanCancelEdit);
         }
 
@@ -89,7 +90,7 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private async void SaveArtist()
+        private async Task SaveArtist()
         {
             if (Editor.WorkingCopyArtist is null)
                 return;
@@ -117,7 +118,7 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private async void DeleteArtist()
+        private async Task DeleteArtist()
         {
             if (SelectedArtist is null)
                 return;

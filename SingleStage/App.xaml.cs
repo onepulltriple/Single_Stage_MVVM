@@ -39,11 +39,13 @@ namespace SingleStage
                     services.AddTransient<MainWindowViewModel>();
                     services.AddTransient<ManageArtistsViewModel>();
                     services.AddTransient<ManageTicketholdersViewModel>();
+                    services.AddTransient<ManageShowsViewModel>();
 
                     services.AddTransient<EmployeeLoginWindow>();
                     services.AddTransient<MainWindow>();
                     services.AddTransient<ManageArtistsWindow>();
                     services.AddTransient<ManageTicketholdersWindow>();
+                    services.AddTransient<ManageShowsWindow>();
                     
                     // depricated
                     services.AddTransient<EmployeeLoginWindowNoMVVM>();

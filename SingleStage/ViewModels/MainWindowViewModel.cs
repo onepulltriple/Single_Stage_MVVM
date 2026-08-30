@@ -157,7 +157,8 @@ namespace SingleStage.ViewModels
         // menu actions
         private void ManageShows()
         {
-            MessageBox.Show("Manage Shows");
+            var window = _serviceProvider.GetRequiredService<ManageShowsWindow>();
+            window.ShowDialog();
         }
 
         private void ManageArtists()

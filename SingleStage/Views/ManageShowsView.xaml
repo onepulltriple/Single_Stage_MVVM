@@ -57,14 +57,14 @@
                                 ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                 Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                 Width="140"/>
-                <DataGridTextColumn Header="Price"
+                <DataGridTextColumn Header="Ticket price"
                                 ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                 Binding="{Binding TicketPrice, StringFormat=C}"
                                 Width="100"/>
-                <DataGridCheckBoxColumn Header="Sold"
+                <DataGridCheckBoxColumn Header="Sold out"
                                     ElementStyle="{StaticResource DefaultDataGridCheckBoxStyle}"
                                     Binding="{Binding SoldOut}"
-                                    Width="60"/>
+                                    Width="65"/>
             </DataGrid.Columns>
         </DataGrid>
 

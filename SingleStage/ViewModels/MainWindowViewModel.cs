@@ -54,10 +54,7 @@ namespace SingleStage.ViewModels
 
 
         // constructor
-        public MainWindowViewModel(
-            ShowDAC showDAC, 
-            IServiceProvider serviceProvider
-            )
+        public MainWindowViewModel(ShowDAC showDAC, IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider 
                 ?? throw new ArgumentNullException(nameof(serviceProvider));
@@ -68,7 +65,7 @@ namespace SingleStage.ViewModels
 
             #region menu commands
             ManageShowsCommand =
-                new RelayCommand(ManageShows);
+                ManageShowsCommand = new RelayCommand(async _ => await ManageShowsAsync());
 
             ManageArtistsCommand =
                 new RelayCommand(ManageArtists);
@@ -128,6 +125,8 @@ namespace SingleStage.ViewModels
             return date.Date.AddDays(-(day - 1));
         }
 
+
+
         #region calendar navigation
         private void PreviousWeek()
         {
@@ -155,10 +154,20 @@ namespace SingleStage.ViewModels
         #endregion
 
         // menu actions
-        private void ManageShows()
+        private async Task ManageShowsAsync()
         {
             var window = _serviceProvider.GetRequiredService<ManageShowsWindow>();
+
+            // ensure the window's DataContext is the viewModel so InitialiseAsync runs in the view's Loaded handler
+            var viewModel = _serviceProvider.GetRequiredService<ManageShowsViewModel>();
+            window.DataContext = viewModel;
+
+            // show dialog (blocking)
             window.ShowDialog();
+            // when it closes, refresh calendar data
+
+            // reload shows and update calendar
+            await InitializeAsync();
         }
 
         private void ManageArtists()

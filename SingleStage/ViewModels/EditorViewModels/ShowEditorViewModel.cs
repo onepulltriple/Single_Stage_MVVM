@@ -19,23 +19,25 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 OnPropertyChanged(nameof(WorkingCopyShow));
 
-                // working copy changed, so notify the properties that expose its values, i.e. properties derived from Show
-                OnPropertyChanged(nameof(Name));
-                OnPropertyChanged(nameof(TicketPrice));
-                OnPropertyChanged(nameof(SoldOut));
-
-                // keep the textual time fields in sync with the working copy
+                // sync textual/date fields from working copy
                 if (_workingCopyShow is not null)
                 {
+                    StartDate = _workingCopyShow.StartTime.Date;
                     StartTimeText = _workingCopyShow.StartTime.ToString("HH:mm");
+                    EndDate = _workingCopyShow.EndTime.Date;
                     EndTimeText = _workingCopyShow.EndTime.ToString("HH:mm");
                 }
                 else
                 {
+                    StartDate = null;
                     StartTimeText = string.Empty;
+                    EndDate = null;
                     EndTimeText = string.Empty;
                 }
 
+                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(TicketPrice));
+                OnPropertyChanged(nameof(SoldOut));
                 Validate();
                 OnPropertyChanged(nameof(IsEditing));
             }
@@ -60,20 +62,34 @@ namespace SingleStage.ViewModels.EditorViewModels
             }
         }
 
-        // use nullable DateTime for easy binding with DatePicker controls
-        public DateTime? StartTime
+        // Date parts (DatePicker bound here)
+        private DateTime? _startDate;
+        public DateTime? StartDate
         {
-            get => WorkingCopyShow?.StartTime;
+            get => _startDate;
             set
             {
-                if (WorkingCopyShow is null || value is null)
+                if (_startDate == value)
                     return;
 
-                if (WorkingCopyShow.StartTime == value.Value)
+                _startDate = value;
+                OnPropertyChanged(nameof(StartDate));
+                Validate();
+            }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set
+            {
+                if (_endDate == value)
                     return;
 
-                WorkingCopyShow.StartTime = value.Value;
-                OnPropertyChanged(nameof(StartTime));
+                _endDate = value;
+                OnPropertyChanged(nameof(EndDate));
+                Validate();
             }
         }
 
@@ -93,22 +109,6 @@ namespace SingleStage.ViewModels.EditorViewModels
             }
         }
 
-        public DateTime? EndTime
-        {
-            get => WorkingCopyShow?.EndTime;
-            set
-            {
-                if (WorkingCopyShow is null || value is null)
-                    return;
-
-                if (WorkingCopyShow.EndTime == value.Value)
-                    return;
-
-                WorkingCopyShow.EndTime = value.Value;
-                OnPropertyChanged(nameof(EndTime));
-            }
-        }
-
         private string _endTimeText = string.Empty;
         public string EndTimeText
         {
@@ -124,9 +124,9 @@ namespace SingleStage.ViewModels.EditorViewModels
             }
         }
 
-        // read-only accessors reflecting the combined DateTime values
-        public DateTime? DisplayedStartTime => WorkingCopyShow?.StartTime;
-        public DateTime? DisplayedEndTime => WorkingCopyShow?.EndTime;
+        // read-only accessors reflecting the combined DateTime values (updated by Validate when valid)
+        public DateTime? StartTime => WorkingCopyShow?.StartTime;
+        public DateTime? EndTime => WorkingCopyShow?.EndTime;
 
         public decimal? TicketPrice
         {
@@ -177,7 +177,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public bool IsValid { get; private set; } = false;
 
-        // Try to parse textual times, set WorkingCopyShow.StartTime/EndTime when valid
+        // Try to parse date + textual times, set WorkingCopyShow.StartTime/EndTime when valid
         private void Validate()
         {
             ErrorMessage = string.Empty;
@@ -185,12 +185,10 @@ namespace SingleStage.ViewModels.EditorViewModels
 
             if (WorkingCopyShow is null)
             {
-                // nothing to validate
                 RaiseValidityChanged();
                 return;
             }
 
-            // Basic name check
             if (string.IsNullOrWhiteSpace(WorkingCopyShow.Name))
             {
                 ErrorMessage = "Name is required.";
@@ -198,35 +196,49 @@ namespace SingleStage.ViewModels.EditorViewModels
                 return;
             }
 
-            // Parse start time
-            if (!TryParseTime(StartTimeText, WorkingCopyShow.StartTime.Date, out DateTime parsedStart))
+            if (StartDate is null)
+            {
+                ErrorMessage = "Start date is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (EndDate is null)
+            {
+                ErrorMessage = "End date is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (!TryParseTime(StartTimeText, out TimeSpan startTimeOfDay))
             {
                 ErrorMessage = "Invalid start time format.";
                 RaiseValidityChanged();
                 return;
             }
 
-            // Parse end time
-            if (!TryParseTime(EndTimeText, WorkingCopyShow.EndTime.Date, out DateTime parsedEnd))
+            if (!TryParseTime(EndTimeText, out TimeSpan endTimeOfDay))
             {
                 ErrorMessage = "Invalid end time format.";
                 RaiseValidityChanged();
                 return;
             }
 
-            // Ensure start is before end
-            if (!(parsedStart < parsedEnd))
+            // combine date + time
+            DateTime combinedStart = StartDate.Value.Date + startTimeOfDay;
+            DateTime combinedEnd = EndDate.Value.Date + endTimeOfDay;
+
+            if (!(combinedStart < combinedEnd))
             {
-                ErrorMessage = "Start time must be before end time.";
+                ErrorMessage = "Start must be before End.";
                 RaiseValidityChanged();
                 return;
             }
 
-            // All good: apply parsed values to working copy and clear error
-            WorkingCopyShow.StartTime = parsedStart;
-            WorkingCopyShow.EndTime = parsedEnd;
+            // valid: write back to working copy
+            WorkingCopyShow.StartTime = combinedStart;
+            WorkingCopyShow.EndTime = combinedEnd;
 
-            // notify read-only DateTime properties changed
             OnPropertyChanged(nameof(StartTime));
             OnPropertyChanged(nameof(EndTime));
 
@@ -235,20 +247,25 @@ namespace SingleStage.ViewModels.EditorViewModels
             RaiseValidityChanged();
         }
 
-        private bool TryParseTime(string timeText, DateTime baseDate, out DateTime result)
+        // parse flexible time strings to TimeSpan
+        private bool TryParseTime(string timeText, out TimeSpan result)
         {
-            result = DateTime.MinValue;
+            result = default;
 
             if (string.IsNullOrWhiteSpace(timeText))
                 return false;
 
-            // Try parse user input as a time or date time
-            if (!DateTime.TryParse(timeText, out DateTime parsed))
-                return false;
+            // Accept "HH:mm", "h:mm tt", etc.
+            if (TimeSpan.TryParse(timeText, out result))
+                return true;
 
-            // Use base date with parsed time part
-            result = baseDate.Date + parsed.TimeOfDay;
-            return true;
+            if (DateTime.TryParse(timeText, out DateTime dt))
+            {
+                result = dt.TimeOfDay;
+                return true;
+            }
+
+            return false;
         }
 
         private void RaiseValidityChanged()
@@ -259,20 +276,18 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginCreate()
         {
-            // Default show spans tonight 19:00-21:00
+            // default: tonight 19:00 - next 21:00
             DateTime defaultStart = DateTime.Today.AddHours(19);
             DateTime defaultEnd = DateTime.Today.AddHours(21);
 
             this.WorkingCopyShow = new Show
             {
-                Name = string.Empty,
                 StartTime = defaultStart,
                 EndTime = defaultEnd,
                 TicketPrice = 0m,
-                SoldOut = false
+                SoldOut = false,
+                Name = string.Empty
             };
-
-            // StartTimeText/EndTimeText are set by WorkingCopyShow setter (and Validate called)
         }
 
         public void BeginEdit(Show show)
@@ -285,10 +300,7 @@ namespace SingleStage.ViewModels.EditorViewModels
                 EndTime = show.EndTime,
                 TicketPrice = show.TicketPrice,
                 SoldOut = show.SoldOut
-                // related collections intentionally not copied
             };
-
-            // StartTimeText/EndTimeText are set by WorkingCopyShow setter (and Validate called)
         }
 
         public void Cancel()

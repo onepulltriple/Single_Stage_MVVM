@@ -70,7 +70,7 @@ namespace SingleStage.ViewModels
 
             ListOfShows.Clear();
 
-            foreach (Show show in shows)
+            foreach (Show show in shows.OrderBy(s => s.StartTime))
             {
                 ListOfShows.Add(show);
             }

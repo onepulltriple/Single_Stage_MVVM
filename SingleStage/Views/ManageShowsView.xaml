@@ -27,61 +27,70 @@
 
         <!-- header -->
         <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
-                   Text="Manage Shows"/>
+               Grid.Column="0"
+               Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
+               Text="Manage Shows"/>
 
         <TextBlock Grid.Row="0"
-                   Grid.Column="1"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Select a show to edit or create a new show"/>
+               Grid.Column="1"
+               Style="{StaticResource PopUpWindowBodyTextStyle}"
+               Text="Select a show to edit or create a new show"/>
 
-        <!-- show list -->
+        <!-- show list (chronological, formatted without year) -->
         <DataGrid Grid.Row="1"
-                  Grid.Column="0"
-                  Style="{StaticResource DefaultDataGridStyle}"
-                  IsReadOnly="True"
-                  AutoGenerateColumns="False"
-                  ItemsSource="{Binding ListOfShows}"
-                  SelectedItem="{Binding SelectedShow, Mode=TwoWay}">
+              Grid.Column="0"
+              Style="{StaticResource DefaultDataGridStyle}"
+              IsReadOnly="True"
+              AutoGenerateColumns="False"
+              ItemsSource="{Binding ListOfShows}"
+              SelectedItem="{Binding SelectedShow, Mode=TwoWay}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding Name}"
-                                    Width="100"/>
+                                ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                Binding="{Binding Name}"
+                                Width="*"/>
                 <DataGridTextColumn Header="Start"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding DisplayedStartTime, StringFormat=\{0:g\}}"
-                                    Width="140"/>
+                                ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
+                                Width="140"/>
                 <DataGridTextColumn Header="End"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding DisplayedEndTime, StringFormat=\{0:g\}}"
-                                    Width="140"/>
+                                ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
+                                Width="140"/>
                 <DataGridTextColumn Header="Price"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding TicketPrice, StringFormat=C}"
-                                    Width="100"/>
-                <DataGridCheckBoxColumn Header="Sold out"
-                                        ElementStyle="{StaticResource DefaultDataGridCheckBoxStyle}"
-                                        Binding="{Binding SoldOut}"
-                                        Width="80"/>
+                                ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                Binding="{Binding TicketPrice, StringFormat=C}"
+                                Width="100"/>
+                <DataGridCheckBoxColumn Header="Sold"
+                                    ElementStyle="{StaticResource DefaultDataGridCheckBoxStyle}"
+                                    Binding="{Binding SoldOut}"
+                                    Width="60"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- show editor -->
+        <!-- show editor with separate date/time fields -->
         <Grid Grid.Row="1"
-              Grid.Column="1"
-              Margin="20,0,0,0"
-              IsEnabled="{Binding Editor.IsEditing}">
+          Grid.Column="1"
+          Margin="20,0,0,0"
+          IsEnabled="{Binding Editor.IsEditing}">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Name -->
-                <RowDefinition Height="Auto"/> <!-- Start date -->
-                <RowDefinition Height="Auto"/> <!-- Start time -->
-                <RowDefinition Height="Auto"/> <!-- End date -->
-                <RowDefinition Height="Auto"/> <!-- End time -->
-                <RowDefinition Height="Auto"/> <!-- TicketPrice -->
-                <RowDefinition Height="Auto"/> <!-- SoldOut -->
+                <RowDefinition Height="Auto"/>
+                <!-- Name -->
+                <RowDefinition Height="Auto"/>
+                <!-- Start date -->
+                <RowDefinition Height="Auto"/>
+                <!-- Start time -->
+                <RowDefinition Height="Auto"/>
+                <!-- End date -->
+                <RowDefinition Height="Auto"/>
+                <!-- End time -->
+                <RowDefinition Height="Auto"/>
+                <!-- TicketPrice -->
+                <RowDefinition Height="Auto"/>
+                <!-- SoldOut -->
+                <RowDefinition Height="Auto"/>
+                <!-- Error message -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -92,95 +101,77 @@
 
             <!-- Name -->
             <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Name"/>
-
+                   Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Name"/>
             <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                 Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Start date -->
-            <TextBlock Grid.Row="1"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Start date"/>
+            <!-- Start Date -->
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Start date"/>
+            <DatePicker Grid.Row="1" Grid.Column="1"
+                    SelectedDate="{Binding Editor.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <DatePicker Grid.Row="1"
-                        Grid.Column="1"
-                        Style="{StaticResource PopUpWindowDatePickerStyle}"
-                        SelectedDate="{Binding Editor.StartTime, UpdateSourceTrigger=PropertyChanged}"/>
+            <!-- Start Time (text) -->
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Start time"/>
+            <TextBox Grid.Row="2" Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding Editor.StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Start time -->
-            <TextBlock Grid.Row="2"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Start time"/>
+            <!-- End Date -->
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="End date"/>
+            <DatePicker Grid.Row="3" Grid.Column="1"
+                    SelectedDate="{Binding Editor.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <TextBox Grid.Row="2"
-                     Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.StartTimeText, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <!-- End date -->
-            <TextBlock Grid.Row="3"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="End date"/>
-
-            <DatePicker Grid.Row="3"
-                        Grid.Column="1"
-                        Style="{StaticResource PopUpWindowDatePickerStyle}"
-                        SelectedDate="{Binding Editor.EndTime, UpdateSourceTrigger=PropertyChanged}"/>
-
-            <!-- End time -->
-            <TextBlock Grid.Row="4"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="End time"/>
-
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.EndTimeText, UpdateSourceTrigger=PropertyChanged}"/>
+            <!-- End Time (text) -->
+            <TextBlock Grid.Row="4" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="End time"/>
+            <TextBox Grid.Row="4" Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding Editor.EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Ticket Price -->
-            <TextBlock Grid.Row="5"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Ticket Price"/>
-
-            <TextBox Grid.Row="5"
-                     Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.TicketPrice, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="5" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Ticket Price"/>
+            <TextBox Grid.Row="5" Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding Editor.TicketPrice, UpdateSourceTrigger=PropertyChanged}"/>
 
             <!-- Sold Out -->
-            <TextBlock Grid.Row="6"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Sold Out"/>
-
-            <CheckBox Grid.Row="6"
-                      Grid.Column="1"
-                      IsChecked="{Binding Editor.SoldOut, UpdateSourceTrigger=PropertyChanged}"
-                      VerticalAlignment="Center"
-                      Style="{StaticResource PopUpWindowCheckBoxStyle}"/>
+            <TextBlock Grid.Row="6" Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Sold Out"/>
+            <CheckBox Grid.Row="6" Grid.Column="1"
+                  IsChecked="{Binding Editor.SoldOut, UpdateSourceTrigger=PropertyChanged}"
+                  VerticalAlignment="Center"
+                  Style="{StaticResource PopUpWindowCheckBoxStyle}"/>
 
             <!-- Error message row -->
             <TextBlock Grid.Row="7"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                       Text="{Binding Editor.ErrorMessage}"
-                       TextWrapping="Wrap"/>
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                   Text="{Binding Editor.ErrorMessage}"
+                   TextWrapping="Wrap"/>
+
         </Grid>
 
         <!-- CRUD action bar -->
         <shared:CrudActionBarView Grid.Row="2"
-                                  Grid.Column="0"
-                                  Grid.ColumnSpan="2"/>
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"/>
     </Grid>
 
 </UserControl>

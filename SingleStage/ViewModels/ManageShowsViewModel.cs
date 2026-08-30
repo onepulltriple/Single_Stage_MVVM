@@ -53,6 +53,9 @@ namespace SingleStage.ViewModels
 
             Editor = new ShowEditorViewModel();
 
+            // listen for editor changes so command states update when validation state changes
+            Editor.PropertyChanged += (_, _) => UpdateCommandStates();
+
             CreateCommand = new RelayCommand(_ => CreateShow(), CanCreateShow);
             EditCommand = new RelayCommand(_ => EditShow(), CanEditShow);
             SaveCommand = new RelayCommand(_ => SaveShow(), CanSaveShow);
@@ -92,7 +95,8 @@ namespace SingleStage.ViewModels
 
         private async void SaveShow()
         {
-            if (Editor.WorkingCopyShow is null)
+            // additional guard: ensure editor validation passed
+            if (Editor.WorkingCopyShow is null || !Editor.IsValid)
                 return;
 
             if (string.IsNullOrWhiteSpace(Editor.WorkingCopyShow.Name))
@@ -153,7 +157,8 @@ namespace SingleStage.ViewModels
 
         private bool CanSaveShow(object? parameter)
         {
-            return Editor.WorkingCopyShow is not null;
+            // require working copy and valid parsed times, etc.
+            return Editor.WorkingCopyShow is not null && Editor.IsValid;
         }
 
         private bool CanDeleteShow(object? parameter)

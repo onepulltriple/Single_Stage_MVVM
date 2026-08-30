@@ -50,8 +50,8 @@
                                     ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                     Binding="{Binding Name}"
                                     Width="*"/>
-                <!--<DataGridTextColumn Header="Appearance"
-                                    Binding="{Binding Appearance}"
+                <!--<DataGridTextColumn Header="ArtistPerformance"
+                                    Binding="{Binding ArtistPerformance}"
                                     Width="*"/>-->
             </DataGrid.Columns>
         </DataGrid>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SingleStage.Entities;
 
-public partial class ShowAppearance
+public partial class Performance
 {
     public int Id { get; set; }
 
@@ -15,7 +15,7 @@ public partial class ShowAppearance
 
     public int ShowId { get; set; }
 
-    public virtual ICollection<Appearance> Appearances { get; set; } = new List<Appearance>();
+    public virtual ICollection<ArtistPerformance> ArtistPerformances { get; set; } = new List<ArtistPerformance>();
 
     public virtual Show Show { get; set; } = null!;
 }

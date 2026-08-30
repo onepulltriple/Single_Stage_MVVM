@@ -17,7 +17,7 @@ public partial class Show
 
     public bool SoldOut { get; set; }
 
-    public virtual ICollection<ShowAppearance> ShowAppearances { get; set; } = new List<ShowAppearance>();
+    public virtual ICollection<Performance> Performances { get; set; } = new List<Performance>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

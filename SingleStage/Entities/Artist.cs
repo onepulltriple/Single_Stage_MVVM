@@ -9,5 +9,5 @@ public partial class Artist
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<Appearance> Appearances { get; set; } = new List<Appearance>();
+    public virtual ICollection<ArtistPerformance> ArtistPerformances { get; set; } = new List<ArtistPerformance>();
 }

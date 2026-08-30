@@ -15,17 +15,17 @@ public partial class SingleStageMvvmContext : DbContext
     {
     }
 
-    public virtual DbSet<Appearance> Appearances { get; set; }
-
     public virtual DbSet<Artist> Artists { get; set; }
 
+    public virtual DbSet<ArtistPerformance> ArtistPerformances { get; set; }
+
     public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<Performance> Performances { get; set; }
 
     public virtual DbSet<Seat> Seats { get; set; }
 
     public virtual DbSet<Show> Shows { get; set; }
-
-    public virtual DbSet<ShowAppearance> ShowAppearances { get; set; }
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
@@ -37,34 +37,13 @@ public partial class SingleStageMvvmContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Appearance>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Appearan__3213E83F5C2F695B");
-
-            entity.ToTable("Appearance");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.ArtistId).HasColumnName("Artist_id");
-            entity.Property(e => e.RoyaltyAtEnd).HasColumnType("decimal(18, 0)");
-            entity.Property(e => e.RoyaltyUpFront).HasColumnType("decimal(18, 0)");
-            entity.Property(e => e.ShowAppearanceId).HasColumnName("ShowAppearance_id");
-
-            entity.HasOne(d => d.Artist).WithMany(p => p.Appearances)
-                .HasForeignKey(d => d.ArtistId)
-                .HasConstraintName("FK_ParentArtistChildAppearance");
-
-            entity.HasOne(d => d.ShowAppearance).WithMany(p => p.Appearances)
-                .HasForeignKey(d => d.ShowAppearanceId)
-                .HasConstraintName("FK_ParentShowAppearanceChildAppearance");
-        });
-
         modelBuilder.Entity<Artist>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Artist__3213E83FF432A587");
+            entity.HasKey(e => e.Id).HasName("PK__Artist__3213E83FBF545CD8");
 
             entity.ToTable("Artist");
 
-            entity.HasIndex(e => e.Name, "UQ__Artist__737584F65A06BDF0").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Artist__737584F6DE623A9F").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
@@ -72,13 +51,34 @@ public partial class SingleStageMvvmContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<ArtistPerformance>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__ArtistPe__3213E83FAE029D8A");
+
+            entity.ToTable("ArtistPerformance");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ArtistId).HasColumnName("Artist_id");
+            entity.Property(e => e.PerformanceId).HasColumnName("Performance_id");
+            entity.Property(e => e.RoyaltyAtEnd).HasColumnType("decimal(18, 0)");
+            entity.Property(e => e.RoyaltyUpFront).HasColumnType("decimal(18, 0)");
+
+            entity.HasOne(d => d.Artist).WithMany(p => p.ArtistPerformances)
+                .HasForeignKey(d => d.ArtistId)
+                .HasConstraintName("FK_ParentArtistChildArtistPerformance");
+
+            entity.HasOne(d => d.Performance).WithMany(p => p.ArtistPerformances)
+                .HasForeignKey(d => d.PerformanceId)
+                .HasConstraintName("FK_ParentPerformanceChildArtistPerformance");
+        });
+
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3213E83FDD45F866");
+            entity.HasKey(e => e.Id).HasName("PK__Employee__3213E83FC9EAA033");
 
             entity.ToTable("Employee");
 
-            entity.HasIndex(e => e.Username, "UQ__Employee__536C85E4610A01CC").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Employee__536C85E4728EAFE2").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Password)
@@ -89,9 +89,28 @@ public partial class SingleStageMvvmContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<Performance>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Performa__3213E83F43EC31A8");
+
+            entity.ToTable("Performance");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.EndTime).HasColumnType("datetime");
+            entity.Property(e => e.ShowId).HasColumnName("Show_id");
+            entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Show).WithMany(p => p.Performances)
+                .HasForeignKey(d => d.ShowId)
+                .HasConstraintName("FK_ParentShowChildPerformance");
+        });
+
         modelBuilder.Entity<Seat>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Seat__3213E83FDED4506F");
+            entity.HasKey(e => e.Id).HasName("PK__Seat__3213E83FF5585E23");
 
             entity.ToTable("Seat");
 
@@ -104,7 +123,7 @@ public partial class SingleStageMvvmContext : DbContext
 
         modelBuilder.Entity<Show>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Show__3213E83F6D2C66D4");
+            entity.HasKey(e => e.Id).HasName("PK__Show__3213E83F7FDAF752");
 
             entity.ToTable("Show");
 
@@ -117,28 +136,9 @@ public partial class SingleStageMvvmContext : DbContext
             entity.Property(e => e.TicketPrice).HasColumnType("decimal(18, 0)");
         });
 
-        modelBuilder.Entity<ShowAppearance>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__ShowAppe__3213E83FA8157292");
-
-            entity.ToTable("ShowAppearance");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Description)
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.EndTime).HasColumnType("datetime");
-            entity.Property(e => e.ShowId).HasColumnName("Show_id");
-            entity.Property(e => e.StartTime).HasColumnType("datetime");
-
-            entity.HasOne(d => d.Show).WithMany(p => p.ShowAppearances)
-                .HasForeignKey(d => d.ShowId)
-                .HasConstraintName("FK_ParentShowChildShowAppearance");
-        });
-
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Ticket__3213E83F69D244E2");
+            entity.HasKey(e => e.Id).HasName("PK__Ticket__3213E83FC9DE0891");
 
             entity.ToTable("Ticket");
 
@@ -162,11 +162,11 @@ public partial class SingleStageMvvmContext : DbContext
 
         modelBuilder.Entity<Ticketholder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Ticketho__3213E83F5C46502C");
+            entity.HasKey(e => e.Id).HasName("PK__Ticketho__3213E83F9EA94329");
 
             entity.ToTable("Ticketholder");
 
-            entity.HasIndex(e => e.Email, "UQ__Ticketho__A9D105349B658946").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Ticketho__A9D10534B3D2DF87").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Birthdate).HasColumnType("datetime");

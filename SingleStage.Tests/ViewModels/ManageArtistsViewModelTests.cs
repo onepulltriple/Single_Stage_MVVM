@@ -50,7 +50,7 @@ namespace SingleStage.Tests.ViewModels
         }
 
         [Test]
-        public async Task InitialiseAsync_CallsDACGetALLAsync()
+        public async Task InitialiseAsync_CallsDACGetAllAsync()
         {
             // arrange
             _artistDAC.GetAllAsync().Returns(new List<Artist>());
@@ -81,10 +81,10 @@ namespace SingleStage.Tests.ViewModels
             _artistDAC.GetAllAsync().Returns(firstList, secondList);
             // NSubstitute returns firstList on the first call and secondList on the second call
 
-            await _viewModel.InitialiseAsync();
+            await _viewModel.InitialiseAsync(); // first call
 
             // act
-            await _viewModel.InitialiseAsync();
+            await _viewModel.InitialiseAsync(); // second call
 
             // assert
             _viewModel.ListOfArtists.Should().HaveCount(1);
@@ -221,10 +221,10 @@ namespace SingleStage.Tests.ViewModels
         {
             // arrange
             var savedArtists = new List<Artist>
-    {
-        new Artist { Id = 1, Name = "Prince" },
-        new Artist { Id = 2, Name = "The Smiths" }
-    };
+            {
+                new Artist { Id = 1, Name = "Prince" },
+                new Artist { Id = 2, Name = "The Smiths" }
+            };
 
             _artistDAC.GetAllAsync().Returns(savedArtists);
 

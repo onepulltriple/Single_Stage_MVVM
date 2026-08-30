@@ -18,9 +18,9 @@ namespace SingleStage.DAC
         // Set<TEntity>() means: "Give me the DbSet for whatever entity type I provide."
 
         // read all
-        public virtual Task<List<TEntity>> GetAllAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync()
         {
-            return _context.Set<TEntity>()
+            return await _context.Set<TEntity>()
                 .AsNoTracking()
                 .ToListAsync();
         }

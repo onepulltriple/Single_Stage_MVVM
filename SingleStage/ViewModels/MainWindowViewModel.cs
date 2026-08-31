@@ -3,9 +3,6 @@ using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.Windows;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 

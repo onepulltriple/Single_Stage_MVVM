@@ -9,135 +9,144 @@
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManagePerformancesView_Loaded"
              PreviewKeyDown="ManagePerformancesView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="850" d:DesignWidth="1000"
              >
 
-    <Grid Margin="6">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+	<Grid Margin="6">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="3*"/>
+		</Grid.ColumnDefinitions>
 
-        <!-- header -->
-        <TextBlock Grid.Row="0" Grid.Column="0"
+		<!-- header -->
+		<TextBlock Grid.Row="0" Grid.Column="0"
                    Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
                    Text="Manage Performances"/>
 
-        <TextBlock Grid.Row="0" Grid.Column="1"
+		<TextBlock Grid.Row="0" Grid.Column="1"
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Select a performance to edit or create a new one"/>
 
-        <!-- performances list -->
-        <DataGrid Grid.Row="1" Grid.Column="0"
+		<!-- performances list -->
+		<DataGrid Grid.Row="1" Grid.Column="0"
                   Style="{StaticResource DefaultDataGridStyle}"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding ListOfPerformances}"
                   SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Description"
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Description"
                                     ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                     Binding="{Binding Description}"
-                                    Width="*"/>
-                <DataGridTextColumn Header="Start"
+                                    Width="200"/>
+				<DataGridTextColumn Header="Part of Show"
+                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                    Binding="{Binding Show.Name}"
+                                    Width="100"/>
+				<DataGridTextColumn Header="Start"
                                     ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                     Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                     Width="140"/>
-                <DataGridTextColumn Header="End"
+				<DataGridTextColumn Header="End"
                                     ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                     Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                     Width="140"/>
-                <DataGridTextColumn Header="Show"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding Show.Name}"
-                                    Width="200"/>
-            </DataGrid.Columns>
-        </DataGrid>
+			</DataGrid.Columns>
+		</DataGrid>
 
-        <!-- performance editor -->
-        <Grid Grid.Row="1" Grid.Column="1"
+		<!-- performance editor -->
+		<Grid Grid.Row="1" Grid.Column="1"
               Margin="20,0,0,0"
               IsEnabled="{Binding Editor.IsEditing}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0"
+			<TextBlock Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Description"/>
-            <TextBox Grid.Row="0" Grid.Column="1"
+			<TextBox Grid.Row="0" Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding Editor.Description, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0"
+			<TextBlock Grid.Row="1" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Start date"/>
-            <DatePicker Grid.Row="1" Grid.Column="1"
+			<DatePicker Grid.Row="1" Grid.Column="1"
                         SelectedDate="{Binding Editor.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0"
+			<TextBlock Grid.Row="2" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Start time"/>
-            <TextBox Grid.Row="2" Grid.Column="1"
+			<TextBox Grid.Row="2" Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding Editor.StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0"
+			<TextBlock Grid.Row="3" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="End date"/>
-            <DatePicker Grid.Row="3" Grid.Column="1"
+			<DatePicker Grid.Row="3" Grid.Column="1"
                         SelectedDate="{Binding Editor.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <TextBlock Grid.Row="4" Grid.Column="0"
+			<TextBlock Grid.Row="4" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="End time"/>
-            <TextBox Grid.Row="4" Grid.Column="1"
+			<TextBox Grid.Row="4" Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding Editor.EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- show selection -->
-            <StackPanel Grid.Row="5" 
-                        Grid.Column="0" 
-                        Grid.ColumnSpan="2" 
-                        Orientation="Vertical">
-                <TextBlock Style="{StaticResource PopUpWindowBodyTextStyle}" 
-                           Text="Part of show:"
-                           HorizontalAlignment="Left"/>
-                <ComboBox ItemsSource="{Binding ListOfShows}"
-                          SelectedValuePath="Id"
-                          DisplayMemberPath="Name"
-                          SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          />
-                          <!--Style="{StaticResource PopUpWindowComboBoxStyle}"-->
-                <TextBlock Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                           Text="{Binding Editor.ErrorMessage}"
-                           TextWrapping="Wrap"/>
-            </StackPanel>
-        </Grid>
+			<!-- Show -->
+			<TextBlock Grid.Row="5"
+                       Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Part of show"/>
 
-        <!-- CRUD action bar -->
-        <shared:CrudActionBarView Grid.Row="2" 
-                                  Grid.Column="0" 
+			<ComboBox Grid.Row="5"
+                      Grid.Column="1"
+                      ItemsSource="{Binding ListOfShows}"
+                      SelectedValuePath="Id"
+                      DisplayMemberPath="Name"
+                      Style="{StaticResource PopUpWindowComboBoxStyle}"
+                      SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+			<!-- Error message row -->
+			<TextBlock Grid.Row="6"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                       Text="{Binding Editor.ErrorMessage}"
+                       TextWrapping="Wrap"
+                       Margin="20"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"/>
+
+
+		</Grid>
+
+		<!-- CRUD action bar -->
+		<shared:CrudActionBarView Grid.Row="2"
+                                  Grid.Column="0"
                                   Grid.ColumnSpan="2"
                                   />
 
-    </Grid>
+	</Grid>
 </UserControl>

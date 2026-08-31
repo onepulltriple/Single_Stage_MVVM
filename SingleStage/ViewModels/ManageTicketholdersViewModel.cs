@@ -40,8 +40,8 @@ namespace SingleStage.ViewModels
 
         public RelayCommand CreateCommand { get; }
         public RelayCommand EditCommand { get; }
-        public RelayCommand SaveCommand { get; }
-        public RelayCommand DeleteCommand { get; }
+        public AsyncRelayCommand SaveCommand { get; }
+        public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
 
         public ManageTicketholdersViewModel(TicketholderDAC ticketholderDAC)
@@ -53,8 +53,8 @@ namespace SingleStage.ViewModels
 
             CreateCommand   = new RelayCommand(_ => CreateTicketholder(),   CanCreateTicketholder);
             EditCommand     = new RelayCommand(_ => EditTicketholder(),     CanEditTicketholder);
-            SaveCommand     = new RelayCommand(_ => SaveTicketholder(),     CanSaveTicketholder);
-            DeleteCommand   = new RelayCommand(_ => DeleteTicketholder(),   CanDeleteTicketholder);
+            SaveCommand     = new AsyncRelayCommand(_ => SaveTicketholder(),     CanSaveTicketholder);
+            DeleteCommand   = new AsyncRelayCommand(_ => DeleteTicketholder(),   CanDeleteTicketholder);
             CancelCommand   = new RelayCommand(_ => CancelEdit(),           CanCancelEdit);
         }
 
@@ -88,7 +88,7 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private async void SaveTicketholder()
+        private async Task SaveTicketholder()
         {
             if (Editor.WorkingCopyTicketholder is null)
                 return;
@@ -116,7 +116,7 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private async void DeleteTicketholder()
+        private async Task DeleteTicketholder()
         {
             if (SelectedTicketholder is null)
                 return;

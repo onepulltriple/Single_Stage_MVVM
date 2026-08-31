@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace SingleStage.ViewModels
 {
@@ -15,6 +16,7 @@ namespace SingleStage.ViewModels
     // responds to CRUD button clicks
     public class ManageShowsViewModel : ViewModelBase
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly ShowDAC _showDAC;
 
         public ObservableCollection<Show> ListOfShows { get; } = new();
@@ -42,14 +44,17 @@ namespace SingleStage.ViewModels
 
         public RelayCommand CreateCommand { get; }
         public RelayCommand EditCommand { get; }
-        public RelayCommand SaveCommand { get; }
-        public RelayCommand DeleteCommand { get; }
+        public AsyncRelayCommand SaveCommand { get; }
+        public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
+        public AsyncRelayCommand ManagePerformancesCommand { get; }
 
-        public ManageShowsViewModel(ShowDAC showDAC)
+        public ManageShowsViewModel(ShowDAC showDAC, IServiceProvider serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(showDAC);
+            ArgumentNullException.ThrowIfNull(serviceProvider);
             _showDAC = showDAC;
+            _serviceProvider = serviceProvider;
 
             Editor = new ShowEditorViewModel();
 
@@ -58,9 +63,12 @@ namespace SingleStage.ViewModels
 
             CreateCommand = new RelayCommand(_ => CreateShow(), CanCreateShow);
             EditCommand = new RelayCommand(_ => EditShow(), CanEditShow);
-            SaveCommand = new RelayCommand(_ => SaveShow(), CanSaveShow);
-            DeleteCommand = new RelayCommand(_ => DeleteShow(), CanDeleteShow);
+            SaveCommand = new AsyncRelayCommand(_ => SaveShow(), CanSaveShow);
+            DeleteCommand = new AsyncRelayCommand(_ => DeleteShow(), CanDeleteShow);
             CancelCommand = new RelayCommand(_ => CancelEdit(), CanCancelEdit);
+
+            // new command to open the ManagePerformances dialog (saves editor if needed)
+            ManagePerformancesCommand = new AsyncRelayCommand(async _ => await ManagePerformancesAsync(), _ => CanManagePerformances(null));
         }
 
         // loads the list
@@ -93,36 +101,38 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private async void SaveShow()
+        private async Task SaveShow()
         {
-            // additional guard: ensure editor validation passed
-            if (Editor.WorkingCopyShow is null || !Editor.IsValid)
-                return;
-
-            if (string.IsNullOrWhiteSpace(Editor.WorkingCopyShow.Name))
-                return;
-
-            if (Editor.WorkingCopyShow.Id == 0)
-            {
-                // new show
-                await _showDAC.AddAsync(Editor.WorkingCopyShow);
-            }
-            else
-            {
-                // existing show
-                await _showDAC.UpdateAsync(Editor.WorkingCopyShow);
-            }
-
-            await InitialiseAsync();
-
-            Editor.Cancel();
-
-            SelectedShow = null;
-
-            UpdateCommandStates();
+            await SaveEditorIfNeededAsync();
         }
 
-        private async void DeleteShow()
+        //private async Task SaveShow()
+        //{
+        //    // additional guard: ensure editor validation passed
+        //    if (Editor.WorkingCopyShow is null || !Editor.IsValid)
+        //        return;
+
+        //    if (Editor.WorkingCopyShow.Id == 0)
+        //    {
+        //        // new show
+        //        await _showDAC.AddAsync(Editor.WorkingCopyShow);
+        //    }
+        //    else
+        //    {
+        //        // existing show
+        //        await _showDAC.UpdateAsync(Editor.WorkingCopyShow);
+        //    }
+
+        //    await InitialiseAsync();
+
+        //    Editor.Cancel();
+
+        //    SelectedShow = null;
+
+        //    UpdateCommandStates();
+        //}
+
+        private async Task DeleteShow()
         {
             if (SelectedShow is null)
                 return;
@@ -143,6 +153,64 @@ namespace SingleStage.ViewModels
             Editor.Cancel();
 
             UpdateCommandStates();
+        }
+
+        private async Task<Show?> SaveEditorIfNeededAsync()
+        {
+            // if not editing, nothing to save — return currently selected show (may be null)
+            if (!Editor.IsEditing)
+                return SelectedShow;
+
+            // guard: require working copy and valid parsed times, etc.
+            if (Editor.WorkingCopyShow is null || !Editor.IsValid)
+                return null; // invalid => caller will abort
+
+            if (Editor.WorkingCopyShow.Id == 0)
+            {
+                // new show
+                await _showDAC.AddAsync(Editor.WorkingCopyShow);
+            }
+            else
+            {
+                // existing show
+                await _showDAC.UpdateAsync(Editor.WorkingCopyShow);
+            }
+
+            // capture the id of the saved entity, refresh the list, then find it
+            var savedId = Editor.WorkingCopyShow.Id;
+
+            await InitialiseAsync();
+
+            var saved = ListOfShows.FirstOrDefault(s => s.Id == savedId);
+
+            Editor.Cancel();
+
+            SelectedShow = saved;
+
+            UpdateCommandStates();
+
+            return saved;
+        }
+
+        private async Task ManagePerformancesAsync()
+        {
+            // if editing, try save first
+            if (Editor.IsEditing)
+            {
+                var saved = await SaveEditorIfNeededAsync();
+                if (saved is null)
+                    return; // invalid => do not proceed
+            }
+
+            // must have a selected show to manage
+            if (SelectedShow is null)
+                return;
+
+            // resolve and show the ManagePerformancesWindow via DI
+            var window = _serviceProvider.GetRequiredService<Windows.ManagePerformancesWindow>();
+            // set owner to main window if available so it behaves like a dialog
+            window.Owner = System.Windows.Application.Current?.MainWindow;
+            window.ShowDialog();
         }
 
         private bool CanCreateShow(object? arg)
@@ -171,6 +239,12 @@ namespace SingleStage.ViewModels
             return Editor.IsEditing;
         }
 
+        private bool CanManagePerformances(object? parameter)
+        {
+            // allow if a show is selected, or if we are editing and the editor is valid
+            return SelectedShow is not null || (Editor.IsEditing && Editor.IsValid);
+        }
+
         private void UpdateCommandStates()
         {
             CreateCommand.RaiseCanExecuteChanged();
@@ -178,6 +252,8 @@ namespace SingleStage.ViewModels
             SaveCommand.RaiseCanExecuteChanged();
             DeleteCommand.RaiseCanExecuteChanged();
             CancelCommand.RaiseCanExecuteChanged();
+
+            ManagePerformancesCommand.RaiseCanExecuteChanged();
         }
     }
 }

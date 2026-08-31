@@ -9,10 +9,10 @@
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageShowsView_Loaded"
              PreviewKeyDown="ManageShowsView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="650" d:DesignWidth="1000"
              >
 
-    <Grid Margin="6">
+    <Grid Margin="6,6,0,6">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -68,110 +68,132 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- show editor with separate date/time fields -->
         <Grid Grid.Row="1"
-          Grid.Column="1"
-          Margin="20,0,0,0"
-          IsEnabled="{Binding Editor.IsEditing}">
+              Grid.Column="1"
+              Margin="20,0,0,0">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <!-- Name -->
-                <RowDefinition Height="Auto"/>
-                <!-- Start date -->
-                <RowDefinition Height="Auto"/>
-                <!-- Start time -->
-                <RowDefinition Height="Auto"/>
-                <!-- End date -->
-                <RowDefinition Height="Auto"/>
-                <!-- End time -->
-                <RowDefinition Height="Auto"/>
-                <!-- TicketPrice -->
-                <RowDefinition Height="Auto"/>
-                <!-- SoldOut -->
-                <RowDefinition Height="Auto"/>
-                <!-- Error message -->
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            
+            <!-- show editor with separate date/time fields -->
+            <Grid Grid.Row="0"
+                  IsEnabled="{Binding Editor.IsEditing}">
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Name -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Start date -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Start time -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- End date -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- End time -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- TicketPrice -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- SoldOut -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Error message -->
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <!-- Name -->
-            <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Name"/>
-            <TextBox Grid.Row="0"
-                 Grid.Column="1"
-                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Start Date -->
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Start date"/>
-            <DatePicker Grid.Row="1" Grid.Column="1"
-                    SelectedDate="{Binding Editor.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{StaticResource PopUpWindowDatePickerStyle}"/>
+                <!-- Name -->
+                <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Name"/>
+                <TextBox Grid.Row="0"
+                     Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Editor.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Start Time (text) -->
-            <TextBlock Grid.Row="2" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Start time"/>
-            <TextBox Grid.Row="2" Grid.Column="1"
-                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding Editor.StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Start Date -->
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Start date"/>
+                <DatePicker Grid.Row="1" Grid.Column="1"
+                        SelectedDate="{Binding Editor.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <!-- End Date -->
-            <TextBlock Grid.Row="3" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="End date"/>
-            <DatePicker Grid.Row="3" Grid.Column="1"
-                    SelectedDate="{Binding Editor.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Style="{StaticResource PopUpWindowDatePickerStyle}"/>
+                <!-- Start Time (text) -->
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Start time"/>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Editor.StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- End Time (text) -->
-            <TextBlock Grid.Row="4" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="End time"/>
-            <TextBox Grid.Row="4" Grid.Column="1"
-                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding Editor.EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- End Date -->
+                <TextBlock Grid.Row="3" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="End date"/>
+                <DatePicker Grid.Row="3" Grid.Column="1"
+                        SelectedDate="{Binding Editor.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-            <!-- Ticket Price -->
-            <TextBlock Grid.Row="5" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Ticket Price"/>
-            <TextBox Grid.Row="5" Grid.Column="1"
-                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding Editor.TicketPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- End Time (text) -->
+                <TextBlock Grid.Row="4" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="End time"/>
+                <TextBox Grid.Row="4" Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Editor.EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Sold Out -->
-            <TextBlock Grid.Row="6" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Sold Out"/>
-            <CheckBox Grid.Row="6" Grid.Column="1"
-                  IsChecked="{Binding Editor.SoldOut, UpdateSourceTrigger=PropertyChanged}"
-                  VerticalAlignment="Center"
-                  Style="{StaticResource PopUpWindowCheckBoxStyle}"/>
+                <!-- Ticket Price -->
+                <TextBlock Grid.Row="5" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Ticket Price"/>
+                <TextBox Grid.Row="5" Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Editor.TicketPrice, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <!-- Error message row -->
-            <TextBlock Grid.Row="7"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                   Text="{Binding Editor.ErrorMessage}"
-                   TextWrapping="Wrap"/>
+                <!-- Sold Out -->
+                <TextBlock Grid.Row="6" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Sold Out"/>
+                <CheckBox Grid.Row="6" Grid.Column="1"
+                      IsChecked="{Binding Editor.SoldOut, UpdateSourceTrigger=PropertyChanged}"
+                      VerticalAlignment="Center"
+                      Style="{StaticResource PopUpWindowCheckBoxStyle}"/>
 
+                <!-- Error message row -->
+                <TextBlock Grid.Row="7"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                       Text="{Binding Editor.ErrorMessage}"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       />
+            </Grid>
+
+            <!-- To manage performances -->
+            <Button Grid.Row="1"
+                    Margin="6"
+                    Style="{StaticResource CrudActionBarButtonStyle}"
+                    Command="{Binding ManagePerformancesCommand}">
+                    <TextBlock Style="{StaticResource PopUpWindowButtonTextStyle}"
+                               Text="Manage selected show's performances&#xA;(Saves any changes)"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               />
+            </Button>
         </Grid>
 
         <!-- CRUD action bar -->
         <shared:CrudActionBarView Grid.Row="2"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="2"/>
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Margin="0,0,6,0"/>
     </Grid>
 
 </UserControl>

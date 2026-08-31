@@ -25,4 +25,18 @@
         <Setter Property="BorderBrush"              Value="{StaticResource InputBorderBrush}" />
     </Style>
 
+    <Style x:Key="PopUpWindowComboBoxStyle"
+       TargetType="ComboBox"
+       BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="VerticalAlignment"   Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Margin"              Value="6" />
+        <Setter Property="Padding"             Value="6" />
+        <Setter Property="MinWidth"            Value="140" />
+        <Setter Property="Background"          Value="White" />
+        <Setter Property="FontSize"            Value="{StaticResource DefaultFontSize}" />
+        <Setter Property="FontFamily"          Value="{StaticResource DefaultFont}" />
+        <Setter Property="BorderBrush"         Value="{StaticResource InputBorderBrush}" />
+    </Style>
+
 </ResourceDictionary>

@@ -42,6 +42,7 @@
             Grid.Column="0" 
             Text="Username"
             Style="{StaticResource PopUpWindowBodyTextStyle}"
+            HorizontalAlignment="Center"
             />
         <TextBox      
             Grid.Row="1" 
@@ -56,6 +57,7 @@
             Grid.Column="0" 
             Text="Password"
             Style="{StaticResource PopUpWindowBodyTextStyle}"
+            HorizontalAlignment="Center"
             />
         <PasswordBox  
             Grid.Row="2"
@@ -72,6 +74,7 @@
                    Grid.ColumnSpan="2"
                    Text="{Binding DisplayedErrorMessage}"
                    Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                   HorizontalAlignment="Center"
                    />
 
         <!--bottom section-->

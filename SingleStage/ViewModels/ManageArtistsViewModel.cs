@@ -136,9 +136,7 @@ namespace SingleStage.ViewModels
         {
             Editor.Cancel();
 
-            CreateCommand.RaiseCanExecuteChanged();
-            SaveCommand.RaiseCanExecuteChanged();
-            CancelCommand.RaiseCanExecuteChanged();
+            UpdateCommandStates();
         }
 
         private bool CanCreateArtist(object? arg)

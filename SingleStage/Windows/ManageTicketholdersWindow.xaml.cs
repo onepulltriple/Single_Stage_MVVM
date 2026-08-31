@@ -12,7 +12,7 @@ namespace SingleStage.Windows
         {
             InitializeComponent();
             DataContext = viewModel
-                ?? throw new ArgumentException(nameof(viewModel));
+                ?? throw new ArgumentNullException(nameof(viewModel));
         }
     }
 }

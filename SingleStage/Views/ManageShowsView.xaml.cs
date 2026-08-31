@@ -19,7 +19,23 @@ namespace SingleStage.Views
         {
             if (DataContext is ManageShowsViewModel viewModel)
             {
-                await viewModel.InitialiseAsync();
+                try
+                {
+                    await viewModel.InitialiseAsync();
+
+                    // diagnostics: report list counts
+                    System.Diagnostics.Debug.WriteLine($"ManageShowsView: ListOfTicketholders.Count = " +
+                        $"{viewModel.ListOfShows?.Count ?? 0}");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ManageShowsView.InitialiseAsync threw: {ex}");
+                    System.Windows.MessageBox.Show($"Initialise error: {ex.Message}", "Debug");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("ManageShowsView: DataContext is not a ManageShowsViewModel");
             }
         }
 

@@ -13,7 +13,6 @@
              >
     
     <Grid Margin="6">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

@@ -28,9 +28,10 @@ namespace SingleStage
                     services.AddTransient<SingleStageMvvmContext>();
 
                     // DACs - register concrete types (constructor takes SingleStageMvvmContext)
-                    services.AddTransient<IArtistDAC, ArtistDAC>(); // whenever something asks for an IArtistDAC, give it an ArtistDAC
-                    services.AddTransient<ArtistPerformance>();
-                    services.AddTransient<Performance>();
+                    services.AddTransient<IArtistDAC, ArtistDAC>(); 
+                      // whenever something asks for an IArtistDAC, give it an ArtistDAC
+                    //services.AddTransient<ArtistPerformance>();
+                    services.AddTransient<PerformanceDAC>();
                     services.AddTransient<ShowDAC>();
                     services.AddTransient<TicketholderDAC>();
                     services.AddTransient<EmployeeDAC>();
@@ -39,14 +40,16 @@ namespace SingleStage
                     services.AddTransient<EmployeeLoginViewModel>();
                     services.AddTransient<MainWindowViewModel>();
                     services.AddTransient<ManageArtistsViewModel>();
-                    services.AddTransient<ManageTicketholdersViewModel>();
+                    services.AddTransient<ManagePerformancesViewModel>();
                     services.AddTransient<ManageShowsViewModel>();
+                    services.AddTransient<ManageTicketholdersViewModel>();
 
                     services.AddTransient<EmployeeLoginWindow>();
                     services.AddTransient<MainWindow>();
                     services.AddTransient<ManageArtistsWindow>();
-                    services.AddTransient<ManageTicketholdersWindow>();
+                    services.AddTransient<ManagePerformancesWindow>();
                     services.AddTransient<ManageShowsWindow>();
+                    services.AddTransient<ManageTicketholdersWindow>();
                     
                     // depricated
                     services.AddTransient<EmployeeLoginWindowNoMVVM>();

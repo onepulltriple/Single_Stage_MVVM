@@ -28,7 +28,7 @@
     <Style x:Key="PopUpWindowBodyTextStyle"
            TargetType="TextBlock"
            BasedOn="{StaticResource BodyTextStyle}">
-        <Setter Property="HorizontalAlignment"      Value="Center"/>
+        <Setter Property="HorizontalAlignment"      Value="Left"/>
         <Setter Property="VerticalAlignment"        Value="Center"/>
         <Setter Property="Margin"                   Value="6"/>
     </Style>

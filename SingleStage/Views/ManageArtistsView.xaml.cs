@@ -24,7 +24,8 @@ namespace SingleStage.Views
                     await viewModel.InitialiseAsync();
 
                     // diagnostics: report list counts
-                    System.Diagnostics.Debug.WriteLine($"ManageArtistsView: ListOfArtists.Count = {viewModel.ListOfArtists?.Count ?? 0}");
+                    System.Diagnostics.Debug.WriteLine($"ManageArtistsView: ListOfArtists.Count = " +
+                        $"{viewModel.ListOfArtists?.Count ?? 0}");
                 }
                 catch (Exception ex)
                 {

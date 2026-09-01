@@ -1,4 +1,3 @@
-using System.Globalization;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 
@@ -6,12 +5,41 @@ namespace SingleStage.ViewModels.EditorViewModels
 {
     public class PerformanceEditorViewModel : ViewModelBase
     {
-        public Performance? WorkingCopyPerformance { get; private set; }
+        private Performance? _workingCopyPerformance;
+        public Performance? WorkingCopyPerformance
+        {
+            get => _workingCopyPerformance;
+            set
+            {
+                if (_workingCopyPerformance == value)
+                    return;
 
-        private DateTime? _startDate;
-        private string _startTimeText = string.Empty;
-        private DateTime? _endDate;
-        private string _endTimeText = string.Empty;
+                _workingCopyPerformance = value;
+
+                OnPropertyChanged(nameof(WorkingCopyPerformance));
+
+                // sync textual/date fields from working copy to this view model
+                if (_workingCopyPerformance is not null)
+                {
+                    StartDate = _workingCopyPerformance.StartTime.Date;
+                    StartTimeText = _workingCopyPerformance.StartTime.ToString("HH:mm");
+                    EndDate = _workingCopyPerformance.EndTime.Date;
+                    EndTimeText = _workingCopyPerformance.EndTime.ToString("HH:mm");
+                }
+                else
+                {
+                    StartDate = null;
+                    StartTimeText = string.Empty;
+                    EndDate = null;
+                    EndTimeText = string.Empty;
+                }
+
+                OnPropertyChanged(nameof(Description));
+                OnPropertyChanged(nameof(ShowId));
+                Validate();
+                OnPropertyChanged(nameof(IsEditing));
+            }
+        }
 
         public bool IsEditing => WorkingCopyPerformance is not null;
 
@@ -20,176 +48,189 @@ namespace SingleStage.ViewModels.EditorViewModels
             get => WorkingCopyPerformance?.Description ?? string.Empty;
             set
             {
-                if (WorkingCopyPerformance is null) return;
-                if (WorkingCopyPerformance.Description == value) return;
+                if (WorkingCopyPerformance is null) 
+                    return;
+
+                if (WorkingCopyPerformance.Description == value) 
+                    return;
+
                 WorkingCopyPerformance.Description = value;
+
                 OnPropertyChanged(nameof(Description));
-                OnPropertyChanged(nameof(IsValid));
+                Validate();
             }
         }
 
+        // Date parts (DatePicker bound here)
+        private DateTime? _startDate;
         public DateTime? StartDate
         {
             get => _startDate;
             set
             {
-                if (_startDate == value) return;
+                if (_startDate == value)
+                    return;
+
                 _startDate = value;
                 OnPropertyChanged(nameof(StartDate));
-                RecomputeTimes();
-                OnPropertyChanged(nameof(IsValid));
+                UpdateWorkingCopyDateTimes();
+                Validate();
             }
         }
 
+        // textual time inputs (user types time like "19:00" or "7:30 PM")
+        private string _startTimeText = string.Empty;
         public string StartTimeText
         {
             get => _startTimeText;
             set
             {
-                if (_startTimeText == value) return;
+                if (_startTimeText == value)
+                    return;
+
                 _startTimeText = value;
                 OnPropertyChanged(nameof(StartTimeText));
-                RecomputeTimes();
-                OnPropertyChanged(nameof(IsValid));
+                UpdateWorkingCopyDateTimes();
+                Validate();
             }
         }
 
+        private DateTime? _endDate;
         public DateTime? EndDate
         {
             get => _endDate;
             set
             {
-                if (_endDate == value) return;
+                if (_endDate == value)
+                    return;
+
                 _endDate = value;
                 OnPropertyChanged(nameof(EndDate));
-                RecomputeTimes();
-                OnPropertyChanged(nameof(IsValid));
+                UpdateWorkingCopyDateTimes();
+                Validate();
             }
         }
 
+        private string _endTimeText = string.Empty;
         public string EndTimeText
         {
             get => _endTimeText;
             set
             {
-                if (_endTimeText == value) return;
+                if (_endTimeText == value)
+                    return;
+
                 _endTimeText = value;
                 OnPropertyChanged(nameof(EndTimeText));
-                RecomputeTimes();
-                OnPropertyChanged(nameof(IsValid));
+                UpdateWorkingCopyDateTimes();
+                Validate();
             }
         }
+
+        // read-only accessors reflecting the combined DateTime values (updated by Validate when valid)
+        public DateTime? StartTime => WorkingCopyPerformance?.StartTime;
+        public DateTime? EndTime => WorkingCopyPerformance?.EndTime;
 
         public int ShowId
         {
             get => WorkingCopyPerformance?.ShowId ?? 0;
             set
             {
-                if (WorkingCopyPerformance is null) return;
-                if (WorkingCopyPerformance.ShowId == value) return;
+                if (WorkingCopyPerformance is null) 
+                    return;
+
+                if (WorkingCopyPerformance.ShowId == value) 
+                    return;
+
                 WorkingCopyPerformance.ShowId = value;
                 OnPropertyChanged(nameof(ShowId));
             }
         }
 
-        public string ErrorMessage { get; private set; } = string.Empty;
-
-        public bool IsValid
+        // validation state & message
+        private string _errorMessage = string.Empty;
+        public string ErrorMessage
         {
-            get
+            get => _errorMessage;
+            private set
             {
-                if (WorkingCopyPerformance is null)
-                    return false;
+                if (_errorMessage == value)
+                    return;
 
-                if (string.IsNullOrWhiteSpace(WorkingCopyPerformance.Description))
-                {
-                    ErrorMessage = "Description is required.";
-                    return false;
-                }
-
-                if (!TryGetCombinedDateTime(out DateTime s, out DateTime e))
-                {
-                    ErrorMessage = "Start/End date or time invalid.";
-                    return false;
-                }
-
-                if (e <= s)
-                {
-                    ErrorMessage = "End must be after Start.";
-                    return false;
-                }
-
-                ErrorMessage = string.Empty;
-                return true;
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
             }
         }
 
-        public void BeginCreate()
+        public bool IsValid { get; private set; } = false;
+
+        // Try to parse date + textual times, set WorkingCopyPerformance.StartTime/EndTime when valid
+        private void Validate()
         {
-            WorkingCopyPerformance = new Performance
-            {
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(1),
-                Description = string.Empty,
-                ShowId = 0
-            };
-
-            _startDate = WorkingCopyPerformance.StartTime.Date;
-            _startTimeText = WorkingCopyPerformance.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-            _endDate = WorkingCopyPerformance.EndTime.Date;
-            _endTimeText = WorkingCopyPerformance.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-
-            OnAllEditorPropertiesChanged();
-        }
-
-        public void BeginEdit(Performance source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
-
-            // shallow clone to avoid editing the original instance directly
-            WorkingCopyPerformance = new Performance
-            {
-                Id = source.Id,
-                Description = source.Description,
-                StartTime = source.StartTime,
-                EndTime = source.EndTime,
-                ShowId = source.ShowId
-            };
-
-            _startDate = WorkingCopyPerformance.StartTime.Date;
-            _startTimeText = WorkingCopyPerformance.StartTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-            _endDate = WorkingCopyPerformance.EndTime.Date;
-            _endTimeText = WorkingCopyPerformance.EndTime.ToString("HH:mm", CultureInfo.InvariantCulture);
-
-            OnAllEditorPropertiesChanged();
-        }
-
-        public void Cancel()
-        {
-            WorkingCopyPerformance = null;
-            _startDate = null;
-            _endDate = null;
-            _startTimeText = string.Empty;
-            _endTimeText = string.Empty;
             ErrorMessage = string.Empty;
-            OnAllEditorPropertiesChanged();
-        }
+            IsValid = false;
 
-        private void OnAllEditorPropertiesChanged()
-        {
-            OnPropertyChanged(nameof(WorkingCopyPerformance));
-            OnPropertyChanged(nameof(Description));
-            OnPropertyChanged(nameof(StartDate));
-            OnPropertyChanged(nameof(StartTimeText));
-            OnPropertyChanged(nameof(EndDate));
-            OnPropertyChanged(nameof(EndTimeText));
-            OnPropertyChanged(nameof(ShowId));
-            OnPropertyChanged(nameof(IsEditing));
-            OnPropertyChanged(nameof(IsValid));
-            OnPropertyChanged(nameof(ErrorMessage));
-        }
+            if (WorkingCopyPerformance is null)
+            {
+                RaiseValidityChanged();
+                return;
+            }
 
-        private void RecomputeTimes()
+            if (string.IsNullOrWhiteSpace(WorkingCopyPerformance.Description))
+            {
+                ErrorMessage = "Description is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (StartDate is null)
+            {
+                ErrorMessage = "Start date is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (EndDate is null)
+            {
+                ErrorMessage = "End date is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (!DateTimeHelper.TryCombineDateAndTime(StartDate, StartTimeText, out DateTime combinedStart))
+            {
+                ErrorMessage = "Invalid start time format.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (!DateTimeHelper.TryCombineDateAndTime(EndDate, EndTimeText, out DateTime combinedEnd))
+            {
+                ErrorMessage = "Invalid end time format.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (!(combinedStart < combinedEnd))
+            {
+                ErrorMessage = "Start must be before End.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            // valid: write back to working copy
+            WorkingCopyPerformance.StartTime = combinedStart;
+            WorkingCopyPerformance.EndTime = combinedEnd;
+
+            OnPropertyChanged(nameof(StartTime));
+            OnPropertyChanged(nameof(EndTime));
+
+            ErrorMessage = string.Empty;
+            IsValid = true;
+            RaiseValidityChanged();
+        }
+        
+        private void UpdateWorkingCopyDateTimes()
         {
             if (WorkingCopyPerformance is null)
                 return;
@@ -205,25 +246,50 @@ namespace SingleStage.ViewModels.EditorViewModels
             }
 
             OnPropertyChanged(nameof(WorkingCopyPerformance));
+            OnPropertyChanged(nameof(StartTime));
+            OnPropertyChanged(nameof(EndTime));
             OnPropertyChanged(nameof(ErrorMessage));
         }
 
-        private bool TryGetCombinedDateTime(out DateTime start, out DateTime end)
+        private void RaiseValidityChanged()
         {
-            start = default;
-            end = default;
-
-            if (WorkingCopyPerformance is null)
-                return false;
-
-            if (!DateTimeHelper.TryCombineDateAndTime(_startDate, _startTimeText, out start))
-                return false;
-
-            if (!DateTimeHelper.TryCombineDateAndTime(_endDate, _endTimeText, out end))
-                return false;
-
-            return true;
+            OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(ErrorMessage));
         }
 
+        public void BeginCreate()
+        {
+            // default: tonight 19:00 - next 21:00
+            DateTime defaultStart = DateTime.Today.AddHours(19);
+            DateTime defaultEnd = DateTime.Today.AddHours(21);
+
+            this.WorkingCopyPerformance = new Performance
+            {
+                StartTime = defaultStart,
+                EndTime = defaultEnd,
+                Description = string.Empty,
+                ShowId = 0
+            };
+        }
+
+        public void BeginEdit(Performance performance)
+        {
+            // shallow clone to avoid editing the original instance directly
+            this.WorkingCopyPerformance = new Performance
+            {
+                Id = performance.Id,
+                Description = performance.Description,
+                StartTime = performance.StartTime,
+                EndTime = performance.EndTime,
+                ShowId = performance.ShowId
+            };
+        }
+
+        public void Cancel()
+        {
+            this.WorkingCopyPerformance = null;
+            ErrorMessage = string.Empty;
+            IsValid = false;
+        }
     }
 }

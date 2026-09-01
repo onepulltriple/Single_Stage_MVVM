@@ -20,7 +20,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 OnPropertyChanged(nameof(WorkingCopyShow));
 
-                // sync textual/date fields from working copy
+                // sync textual/date fields from working copy to this view model
                 if (_workingCopyShow is not null)
                 {
                     StartDate = _workingCopyShow.StartTime.Date;
@@ -75,21 +75,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 _startDate = value;
                 OnPropertyChanged(nameof(StartDate));
-                Validate();
-            }
-        }
-
-        private DateTime? _endDate;
-        public DateTime? EndDate
-        {
-            get => _endDate;
-            set
-            {
-                if (_endDate == value)
-                    return;
-
-                _endDate = value;
-                OnPropertyChanged(nameof(EndDate));
+                UpdateWorkingCopyDateTimes();
                 Validate();
             }
         }
@@ -106,6 +92,23 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 _startTimeText = value;
                 OnPropertyChanged(nameof(StartTimeText));
+                UpdateWorkingCopyDateTimes();
+                Validate();
+            }
+        }
+
+        private DateTime? _endDate;
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set
+            {
+                if (_endDate == value)
+                    return;
+
+                _endDate = value;
+                OnPropertyChanged(nameof(EndDate));
+                UpdateWorkingCopyDateTimes();
                 Validate();
             }
         }
@@ -121,6 +124,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 _endTimeText = value;
                 OnPropertyChanged(nameof(EndTimeText));
+                UpdateWorkingCopyDateTimes();
                 Validate();
             }
         }
@@ -244,6 +248,27 @@ namespace SingleStage.ViewModels.EditorViewModels
             RaiseValidityChanged();
         }
 
+        private void UpdateWorkingCopyDateTimes()
+        {
+            if (WorkingCopyShow is null)
+                return;
+
+            if (DateTimeHelper.TryCombineDateAndTime(_startDate, _startTimeText, out DateTime start))
+            {
+                WorkingCopyShow.StartTime = start;
+            }
+
+            if (DateTimeHelper.TryCombineDateAndTime(_endDate, _endTimeText, out DateTime end))
+            {
+                WorkingCopyShow.EndTime = end;
+            }
+
+            OnPropertyChanged(nameof(WorkingCopyShow));
+            OnPropertyChanged(nameof(StartTime));
+            OnPropertyChanged(nameof(EndTime));
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
+
         private void RaiseValidityChanged()
         {
             OnPropertyChanged(nameof(IsValid));
@@ -266,6 +291,7 @@ namespace SingleStage.ViewModels.EditorViewModels
             };
         }
 
+        // shallow clone to avoid editing the original instance directly
         public void BeginEdit(Show show)
         {
             this.WorkingCopyShow = new Show

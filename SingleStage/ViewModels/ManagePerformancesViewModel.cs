@@ -59,6 +59,7 @@ namespace SingleStage.ViewModels
             CancelCommand = new RelayCommand(_ => CancelEdit(), _ => CanCancelEdit(null));
         }
 
+        // loads the lists
         public async Task InitialiseAsync()
         {
             var performances = await _performanceDAC.GetAllAsync();
@@ -66,16 +67,16 @@ namespace SingleStage.ViewModels
 
             ListOfPerformances.Clear();
 
-            foreach (var p in performances.OrderBy(p => p.StartTime))
+            foreach (Performance performance in performances.OrderBy(performance => performance.StartTime))
             {
-                ListOfPerformances.Add(p);
+                ListOfPerformances.Add(performance);
             }
 
             ListOfShows.Clear();
 
-            foreach (var s in shows.OrderBy(s => s.StartTime))
+            foreach (Show show in shows.OrderBy(show => show.StartTime))
             {
-                ListOfShows.Add(s);
+                ListOfShows.Add(show);
             }
         }
 
@@ -103,10 +104,12 @@ namespace SingleStage.ViewModels
 
             if (Editor.WorkingCopyPerformance.Id == 0)
             {
+                // new performance
                 await _performanceDAC.AddAsync(Editor.WorkingCopyPerformance);
             }
             else
             {
+                // existing performance
                 await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
             }
 
@@ -131,6 +134,8 @@ namespace SingleStage.ViewModels
             Editor.Cancel();
 
             SelectedPerformance = null;
+
+            UpdateCommandStates();
         }
 
         private void CancelEdit()
@@ -140,11 +145,31 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-        private bool CanCreatePerformance(object? _) => !Editor.IsEditing;
-        private bool CanEditPerformance(object? _) => SelectedPerformance is not null;
-        private bool CanSavePerformance(object? _) => Editor.WorkingCopyPerformance is not null && Editor.IsValid;
-        private bool CanDeletePerformance(object? _) => SelectedPerformance is not null;
-        private bool CanCancelEdit(object? _) => Editor.IsEditing;
+        private bool CanCreatePerformance(object? parameter)
+        {
+            return !Editor.IsEditing;
+        } 
+
+        private bool CanEditPerformance(object? parameter)
+        {
+            return SelectedPerformance is not null;
+        } 
+
+        private bool CanSavePerformance(object? parameter)
+        {
+            // require working copy and valid parsed times, etc.
+            return Editor.WorkingCopyPerformance is not null && Editor.IsValid;
+        }
+
+        private bool CanDeletePerformance(object? parameter)
+        {
+            return SelectedPerformance is not null;
+        }
+
+        private bool CanCancelEdit(object? parameter)
+        {
+            return Editor.IsEditing;
+        }
 
         private void UpdateCommandStates()
         {

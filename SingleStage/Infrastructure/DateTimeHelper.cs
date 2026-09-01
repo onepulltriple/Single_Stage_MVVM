@@ -15,11 +15,7 @@ namespace SingleStage.Infrastructure
             if (TimeSpan.TryParse(text.Trim(), out time))
                 return true;
 
-            if (DateTime.TryParse(
-                    text.Trim(),
-                    CultureInfo.CurrentCulture,
-                    DateTimeStyles.None,
-                    out DateTime dateTime))
+            if (DateTime.TryParse(text.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dateTime))
             {
                 time = dateTime.TimeOfDay;
                 return true;

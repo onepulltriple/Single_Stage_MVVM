@@ -19,6 +19,8 @@
             <MenuItem Header="_Manage">
                 <MenuItem Header="_Shows"
                           Command="{Binding ManageShowsCommand}"/>
+                <MenuItem Header="_Performances"
+                          Command="{Binding ManagePerformancesCommand}"/>
                 <MenuItem Header="_Artists"
                           Command="{Binding ManageArtistsCommand}"/>
                 <MenuItem Header="_Employees"

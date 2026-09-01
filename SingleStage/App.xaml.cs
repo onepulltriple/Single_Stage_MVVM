@@ -54,6 +54,7 @@ namespace SingleStage
 
                     // Infrastructure and Services
                     services.AddTransient<ShowScheduleValidator>();
+                    services.AddTransient<PerformanceScheduleValidator>();
 
                     // depricated
                     services.AddTransient<EmployeeLoginWindowNoMVVM>();

@@ -10,10 +10,9 @@ namespace SingleStage.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private readonly IServiceProvider _serviceProvider; 
+
         private readonly ShowDAC _showDAC;
-
-        private readonly IServiceProvider _serviceProvider; // used to resolve windows on demand
-
 
         public CalendarWeekViewModel? CalendarWeekViewModel { get; private set; }
 
@@ -28,6 +27,8 @@ namespace SingleStage.ViewModels
 
         // menu commands
         public ICommand ManageShowsCommand { get; }
+        
+        public ICommand ManagePerformancesCommand { get; }
 
         public ICommand ManageArtistsCommand { get; }
 
@@ -62,7 +63,10 @@ namespace SingleStage.ViewModels
 
             #region menu commands
             ManageShowsCommand =
-                ManageShowsCommand = new RelayCommand(async _ => await ManageShowsAsync());
+                new RelayCommand(async _ => await ManageShowsAsync());
+
+            ManagePerformancesCommand =
+                new RelayCommand(async _ => await ManagePerformancesAsync());
 
             ManageArtistsCommand =
                 new RelayCommand(ManageArtists);
@@ -157,6 +161,22 @@ namespace SingleStage.ViewModels
 
             // ensure the window's DataContext is the viewModel so InitialiseAsync runs in the view's Loaded handler
             var viewModel = _serviceProvider.GetRequiredService<ManageShowsViewModel>();
+            window.DataContext = viewModel;
+
+            // show dialog (blocking)
+            window.ShowDialog();
+            // when it closes, refresh calendar data
+
+            // reload shows and update calendar
+            await InitializeAsync();
+        }
+
+        private async Task ManagePerformancesAsync()
+        {
+            var window = _serviceProvider.GetRequiredService<ManagePerformancesWindow>();
+
+            // ensure the window's DataContext is the viewModel so InitialiseAsync runs in the view's Loaded handler
+            var viewModel = _serviceProvider.GetRequiredService<ManagePerformancesViewModel>();
             window.DataContext = viewModel;
 
             // show dialog (blocking)

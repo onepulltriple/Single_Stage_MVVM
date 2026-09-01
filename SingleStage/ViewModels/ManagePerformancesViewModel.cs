@@ -10,6 +10,8 @@ namespace SingleStage.ViewModels
     {
         private readonly PerformanceDAC _performanceDAC;
         private readonly ShowDAC _showDAC;
+        private readonly PerformanceScheduleValidator _performanceScheduleValidator;
+
 
         public ObservableCollection<Performance> ListOfPerformances { get; } = new();
         public ObservableCollection<Show> ListOfShows { get; } = new();
@@ -34,6 +36,34 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private string _scheduleErrorMessage = string.Empty;
+
+        public string ScheduleErrorMessage
+        {
+            get => _scheduleErrorMessage;
+            private set
+            {
+                if (_scheduleErrorMessage == value)
+                    return;
+
+                _scheduleErrorMessage = value;
+                OnPropertyChanged(nameof(ScheduleErrorMessage));
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ScheduleErrorMessage))
+                    return ScheduleErrorMessage;
+
+                return Editor.ErrorMessage;
+            }
+        }
+
+
         public PerformanceEditorViewModel Editor { get; }
 
         public RelayCommand CreateCommand { get; }
@@ -42,15 +72,25 @@ namespace SingleStage.ViewModels
         public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
 
-        public ManagePerformancesViewModel(PerformanceDAC performanceDAC, ShowDAC showDAC)
+        public ManagePerformancesViewModel(PerformanceDAC performanceDAC, ShowDAC showDAC, PerformanceScheduleValidator performanceScheduleValidator)
         {
             ArgumentNullException.ThrowIfNull(performanceDAC);
             ArgumentNullException.ThrowIfNull(showDAC);
+            ArgumentNullException.ThrowIfNull(performanceScheduleValidator);
 
             _performanceDAC = performanceDAC;
             _showDAC = showDAC;
+            _performanceScheduleValidator = performanceScheduleValidator;
 
             Editor = new PerformanceEditorViewModel();
+            
+            Editor.PropertyChanged += (_, _) =>
+            {
+                //ScheduleErrorMessage = string.Empty;
+                // the schedule error should persist even while the user modifies the editor
+                OnPropertyChanged(nameof(ErrorMessage));
+                UpdateCommandStates();
+            };
 
             CreateCommand = new RelayCommand(_ => CreatePerformance(), _ => CanCreatePerformance(null));
             EditCommand = new RelayCommand(_ => EditPerformance(), _ => CanEditPerformance(null));
@@ -82,6 +122,8 @@ namespace SingleStage.ViewModels
 
         private void CreatePerformance()
         {
+            ScheduleErrorMessage = string.Empty;
+
             Editor.BeginCreate();
 
             UpdateCommandStates();
@@ -92,24 +134,62 @@ namespace SingleStage.ViewModels
             if (SelectedPerformance is null) 
                 return;
 
+            ScheduleErrorMessage = string.Empty;
+
             Editor.BeginEdit(SelectedPerformance);
 
             UpdateCommandStates();
         }
 
+        //private async Task SavePerformance()
+        //{
+        //    if (Editor.WorkingCopyPerformance is null || !Editor.IsValid)
+        //        return;
+
+        //    if (Editor.WorkingCopyPerformance.Id == 0)
+        //    {
+        //        // new performance
+        //        await _performanceDAC.AddAsync(Editor.WorkingCopyPerformance);
+        //    }
+        //    else
+        //    {
+        //        // existing performance
+        //        await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
+        //    }
+
+        //    await InitialiseAsync();
+
+        //    Editor.Cancel();
+
+        //    SelectedPerformance = null;
+
+        //    UpdateCommandStates();
+        //}
+
         private async Task SavePerformance()
         {
+            ScheduleErrorMessage = string.Empty;
+
             if (Editor.WorkingCopyPerformance is null || !Editor.IsValid)
                 return;
 
+            string? validationError = _performanceScheduleValidator.Validate(
+                Editor.WorkingCopyPerformance,
+                ListOfPerformances,
+                ListOfShows);
+
+            if (validationError is not null)
+            {
+                ScheduleErrorMessage = validationError;
+                return;
+            }
+
             if (Editor.WorkingCopyPerformance.Id == 0)
             {
-                // new performance
                 await _performanceDAC.AddAsync(Editor.WorkingCopyPerformance);
             }
             else
             {
-                // existing performance
                 await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
             }
 
@@ -121,6 +201,7 @@ namespace SingleStage.ViewModels
 
             UpdateCommandStates();
         }
+
 
         private async Task DeletePerformance()
         {
@@ -140,6 +221,8 @@ namespace SingleStage.ViewModels
 
         private void CancelEdit()
         {
+            ScheduleErrorMessage = string.Empty;
+
             Editor.Cancel();
 
             UpdateCommandStates();

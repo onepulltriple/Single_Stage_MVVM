@@ -144,6 +144,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
                 WorkingCopyPerformance.ShowId = value;
                 OnPropertyChanged(nameof(ShowId));
+                Validate();
             }
         }
 
@@ -179,6 +180,13 @@ namespace SingleStage.ViewModels.EditorViewModels
             if (string.IsNullOrWhiteSpace(WorkingCopyPerformance.Description))
             {
                 ErrorMessage = "Description is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (ShowId == 0)
+            {
+                ErrorMessage = "A show must be selected, since a performance is always part of a show.";
                 RaiseValidityChanged();
                 return;
             }

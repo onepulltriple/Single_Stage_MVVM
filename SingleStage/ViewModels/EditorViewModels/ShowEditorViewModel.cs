@@ -1,5 +1,5 @@
-﻿using System;
-using SingleStage.Entities;
+﻿using SingleStage.Entities;
+using SingleStage.Infrastructure;
 
 namespace SingleStage.ViewModels.EditorViewModels
 {
@@ -211,23 +211,19 @@ namespace SingleStage.ViewModels.EditorViewModels
                 return;
             }
 
-            if (!TryParseTime(StartTimeText, out TimeSpan startTimeOfDay))
+            if (!DateTimeHelper.TryCombineDateAndTime(StartDate, StartTimeText, out DateTime combinedStart))
             {
                 ErrorMessage = "Invalid start time format.";
                 RaiseValidityChanged();
                 return;
             }
 
-            if (!TryParseTime(EndTimeText, out TimeSpan endTimeOfDay))
+            if (!DateTimeHelper.TryCombineDateAndTime(EndDate, EndTimeText, out DateTime combinedEnd))
             {
                 ErrorMessage = "Invalid end time format.";
                 RaiseValidityChanged();
                 return;
             }
-
-            // combine date + time
-            DateTime combinedStart = StartDate.Value.Date + startTimeOfDay;
-            DateTime combinedEnd = EndDate.Value.Date + endTimeOfDay;
 
             if (!(combinedStart < combinedEnd))
             {
@@ -246,27 +242,6 @@ namespace SingleStage.ViewModels.EditorViewModels
             ErrorMessage = string.Empty;
             IsValid = true;
             RaiseValidityChanged();
-        }
-
-        // parse flexible time strings to TimeSpan
-        private bool TryParseTime(string timeText, out TimeSpan result)
-        {
-            result = default;
-
-            if (string.IsNullOrWhiteSpace(timeText))
-                return false;
-
-            // Accept "HH:mm", "h:mm tt", etc.
-            if (TimeSpan.TryParse(timeText, out result))
-                return true;
-
-            if (DateTime.TryParse(timeText, out DateTime dt))
-            {
-                result = dt.TimeOfDay;
-                return true;
-            }
-
-            return false;
         }
 
         private void RaiseValidityChanged()

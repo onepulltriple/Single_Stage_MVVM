@@ -38,12 +38,12 @@
 
         <!-- show list (chronological, formatted without year) -->
         <DataGrid Grid.Row="1"
-              Grid.Column="0"
-              Style="{StaticResource DefaultDataGridStyle}"
-              IsReadOnly="True"
-              AutoGenerateColumns="False"
-              ItemsSource="{Binding ListOfShows}"
-              SelectedItem="{Binding SelectedShow, Mode=TwoWay}">
+                  Grid.Column="0"
+                  Style="{StaticResource DefaultDataGridStyle}"
+                  IsReadOnly="True"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding ListOfShows}"
+                  SelectedItem="{Binding SelectedShow, Mode=TwoWay}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name"
                                 ElementStyle="{StaticResource DefaultDataGridTextStyle}"

@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel;
 using System.Globalization;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
@@ -193,44 +191,21 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         private void RecomputeTimes()
         {
-            if (WorkingCopyPerformance is null) return;
+            if (WorkingCopyPerformance is null)
+                return;
 
-            if (TryParseTime(_startTimeText, out TimeSpan? startT) && _startDate.HasValue)
+            if (DateTimeHelper.TryCombineDateAndTime(_startDate, _startTimeText, out DateTime start))
             {
-                WorkingCopyPerformance.StartTime = _startDate.Value.Date + startT.Value;
+                WorkingCopyPerformance.StartTime = start;
             }
 
-            if (TryParseTime(_endTimeText, out TimeSpan? endT) && _endDate.HasValue)
+            if (DateTimeHelper.TryCombineDateAndTime(_endDate, _endTimeText, out DateTime end))
             {
-                WorkingCopyPerformance.EndTime = _endDate.Value.Date + endT.Value;
+                WorkingCopyPerformance.EndTime = end;
             }
 
             OnPropertyChanged(nameof(WorkingCopyPerformance));
             OnPropertyChanged(nameof(ErrorMessage));
-        }
-
-        private static bool TryParseTime(string text, out TimeSpan? time)
-        {
-            time = null;
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
-            if (TimeSpan.TryParseExact(text.Trim(), "h\\:mm", CultureInfo.InvariantCulture, out var ts) ||
-                TimeSpan.TryParseExact(text.Trim(), "hh\\:mm", CultureInfo.InvariantCulture, out ts) ||
-                TimeSpan.TryParse(text.Trim(), out ts))
-            {
-                time = ts;
-                return true;
-            }
-
-            // try parsing as DateTime then take time portion
-            if (DateTime.TryParse(text.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out var dt))
-            {
-                time = dt.TimeOfDay;
-                return true;
-            }
-
-            return false;
         }
 
         private bool TryGetCombinedDateTime(out DateTime start, out DateTime end)
@@ -238,15 +213,17 @@ namespace SingleStage.ViewModels.EditorViewModels
             start = default;
             end = default;
 
-            if (WorkingCopyPerformance is null) return false;
-            if (!_startDate.HasValue || !_endDate.HasValue) return false;
+            if (WorkingCopyPerformance is null)
+                return false;
 
-            if (!TryParseTime(_startTimeText, out var startT)) return false;
-            if (!TryParseTime(_endTimeText, out var endT)) return false;
+            if (!DateTimeHelper.TryCombineDateAndTime(_startDate, _startTimeText, out start))
+                return false;
 
-            start = _startDate.Value.Date + startT.Value;
-            end = _endDate.Value.Date + endT.Value;
+            if (!DateTimeHelper.TryCombineDateAndTime(_endDate, _endTimeText, out end))
+                return false;
+
             return true;
         }
+
     }
 }

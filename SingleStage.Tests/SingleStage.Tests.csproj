@@ -30,7 +30,6 @@
   <ItemGroup>
     <Folder Include="Calendar\" />
     <Folder Include="DAC\" />
-    <Folder Include="Infrastructure\" />
   </ItemGroup>
 
 </Project>

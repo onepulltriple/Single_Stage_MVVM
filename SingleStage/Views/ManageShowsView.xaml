@@ -170,7 +170,7 @@
                        Grid.Column="0"
                        Grid.ColumnSpan="2"
                        Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                       Text="{Binding Editor.ErrorMessage}"
+                       Text="{Binding ErrorMessage}"
                        TextWrapping="Wrap"
                        HorizontalAlignment="Center"
                        />

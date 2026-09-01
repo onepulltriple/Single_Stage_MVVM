@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using SingleStage.DAC;
 using SingleStage.DAC.Interfaces;
 using SingleStage.Entities;
+using SingleStage.Infrastructure;
 using SingleStage.ViewModels;
 using SingleStage.Windows;
 using System.Windows;
@@ -50,7 +51,10 @@ namespace SingleStage
                     services.AddTransient<ManagePerformancesWindow>();
                     services.AddTransient<ManageShowsWindow>();
                     services.AddTransient<ManageTicketholdersWindow>();
-                    
+
+                    // Infrastructure and Services
+                    services.AddTransient<ShowScheduleValidator>();
+
                     // depricated
                     services.AddTransient<EmployeeLoginWindowNoMVVM>();
                 })

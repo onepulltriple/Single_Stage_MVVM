@@ -3,9 +3,7 @@ using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
 namespace SingleStage.ViewModels
 {
@@ -14,10 +12,12 @@ namespace SingleStage.ViewModels
     // owns the currently selected row
     // owns the commands for the screen
     // responds to CRUD button clicks
+    // check validity in relation to other shows
     public class ManageShowsViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ShowDAC _showDAC;
+        private readonly ShowScheduleValidator _showScheduleValidator;
 
         public ObservableCollection<Show> ListOfShows { get; } = new();
 
@@ -40,6 +40,35 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private string _scheduleErrorMessage = string.Empty;
+        public string ScheduleErrorMessage
+        {
+            get => _scheduleErrorMessage;
+            private set
+            {
+                if (_scheduleErrorMessage == value)
+                    return;
+
+                _scheduleErrorMessage = value;
+                OnPropertyChanged(nameof(ScheduleErrorMessage));
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        // combined error message from this and editor
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ScheduleErrorMessage))
+                    return ScheduleErrorMessage;
+
+                return Editor.ErrorMessage;
+            }
+        }
+
+
+
         public ShowEditorViewModel Editor { get; }
 
         public RelayCommand CreateCommand { get; }
@@ -49,17 +78,23 @@ namespace SingleStage.ViewModels
         public RelayCommand CancelCommand { get; }
         public AsyncRelayCommand ManagePerformancesCommand { get; }
 
-        public ManageShowsViewModel(ShowDAC showDAC, IServiceProvider serviceProvider)
+        public ManageShowsViewModel(ShowDAC showDAC, IServiceProvider serviceProvider, ShowScheduleValidator showScheduleValidator)
         {
             ArgumentNullException.ThrowIfNull(showDAC);
             ArgumentNullException.ThrowIfNull(serviceProvider);
+            ArgumentNullException.ThrowIfNull(showScheduleValidator);
             _showDAC = showDAC;
             _serviceProvider = serviceProvider;
+            _showScheduleValidator = showScheduleValidator;
 
             Editor = new ShowEditorViewModel();
 
             // listen for editor changes so command states update when validation state changes
-            Editor.PropertyChanged += (_, _) => UpdateCommandStates();
+            Editor.PropertyChanged += (_, _) =>
+            {
+                OnPropertyChanged(nameof(ErrorMessage));
+                UpdateCommandStates();
+            };
 
             CreateCommand = new RelayCommand(_ => CreateShow(), CanCreateShow);
             EditCommand = new RelayCommand(_ => EditShow(), CanEditShow);
@@ -106,57 +141,11 @@ namespace SingleStage.ViewModels
             await SaveEditorIfNeededAsync();
         }
 
-        //private async Task SaveShow()
-        //{
-        //    // additional guard: ensure editor validation passed
-        //    if (Editor.WorkingCopyShow is null || !Editor.IsValid)
-        //        return;
-
-        //    if (Editor.WorkingCopyShow.Id == 0)
-        //    {
-        //        // new show
-        //        await _showDAC.AddAsync(Editor.WorkingCopyShow);
-        //    }
-        //    else
-        //    {
-        //        // existing show
-        //        await _showDAC.UpdateAsync(Editor.WorkingCopyShow);
-        //    }
-
-        //    await InitialiseAsync();
-
-        //    Editor.Cancel();
-
-        //    SelectedShow = null;
-
-        //    UpdateCommandStates();
-        //}
-
-        private async Task DeleteShow()
-        {
-            if (SelectedShow is null)
-                return;
-
-            await _showDAC.DeleteAsync(SelectedShow.Id);
-
-            await InitialiseAsync();
-
-            Editor.Cancel();
-
-            SelectedShow = null;
-
-            UpdateCommandStates();
-        }
-
-        private void CancelEdit()
-        {
-            Editor.Cancel();
-
-            UpdateCommandStates();
-        }
-
         private async Task<Show?> SaveEditorIfNeededAsync()
         {
+            // clear the previous schedule error
+            ScheduleErrorMessage = string.Empty;
+
             // if not editing, nothing to save — return currently selected show (may be null)
             if (!Editor.IsEditing)
                 return SelectedShow;
@@ -164,6 +153,19 @@ namespace SingleStage.ViewModels
             // guard: require working copy and valid parsed times, etc.
             if (Editor.WorkingCopyShow is null || !Editor.IsValid)
                 return null; // invalid => caller will abort
+
+            // check whether the show overlaps with another show
+            Show? conflictingShow = _showScheduleValidator.GetConflict(Editor.WorkingCopyShow, ListOfShows);
+
+            if (conflictingShow is not null)
+            {
+                ScheduleErrorMessage =
+                    $"The show overlaps with \"{conflictingShow.Name}\" " +
+                    $"({conflictingShow.StartTime:ddd MMM d HH:mm} - " +
+                    $"{conflictingShow.EndTime:ddd MMM d HH:mm}).";
+
+                return null;
+            }
 
             if (Editor.WorkingCopyShow.Id == 0)
             {
@@ -191,6 +193,30 @@ namespace SingleStage.ViewModels
 
             return saved;
         }
+
+        private async Task DeleteShow()
+        {
+            if (SelectedShow is null)
+                return;
+
+            await _showDAC.DeleteAsync(SelectedShow.Id);
+
+            await InitialiseAsync();
+
+            Editor.Cancel();
+
+            SelectedShow = null;
+
+            UpdateCommandStates();
+        }
+
+        private void CancelEdit()
+        {
+            Editor.Cancel();
+
+            UpdateCommandStates();
+        }
+
 
         private async Task ManagePerformancesAsync()
         {

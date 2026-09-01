@@ -4,6 +4,7 @@ using SingleStage.Entities;
 namespace SingleStage.ViewModels.EditorViewModels
 {
     // manages/represents the show currently being edited, i.e. owns the working copy
+    // checks validity for the working copy only (internal validity)
     public class ShowEditorViewModel : ViewModelBase
     {
         private Show? _workingCopyShow;

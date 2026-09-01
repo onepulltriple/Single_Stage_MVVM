@@ -224,6 +224,7 @@ namespace SingleStage.ViewModels
             if (Editor.IsEditing)
             {
                 var saved = await SaveEditorIfNeededAsync();
+
                 if (saved is null)
                     return; // invalid => do not proceed
             }
@@ -234,8 +235,13 @@ namespace SingleStage.ViewModels
 
             // resolve and show the ManagePerformancesWindow via DI
             var window = _serviceProvider.GetRequiredService<Windows.ManagePerformancesWindow>();
-            // set owner to main window if available so it behaves like a dialog
-            window.Owner = System.Windows.Application.Current?.MainWindow;
+
+            // hand over show id by setting it in the viewModel
+            if (window.DataContext is ManagePerformancesViewModel viewModel)
+            {
+                viewModel.ShowId = SelectedShow.Id;
+            }
+
             window.ShowDialog();
         }
 

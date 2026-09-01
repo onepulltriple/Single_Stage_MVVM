@@ -36,6 +36,21 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private int? _showId;
+        public int? ShowId
+        {
+            get => _showId;
+            set
+            {
+                if (_showId == value)
+                    return;
+
+                _showId = value;
+                OnPropertyChanged(nameof(ShowId));
+            }
+        }
+
+
         private string _scheduleErrorMessage = string.Empty;
 
         public string ScheduleErrorMessage
@@ -125,6 +140,11 @@ namespace SingleStage.ViewModels
             ScheduleErrorMessage = string.Empty;
 
             Editor.BeginCreate();
+
+            if (ShowId.HasValue)
+            {
+                Editor.ShowId = ShowId.Value;
+            }
 
             UpdateCommandStates();
         }

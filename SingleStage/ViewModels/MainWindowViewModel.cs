@@ -174,16 +174,11 @@ namespace SingleStage.ViewModels
         private async Task ManagePerformancesAsync()
         {
             var window = _serviceProvider.GetRequiredService<ManagePerformancesWindow>();
-
-            // ensure the window's DataContext is the viewModel so InitialiseAsync runs in the view's Loaded handler
-            var viewModel = _serviceProvider.GetRequiredService<ManagePerformancesViewModel>();
-            window.DataContext = viewModel;
+            // viewModel.showId will be null
 
             // show dialog (blocking)
             window.ShowDialog();
-            // when it closes, refresh calendar data
 
-            // reload shows and update calendar
             await InitializeAsync();
         }
 

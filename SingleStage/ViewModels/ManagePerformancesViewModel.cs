@@ -12,9 +12,9 @@ namespace SingleStage.ViewModels
         private readonly ShowDAC _showDAC;
         private readonly PerformanceScheduleValidator _performanceScheduleValidator;
 
-
         public ObservableCollection<Performance> ListOfPerformances { get; } = new();
         public ObservableCollection<Show> ListOfShows { get; } = new();
+        private readonly List<Performance> _allPerformances = new();
 
         private Performance? _selectedPerformance;
         public Performance? SelectedPerformance
@@ -47,6 +47,12 @@ namespace SingleStage.ViewModels
 
                 _showId = value;
                 OnPropertyChanged(nameof(ShowId));
+
+                Editor.Cancel();
+                SelectedPerformance = null;
+
+                ApplyPerformanceFilter();
+                UpdateCommandStates();
             }
         }
 
@@ -86,6 +92,8 @@ namespace SingleStage.ViewModels
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
+        public RelayCommand ListAllCommand { get; }
+
 
         public ManagePerformancesViewModel(PerformanceDAC performanceDAC, ShowDAC showDAC, PerformanceScheduleValidator performanceScheduleValidator)
         {
@@ -112,6 +120,8 @@ namespace SingleStage.ViewModels
             SaveCommand = new AsyncRelayCommand(async _ => await SavePerformance(), _ => CanSavePerformance(null));
             DeleteCommand = new AsyncRelayCommand(async _ => await DeletePerformance(), _ => CanDeletePerformance(null));
             CancelCommand = new RelayCommand(_ => CancelEdit(), _ => CanCancelEdit(null));
+            ListAllCommand = new RelayCommand(_ => ListAllPerformances());
+
         }
 
         // loads the lists
@@ -120,20 +130,52 @@ namespace SingleStage.ViewModels
             var performances = await _performanceDAC.GetAllAsync();
             var shows = await _showDAC.GetAllAsync();
 
+            _allPerformances.Clear();
+            foreach (Performance performance in performances)
+            {
+                _allPerformances.Add(performance);
+            }
+
+            ListOfShows.Clear();
+            foreach (Show show in shows.OrderBy(show => show.StartTime))
+            {
+                ListOfShows.Add(show);
+            }
+
+            // if a ShowId was supplied but that show no longer exists,
+            // fall back to showing all performances
+            if (ShowId.HasValue && !ListOfShows.Any(show => show.Id == ShowId.Value))
+            {
+                _showId = null; // setter call not needed when initialising
+                OnPropertyChanged(nameof(ShowId));
+            }
+
+            ApplyPerformanceFilter();
+        }
+
+        private void ApplyPerformanceFilter()
+        {
+            IEnumerable<Performance> performances = _allPerformances;
+
+            if (ShowId.HasValue)
+            {
+                performances = performances.Where(
+                    performance => performance.ShowId == ShowId.Value);
+            }
+
             ListOfPerformances.Clear();
 
             foreach (Performance performance in performances.OrderBy(performance => performance.StartTime))
             {
                 ListOfPerformances.Add(performance);
             }
-
-            ListOfShows.Clear();
-
-            foreach (Show show in shows.OrderBy(show => show.StartTime))
-            {
-                ListOfShows.Add(show);
-            }
         }
+
+        private void ListAllPerformances()
+        {
+            ShowId = null;
+        }
+
 
         private void CreatePerformance()
         {
@@ -160,31 +202,6 @@ namespace SingleStage.ViewModels
 
             UpdateCommandStates();
         }
-
-        //private async Task SavePerformance()
-        //{
-        //    if (Editor.WorkingCopyPerformance is null || !Editor.IsValid)
-        //        return;
-
-        //    if (Editor.WorkingCopyPerformance.Id == 0)
-        //    {
-        //        // new performance
-        //        await _performanceDAC.AddAsync(Editor.WorkingCopyPerformance);
-        //    }
-        //    else
-        //    {
-        //        // existing performance
-        //        await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
-        //    }
-
-        //    await InitialiseAsync();
-
-        //    Editor.Cancel();
-
-        //    SelectedPerformance = null;
-
-        //    UpdateCommandStates();
-        //}
 
         private async Task SavePerformance()
         {

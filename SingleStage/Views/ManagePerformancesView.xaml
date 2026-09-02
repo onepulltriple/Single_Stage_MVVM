@@ -33,32 +33,85 @@
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Select a performance to edit or create a new one"/>
 
-		<!-- performances list -->
-		<DataGrid Grid.Row="1" Grid.Column="0"
-                  Style="{StaticResource DefaultDataGridStyle}"
-                  IsReadOnly="True"
-                  AutoGenerateColumns="False"
-                  ItemsSource="{Binding ListOfPerformances}"
-                  SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Description"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding Description}"
-                                    Width="200"/>
-				<DataGridTextColumn Header="Part of Show"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding Show.Name}"
-                                    Width="100"/>
-				<DataGridTextColumn Header="Start"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
-                                    Width="140"/>
-				<DataGridTextColumn Header="End"
-                                    ElementStyle="{StaticResource DefaultDataGridTextStyle}"
-                                    Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
-                                    Width="140"/>
-			</DataGrid.Columns>
-		</DataGrid>
+        <!-- performances list and Show filter -->
+        <Grid Grid.Row="1" 
+              Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Show filter -->
+            <Grid Grid.Row="0"
+                  Margin="1,6,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Style="{StaticResource PopUpWindowBodyTextStyle}"
+                           Text="Show"
+                           VerticalAlignment="Center"/>
+
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding ListOfShows}"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource PopUpWindowComboBoxStyle}"
+                          Margin="10,0,10,4">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Name}"/>
+                                <Run Text=" | "/>
+                                <Run Text="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                                <Run Text=" - "/>
+                                <Run Text="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Button Grid.Column="2"
+                        Content="List all"
+                        Command="{Binding ListAllCommand}"
+                        Style="{StaticResource CrudActionBarButtonStyle}"
+                        MinHeight="10"
+                        MinWidth="50"
+                        Margin="0,0,0,4"/>
+            </Grid>
+
+
+            <!-- performances list -->
+		    <DataGrid Grid.Row="1" 
+                      Grid.Column="0"
+                      Style="{StaticResource DefaultDataGridStyle}"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      ItemsSource="{Binding ListOfPerformances}"
+                      SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}">
+			    <DataGrid.Columns>
+				    <DataGridTextColumn Header="Description"
+                                        ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                        Binding="{Binding Description}"
+                                        Width="200"/>
+				    <DataGridTextColumn Header="Part of Show"
+                                        ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                        Binding="{Binding Show.Name}"
+                                        Width="100"/>
+				    <DataGridTextColumn Header="Start"
+                                        ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                        Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
+                                        Width="140"/>
+				    <DataGridTextColumn Header="End"
+                                        ElementStyle="{StaticResource DefaultDataGridTextStyle}"
+                                        Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
+                                        Width="140"/>
+			    </DataGrid.Columns>
+		    </DataGrid>
+        </Grid>
 
 		<!-- performance editor -->
 		<Grid Grid.Row="1" Grid.Column="1"
@@ -120,15 +173,26 @@
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Part of show"/>
 
-			<ComboBox Grid.Row="5"
+            <ComboBox Grid.Row="5"
                       Grid.Column="1"
                       ItemsSource="{Binding ListOfShows}"
                       SelectedValuePath="Id"
-                      DisplayMemberPath="Name"
                       Style="{StaticResource PopUpWindowComboBoxStyle}"
-                      SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                      SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
+                            <Run Text="{Binding Name}"/>
+                            <Run Text=" | "/>
+                            <Run Text="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                            <Run Text=" - "/>
+                            <Run Text="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-			<!-- Error message row -->
+            <!-- Error message row -->
 			<TextBlock Grid.Row="6"
                        Grid.Column="0"
                        Grid.ColumnSpan="2"

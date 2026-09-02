@@ -280,6 +280,18 @@ namespace SingleStage.ViewModels.EditorViewModels
             };
         }
 
+        public void BeginCreate(DateTime startTime, DateTime endTime, int showId)
+        {
+            WorkingCopyPerformance = new Performance
+            {
+                StartTime = startTime,
+                EndTime = endTime,
+                Description = string.Empty,
+                ShowId = showId
+            };
+        }
+
+
         public void BeginEdit(Performance performance)
         {
             // shallow clone to avoid editing the original instance directly

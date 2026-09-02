@@ -127,6 +127,8 @@ namespace SingleStage.ViewModels
         // loads the lists
         public async Task InitialiseAsync()
         {
+            int? currentShowId = ShowId;
+
             var performances = await _performanceDAC.GetAllAsync();
             var shows = await _showDAC.GetAllAsync();
 
@@ -144,9 +146,23 @@ namespace SingleStage.ViewModels
 
             // if a ShowId was supplied but that show no longer exists,
             // fall back to showing all performances
-            if (ShowId.HasValue && !ListOfShows.Any(show => show.Id == ShowId.Value))
+            //if (ShowId.HasValue && !ListOfShows.Any(show => show.Id == ShowId.Value))
+            //{
+            //    _showId = null; // setter call not needed when initialising
+            //    OnPropertyChanged(nameof(ShowId));
+            //}
+
+            // Restore the previous filter if that show still exists.
+            if (currentShowId.HasValue &&
+                ListOfShows.Any(show => show.Id == currentShowId.Value))
             {
-                _showId = null; // setter call not needed when initialising
+                _showId = currentShowId;
+                OnPropertyChanged(nameof(ShowId));
+            }
+            else if (currentShowId.HasValue)
+            {
+                // The previously selected show no longer exists.
+                _showId = null;
                 OnPropertyChanged(nameof(ShowId));
             }
 
@@ -177,18 +193,95 @@ namespace SingleStage.ViewModels
         }
 
 
+        //private void CreatePerformance()
+        //{
+        //    ScheduleErrorMessage = string.Empty;
+
+        //    Editor.BeginCreate();
+
+        //    if (ShowId.HasValue)
+        //    {
+        //        Editor.ShowId = ShowId.Value;
+        //    }
+
+        //    UpdateCommandStates();
+        //}
+
         private void CreatePerformance()
         {
             ScheduleErrorMessage = string.Empty;
 
-            Editor.BeginCreate();
-
-            if (ShowId.HasValue)
+            if (!ShowId.HasValue)
             {
-                Editor.ShowId = ShowId.Value;
+                Editor.BeginCreate();
+
+                UpdateCommandStates();
+
+                return;
             }
 
+            Show? selectedShow = ListOfShows.FirstOrDefault(
+                show => show.Id == ShowId.Value);
+
+            if (selectedShow is null)
+            {
+                Editor.BeginCreate();
+
+                UpdateCommandStates();
+
+                return;
+            }
+
+            var slot = FindFirstAvailablePerformanceSlot(selectedShow);
+
+            if (slot is null)
+            {
+                ScheduleErrorMessage = "There is no available time remaining in the selected show.";
+                UpdateCommandStates();
+                return;
+            }
+
+            Editor.BeginCreate(
+                slot.Value.Start,
+                slot.Value.End,
+                selectedShow.Id);
+
             UpdateCommandStates();
+        }
+
+        private (DateTime Start, DateTime End)? FindFirstAvailablePerformanceSlot(Show show)
+        {
+            DateTime currentTime = show.StartTime;
+
+            var showPerformances = _allPerformances
+                .Where(performance => performance.ShowId == show.Id)
+                .OrderBy(performance => performance.StartTime)
+                .ToList();
+
+            foreach (Performance performance in showPerformances)
+            {
+                if (performance.EndTime <= currentTime)
+                {
+                    continue;
+                }
+
+                if (performance.StartTime > currentTime)
+                {
+                    return (currentTime, performance.StartTime);
+                }
+
+                if (performance.EndTime > currentTime)
+                {
+                    currentTime = performance.EndTime;
+                }
+            }
+
+            if (currentTime < show.EndTime)
+            {
+                return (currentTime, show.EndTime);
+            }
+
+            return null;
         }
 
         private void EditPerformance()
@@ -205,6 +298,8 @@ namespace SingleStage.ViewModels
 
         private async Task SavePerformance()
         {
+            int savedPerformanceId;
+
             ScheduleErrorMessage = string.Empty;
 
             if (Editor.WorkingCopyPerformance is null || !Editor.IsValid)
@@ -229,12 +324,15 @@ namespace SingleStage.ViewModels
             {
                 await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
             }
+            
+            savedPerformanceId = Editor.WorkingCopyPerformance.Id;
 
             await InitialiseAsync();
 
             Editor.Cancel();
 
-            SelectedPerformance = null;
+            SelectedPerformance = ListOfPerformances.FirstOrDefault(
+                performance => performance.Id == savedPerformanceId);
 
             UpdateCommandStates();
         }

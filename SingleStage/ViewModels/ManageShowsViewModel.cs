@@ -68,7 +68,6 @@ namespace SingleStage.ViewModels
         }
 
 
-
         public ShowEditorViewModel Editor { get; }
 
         public RelayCommand CreateCommand { get; }

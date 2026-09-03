@@ -8,6 +8,12 @@
     <Compile Update="Views\CalendarWeekView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\EditorViews\ArtistEditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\EditorViews\TicketholderEditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\EmployeeLoginView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

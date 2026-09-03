@@ -8,19 +8,13 @@
     <!--e.g. StackPanel, Grid, WrapPanel, DockPanel, Canvas-->
     <!--these do not inherit from Border!-->
 
-    <!--sets the default StackPanel properties globally-->
-    <!--<Style TargetType="StackPanel">
-        <Setter Property="Margin"                   Value="4"/>
-        <Setter Property="Orientation"              Value="Vertical"/>
+    <!-- Editors -->
+    <Style x:Key="EditorGridStyle"
+           TargetType="Grid"
+           > <!-- Grid has no implicit/default style that can be targeted with {x:Type Grid} -->
+        <Setter Property="Margin"                   Value="20,0,0,0"/>
     </Style>
 
-    <Style x:Key="SpacedStackPanel"
-           TargetType="StackPanel"
-           BasedOn="{StaticResource {x:Type StackPanel}}">
-        <Setter Property="Margin"                   Value="10"/>
-    </Style>-->
-
-    
     <!-- Calendar -->
     <Style x:Key="CalendarDayCanvasStyle"
            TargetType="Canvas">

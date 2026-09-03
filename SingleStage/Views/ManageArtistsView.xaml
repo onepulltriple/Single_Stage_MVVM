@@ -4,11 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:SingleStage.Views.Shared"
+             xmlns:editorviews="clr-namespace:SingleStage.Views.EditorViews"
              mc:Ignorable="d"
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageArtistsView_Loaded"
              PreviewKeyDown="ManageArtistsView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="550" d:DesignWidth="1000"
              >
 
     <Grid Margin="6">
@@ -58,35 +59,9 @@
 
 
         <!-- artist editor -->
-        <Grid Grid.Row="1"
-              Grid.Column="1"
-              Margin="20,0,0,0"
-              IsEnabled="{Binding Editor.IsEditing}">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Name"/>
-
-            <TextBox Grid.Row="0"
-                     Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Name,
-                                    UpdateSourceTrigger=PropertyChanged}"/>
-
-        </Grid>
-
+        <editorviews:ArtistEditorView Grid.Row="1"
+                                      Grid.Column="1"
+                                      DataContext="{Binding Editor}"/>
 
         <!-- CRUD action bar -->
         <shared:CrudActionBarView Grid.Row="2"

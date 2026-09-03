@@ -236,6 +236,7 @@
 		<!-- CRUD action bar -->
 		<shared:CrudActionBarView Grid.Row="2"
                                   Grid.Column="0"
+                                  Margin="20,0,0,0"
                                   Grid.ColumnSpan="2"
                                   />
 

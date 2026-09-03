@@ -47,8 +47,9 @@
            BasedOn="{StaticResource PopUpWindowBodyTextStyle}">
         <Setter Property="HorizontalAlignment"      Value="Left"/>
         <Setter Property="VerticalAlignment"        Value="Center"/>
-        <Setter Property="Margin"                   Value="20"/>
+        <Setter Property="Margin"                   Value="6,12,0,12"/>
         <Setter Property="FontSize"                 Value="20"/>
+        <Setter Property="FontWeight"               Value="SemiBold"/>
     </Style>
 
     <!--Pop-up window/dialog BUTTON text style-->

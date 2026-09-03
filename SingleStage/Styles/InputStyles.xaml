@@ -39,4 +39,104 @@
         <Setter Property="BorderBrush"         Value="{StaticResource InputBorderBrush}" />
     </Style>
 
+    <Style x:Key="PopUpWindowSwitchStyle"
+       TargetType="CheckBox"
+       BasedOn="{StaticResource {x:Type CheckBox}}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="6,6,6,6"/>
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid>
+
+                        <!-- Main switch body -->
+                        <Border x:Name="switchBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="0">
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Sliding/selected portion -->
+                                <Border x:Name="switchIndicator"
+                                    Grid.Column="0"
+                                    Margin="2"
+                                    Background="#E8E8E8"
+                                    BorderBrush="#B0B0B0"
+                                    BorderThickness="1"
+                                    CornerRadius="0">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="2"
+                                                      ShadowDepth="1"
+                                                      Opacity="0.25"/>
+                                    </Border.Effect>
+                                </Border>
+
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+
+                        <!-- Checked -->
+                        <Trigger Property="IsChecked" Value="True">
+
+                            <Setter TargetName="switchIndicator"
+                                Property="Grid.Column"
+                                Value="1"/>
+
+                            <Setter TargetName="switchIndicator"
+                                Property="Background"
+                                Value="#E8E8E8"/>
+
+                        </Trigger>
+
+                        <!-- Mouse over -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="switchBorder"
+                                Property="Background"
+                                Value="{StaticResource ButtonIsMouseOverBackground}"/>
+                        </Trigger>
+
+                        <!-- Pressed -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="switchBorder"
+                                Property="Background"
+                                Value="{StaticResource ButtonIsPressedBackground}"/>
+                        </Trigger>
+
+                        <!-- Disabled -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="switchBorder"
+                                Property="Background"
+                                Value="{StaticResource ButtonIsDisabledBackground}"/>
+
+                            <Setter TargetName="switchBorder"
+                                Property="BorderBrush"
+                                Value="{StaticResource ButtonIsDisabledBorderBrush}"/>
+
+                            <Setter TargetName="switchIndicator"
+                                Property="Opacity"
+                                Value="0.5"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
 </ResourceDictionary>

@@ -96,6 +96,45 @@ namespace SingleStage.ViewModels
         public RelayCommand CancelCommand { get; }
         public RelayCommand ListAllCommand { get; }
 
+        #region management mode
+        public enum PerformanceManagementMode
+        {
+            Performances,
+            ArtistPerformances
+        }
+
+        private PerformanceManagementMode _managementMode = PerformanceManagementMode.Performances;
+        // this default makes InManageArtistPerformancesMode return false
+        public PerformanceManagementMode ManagementMode
+        {
+            get => _managementMode;
+            set
+            {
+                if (_managementMode == value)
+                    return;
+
+                _managementMode = value;
+
+                Editor.Cancel();
+                ScheduleErrorMessage = string.Empty;
+                SelectedPerformance = null;
+                // SelectedArtistPerformance = null;
+
+                OnPropertyChanged(nameof(ManagementMode));
+                OnPropertyChanged(nameof(InManageArtistPerformancesMode));
+                UpdateCommandStates();
+            }
+        }
+
+        public bool InManageArtistPerformancesMode
+        {
+            get => ManagementMode == PerformanceManagementMode.ArtistPerformances;
+            set => ManagementMode = value
+                ? PerformanceManagementMode.ArtistPerformances // true
+                : PerformanceManagementMode.Performances; // false
+        }
+
+        #endregion
 
         public ManagePerformancesViewModel(PerformanceDAC performanceDAC, ShowDAC showDAC, PerformanceScheduleValidator performanceScheduleValidator)
         {

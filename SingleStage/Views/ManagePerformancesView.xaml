@@ -14,25 +14,60 @@
              >
 
     <Grid Margin="6,6,0,6">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-		<!-- header -->
-		<TextBlock Grid.Row="0" Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
-                   Text="Manage Performances"/>
+        <!-- header -->
+        <Grid Grid.Row="0" 
+              Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0" Grid.Column="1"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Select a performance to edit or create a new one"/>
+            <TextBlock Grid.Row="0"
+                       Style="{StaticResource PopUpWindowBodyHeadingTextStyle}"
+                       Text="Manage Performances"
+                       Margin="6,12,0,0"/>
+
+            <TextBlock Grid.Row="1" 
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Select a performance to edit or create a new one"/>
+        </Grid>
+
+        <Grid Grid.Row="0" 
+              Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" 
+                       HorizontalAlignment="Right"
+                       TextAlignment="Center"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Manage a show's performances"/>
+        
+            <CheckBox Grid.Column="1"
+                      IsChecked="{Binding InManageArtistPerformancesMode, Mode=TwoWay}"
+                      Style="{StaticResource PopUpWindowSwitchStyle}"/>
+            
+            <TextBlock Grid.Column="2" 
+                       HorizontalAlignment="Left"
+                       TextAlignment="Center"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Manage an artist's performances"/>
+        </Grid>
+
 
         <!-- show filter and performances list -->
         <Grid Grid.Row="1" 
@@ -44,7 +79,7 @@
 
             <!-- show filter -->
             <Grid Grid.Row="0"
-                  Margin="1,6,0,10">
+                  Margin="0,6,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -86,7 +121,7 @@
 
 
             <!-- performances list -->
-		    <DataGrid Grid.Row="1" 
+            <DataGrid Grid.Row="1" 
                       Grid.Column="0"
                       Style="{StaticResource DefaultDataGridStyle}"
                       IsReadOnly="True"
@@ -95,28 +130,28 @@
                       SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}"
                       RowDetailsVisibilityMode="Collapsed"
                       HeadersVisibility="Column">
-                
-			    <DataGrid.Columns>
-				    <DataGridTextColumn Header="Description"
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Description"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Description}"
                                         Width="227"/>
-                    
-				    <DataGridTextColumn Header="Part of Show"
+
+                    <DataGridTextColumn Header="Part of Show"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Show.Name}"
                                         Width="200"/>
-                    
-				    <DataGridTextColumn Header="Start"
+
+                    <DataGridTextColumn Header="Start"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                         Width="140"/>
-                    
-				    <DataGridTextColumn Header="End"
+
+                    <DataGridTextColumn Header="End"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                         Width="140"/>
-			    </DataGrid.Columns>
+                </DataGrid.Columns>
 
                 <!--<DataGrid.RowDetailsTemplate>
                     <DataTemplate>
@@ -158,12 +193,12 @@
             <!-- part of show label and combobox-->
             <Grid Grid.Row="1"
                   Style="{StaticResource EditorGridStyle}">
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Grid.Column="0"
                            Style="{StaticResource PopUpWindowBodyTextStyle}"
                            Text="Part of show"/>
@@ -187,7 +222,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
             </Grid>
-            
+
             <!-- Error message row -->
             <TextBlock Grid.Row="2"
                        Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
@@ -197,12 +232,12 @@
                        VerticalAlignment="Bottom"/>
         </Grid>
 
-		<!-- CRUD action bar -->
-		<shared:CrudActionBarView Grid.Row="2"
+        <!-- CRUD action bar -->
+        <shared:CrudActionBarView Grid.Row="2"
                                   Grid.Column="0"
                                   Grid.ColumnSpan="2"
                                   Margin="0,0,0,0"
                                   />
 
-	</Grid>
+    </Grid>
 </UserControl>

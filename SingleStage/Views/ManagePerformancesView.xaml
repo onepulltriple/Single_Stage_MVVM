@@ -33,7 +33,7 @@
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Select a performance to edit or create a new one"/>
 
-        <!-- performances list and Show filter -->
+        <!-- performances list and show filter -->
         <Grid Grid.Row="1" 
               Grid.Column="0">
             <Grid.RowDefinitions>
@@ -41,7 +41,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Show filter -->
+            <!-- show filter -->
             <Grid Grid.Row="0"
                   Margin="1,6,0,10">
                 <Grid.ColumnDefinitions>
@@ -91,26 +91,53 @@
                       IsReadOnly="True"
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding ListOfPerformances}"
-                      SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}">
+                      SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}"
+                      RowDetailsVisibilityMode="Collapsed"
+                      HeadersVisibility="Column">
+                
 			    <DataGrid.Columns>
 				    <DataGridTextColumn Header="Description"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Description}"
                                         Width="200"/>
+                    
 				    <DataGridTextColumn Header="Part of Show"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Show.Name}"
                                         Width="100"/>
+                    
 				    <DataGridTextColumn Header="Start"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                         Width="140"/>
+                    
 				    <DataGridTextColumn Header="End"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"
                                         Width="140"/>
 			    </DataGrid.Columns>
-		    </DataGrid>
+
+                <!--<DataGrid.RowDetailsTemplate>
+                    <DataTemplate>
+                        <Border Padding="20,0,10,6">
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="Artists: "
+                                     FontWeight="SemiBold"/>
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding StringFormat="{}{0}">
+                                            <MultiBinding.Converter>
+                                                <local:ArtistPerformanceCollectionConverter/>
+                                            </MultiBinding.Converter>
+                                            <Binding Path="ArtistPerformances"/>
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
+                            </TextBlock>
+                        </Border>
+                    </DataTemplate>
+                </DataGrid.RowDetailsTemplate>-->
+            </DataGrid>
         </Grid>
 
 		<!-- performance editor -->

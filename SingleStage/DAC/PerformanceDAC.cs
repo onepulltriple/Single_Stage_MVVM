@@ -7,11 +7,14 @@ namespace SingleStage.DAC
     {
         public PerformanceDAC(SingleStageMvvmContext context) : base(context) { }
 
-        // include Show so the UI can display the show name
+        // include Show and ArtistPerformance/Artist so the UI 
+        // can display all information belonging to each performance
         public override async Task<List<Performance>> GetAllAsync()
         {
             return await _context.Set<Performance>()
                 .Include(p => p.Show)
+                .Include(p => p.ArtistPerformances)
+                    .ThenInclude(ap => ap.Artist)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -20,6 +23,8 @@ namespace SingleStage.DAC
         {
             return await _context.Set<Performance>()
                 .Include(p => p.Show)
+                .Include(p => p.ArtistPerformances)
+                    .ThenInclude(ap => ap.Artist)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
     }

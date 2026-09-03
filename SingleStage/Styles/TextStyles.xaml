@@ -38,6 +38,7 @@
            TargetType="TextBlock"
            BasedOn="{StaticResource PopUpWindowBodyTextStyle}">
         <Setter Property="Foreground"               Value="{StaticResource WarningTextBrush}"/>
+        <Setter Property="Margin"                   Value="20"/>
     </Style>
 
     <!--Pop-up window/dialog HEADING style-->

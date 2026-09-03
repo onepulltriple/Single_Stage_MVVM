@@ -238,7 +238,7 @@ namespace SingleStage.ViewModels
             // hand over show id by setting it in the viewModel
             if (window.DataContext is ManagePerformancesViewModel viewModel)
             {
-                viewModel.ShowId = SelectedShow.Id;
+                viewModel.FilterByShowId = SelectedShow.Id;
             }
 
             window.ShowDialog();

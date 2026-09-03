@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SingleStage.Views.EditorViews.ShowEditorView"
+﻿<UserControl x:Class="SingleStage.Views.EditorViews.PerformanceEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,13 +8,12 @@
              d:DesignHeight="450" 
              d:DesignWidth="800"
              >
-
-    <!-- show editor with separated date and time fields -->
+    
     <Grid Style="{StaticResource EditorGridStyle}"
           IsEnabled="{Binding IsEditing}">
-
+        
         <Grid.RowDefinitions>
-            <!-- Name -->
+            <!-- Description -->
             <RowDefinition Height="Auto"/>
             <!-- Start date -->
             <RowDefinition Height="Auto"/>
@@ -24,10 +23,6 @@
             <RowDefinition Height="Auto"/>
             <!-- End time -->
             <RowDefinition Height="Auto"/>
-            <!-- TicketPrice -->
-            <RowDefinition Height="Auto"/>
-            <!-- SoldOut -->
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -36,17 +31,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Name -->
-        <TextBlock Grid.Row="0"
-                   Grid.Column="0"
-                   Style="{StaticResource PopUpWindowBodyTextStyle}"
-                   Text="Name"/>
-        <TextBox Grid.Row="0"
-                 Grid.Column="1"
-                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                       Style="{StaticResource PopUpWindowBodyTextStyle}"
+                       Text="Description"/>
+        <TextBox Grid.Row="0" Grid.Column="1"
+                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- Start Date -->
         <TextBlock Grid.Row="1" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Start date"/>
@@ -54,7 +45,6 @@
                         SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-        <!-- Start Time (text) -->
         <TextBlock Grid.Row="2" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="Start time"/>
@@ -62,7 +52,6 @@
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <!-- End Date -->
         <TextBlock Grid.Row="3" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="End date"/>
@@ -70,30 +59,12 @@
                         SelectedDate="{Binding EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource PopUpWindowDatePickerStyle}"/>
 
-        <!-- End Time (text) -->
         <TextBlock Grid.Row="4" Grid.Column="0"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
                        Text="End time"/>
         <TextBox Grid.Row="4" Grid.Column="1"
                      Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                      Text="{Binding EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-        <!-- Ticket Price -->
-        <TextBlock Grid.Row="5" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Ticket Price"/>
-        <TextBox Grid.Row="5" Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding TicketPrice, UpdateSourceTrigger=PropertyChanged}"/>
-
-        <!-- Sold Out -->
-        <TextBlock Grid.Row="6" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Sold Out"/>
-        <CheckBox Grid.Row="6" Grid.Column="1"
-                      IsChecked="{Binding SoldOut, UpdateSourceTrigger=PropertyChanged}"
-                      VerticalAlignment="Center"
-                      Style="{StaticResource PopUpWindowCheckBoxStyle}"/>
 
     </Grid>
 </UserControl>

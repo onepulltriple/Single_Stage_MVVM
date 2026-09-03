@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:shared="clr-namespace:SingleStage.Views.Shared"
              xmlns:local="clr-namespace:SingleStage.Views"
+             xmlns:editorviews="clr-namespace:SingleStage.Views.EditorViews"
              mc:Ignorable="d"
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManagePerformancesView_Loaded"
@@ -12,7 +13,7 @@
              d:DesignHeight="850" d:DesignWidth="1000"
              >
 
-	<Grid Margin="6">
+    <Grid Margin="6,6,0,6">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
@@ -20,8 +21,8 @@
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*"/>
-			<ColumnDefinition Width="3*"/>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 
 		<!-- header -->
@@ -33,7 +34,7 @@
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Select a performance to edit or create a new one"/>
 
-        <!-- performances list and show filter -->
+        <!-- show filter and performances list -->
         <Grid Grid.Row="1" 
               Grid.Column="0">
             <Grid.RowDefinitions>
@@ -52,13 +53,13 @@
 
                 <TextBlock Grid.Column="0"
                            Style="{StaticResource PopUpWindowBodyTextStyle}"
-                           Text="Show"
+                           Text="For show:"
                            VerticalAlignment="Center"/>
 
                 <ComboBox Grid.Column="1"
                           ItemsSource="{Binding ListOfShows}"
                           SelectedValuePath="Id"
-                          SelectedValue="{Binding ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding FilterByShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Style="{StaticResource PopUpWindowComboBoxStyle}"
                           Margin="10,0,10,4">
                     <ComboBox.ItemTemplate>
@@ -99,12 +100,12 @@
 				    <DataGridTextColumn Header="Description"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Description}"
-                                        Width="200"/>
+                                        Width="227"/>
                     
 				    <DataGridTextColumn Header="Part of Show"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Show.Name}"
-                                        Width="100"/>
+                                        Width="200"/>
                     
 				    <DataGridTextColumn Header="Start"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
@@ -140,104 +141,67 @@
             </DataGrid>
         </Grid>
 
-		<!-- performance editor -->
-		<Grid Grid.Row="1" Grid.Column="1"
-              Margin="20,0,0,0"
-              IsEnabled="{Binding Editor.IsEditing}">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+        <!-- second column -->
+        <Grid Grid.Row="1"
+              Grid.Column="1">
 
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-			<TextBlock Grid.Row="0" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Description"/>
-			<TextBox Grid.Row="0" Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.Description, UpdateSourceTrigger=PropertyChanged}"/>
+            <!-- performance editor with separated date and time fields -->
+            <editorviews:PerformanceEditorView Grid.Row="0"
+                                               DataContext="{Binding Editor}"/>
 
-			<TextBlock Grid.Row="1" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Start date"/>
-			<DatePicker Grid.Row="1" Grid.Column="1"
-                        SelectedDate="{Binding Editor.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource PopUpWindowDatePickerStyle}"/>
+            <!-- part of show label and combobox-->
+            <Grid Grid.Row="1"
+                  Style="{StaticResource EditorGridStyle}">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Column="0"
+                           Style="{StaticResource PopUpWindowBodyTextStyle}"
+                           Text="Part of show"/>
 
-			<TextBlock Grid.Row="2" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Start time"/>
-			<TextBox Grid.Row="2" Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.StartTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-			<TextBlock Grid.Row="3" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="End date"/>
-			<DatePicker Grid.Row="3" Grid.Column="1"
-                        SelectedDate="{Binding Editor.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource PopUpWindowDatePickerStyle}"/>
-
-			<TextBlock Grid.Row="4" Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="End time"/>
-			<TextBox Grid.Row="4" Grid.Column="1"
-                     Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                     Text="{Binding Editor.EndTimeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-			<!-- Show -->
-			<TextBlock Grid.Row="5"
-                       Grid.Column="0"
-                       Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Part of show"/>
-
-            <ComboBox Grid.Row="5"
-                      Grid.Column="1"
-                      ItemsSource="{Binding ListOfShows}"
-                      SelectedValuePath="Id"
-                      Style="{StaticResource PopUpWindowComboBoxStyle}"
-                      SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock>
-                            <Run Text="{Binding Name}"/>
-                            <Run Text=" | "/>
-                            <Run Text="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
-                            <Run Text=" - "/>
-                            <Run Text="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
-                        </TextBlock>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding ListOfShows}"
+                          SelectedValuePath="Id"
+                          Style="{StaticResource PopUpWindowComboBoxStyle}"
+                          SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="0,6,6,6">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding Name}"/>
+                                <Run Text=" | "/>
+                                <Run Text="{Binding StartTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                                <Run Text=" - "/>
+                                <Run Text="{Binding EndTime, StringFormat={}{0:ddd MMM d HH:mm}}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+            
             <!-- Error message row -->
-			<TextBlock Grid.Row="6"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
+            <TextBlock Grid.Row="2"
                        Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
                        Text="{Binding ErrorMessage}"
                        TextWrapping="Wrap"
-                       Margin="20"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Bottom"/>
-
-
-		</Grid>
+        </Grid>
 
 		<!-- CRUD action bar -->
 		<shared:CrudActionBarView Grid.Row="2"
                                   Grid.Column="0"
-                                  Margin="20,0,0,0"
                                   Grid.ColumnSpan="2"
+                                  Margin="0,0,0,0"
                                   />
 
 	</Grid>

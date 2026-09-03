@@ -36,17 +36,19 @@ namespace SingleStage.ViewModels
             }
         }
 
-        private int? _showId;
-        public int? ShowId
+        private int? _filterByShowId;
+        public int? FilterByShowId
         {
-            get => _showId;
+            get => _filterByShowId;
             set
             {
-                if (_showId == value)
+                if (_filterByShowId == value)
                     return;
 
-                _showId = value;
-                OnPropertyChanged(nameof(ShowId));
+                _filterByShowId = value;
+                OnPropertyChanged(nameof(FilterByShowId));
+
+                ScheduleErrorMessage = string.Empty; // clear schedule error
 
                 Editor.Cancel();
                 SelectedPerformance = null;
@@ -127,7 +129,7 @@ namespace SingleStage.ViewModels
         // loads the lists
         public async Task InitialiseAsync()
         {
-            int? currentShowId = ShowId;
+            int? currentShowId = FilterByShowId;
 
             var performances = await _performanceDAC.GetAllAsync();
             var shows = await _showDAC.GetAllAsync();
@@ -144,26 +146,18 @@ namespace SingleStage.ViewModels
                 ListOfShows.Add(show);
             }
 
-            // if a ShowId was supplied but that show no longer exists,
-            // fall back to showing all performances
-            //if (ShowId.HasValue && !ListOfShows.Any(show => show.Id == ShowId.Value))
-            //{
-            //    _showId = null; // setter call not needed when initialising
-            //    OnPropertyChanged(nameof(ShowId));
-            //}
-
-            // Restore the previous filter if that show still exists.
+            // restore the previous filter if that show still exists.
             if (currentShowId.HasValue &&
                 ListOfShows.Any(show => show.Id == currentShowId.Value))
             {
-                _showId = currentShowId;
-                OnPropertyChanged(nameof(ShowId));
+                _filterByShowId = currentShowId;
+                OnPropertyChanged(nameof(FilterByShowId));
             }
             else if (currentShowId.HasValue)
             {
-                // The previously selected show no longer exists.
-                _showId = null;
-                OnPropertyChanged(nameof(ShowId));
+                // the previously selected show no longer exists.
+                _filterByShowId = null;
+                OnPropertyChanged(nameof(FilterByShowId));
             }
 
             ApplyPerformanceFilter();
@@ -173,10 +167,10 @@ namespace SingleStage.ViewModels
         {
             IEnumerable<Performance> performances = _allPerformances;
 
-            if (ShowId.HasValue)
+            if (FilterByShowId.HasValue)
             {
                 performances = performances.Where(
-                    performance => performance.ShowId == ShowId.Value);
+                    performance => performance.ShowId == FilterByShowId.Value);
             }
 
             ListOfPerformances.Clear();
@@ -189,29 +183,14 @@ namespace SingleStage.ViewModels
 
         private void ListAllPerformances()
         {
-            ShowId = null;
+            FilterByShowId = null;
         }
-
-
-        //private void CreatePerformance()
-        //{
-        //    ScheduleErrorMessage = string.Empty;
-
-        //    Editor.BeginCreate();
-
-        //    if (ShowId.HasValue)
-        //    {
-        //        Editor.ShowId = ShowId.Value;
-        //    }
-
-        //    UpdateCommandStates();
-        //}
 
         private void CreatePerformance()
         {
             ScheduleErrorMessage = string.Empty;
 
-            if (!ShowId.HasValue)
+            if (!FilterByShowId.HasValue)
             {
                 Editor.BeginCreate();
 
@@ -221,7 +200,7 @@ namespace SingleStage.ViewModels
             }
 
             Show? selectedShow = ListOfShows.FirstOrDefault(
-                show => show.Id == ShowId.Value);
+                show => show.Id == FilterByShowId.Value);
 
             if (selectedShow is null)
             {

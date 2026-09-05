@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="SingleStage.Views.EditorViews.ArtistPerformanceEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SingleStage.Views.EditorViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" 
+             d:DesignWidth="800">
+    <Grid Style="{StaticResource EditorGridStyle}"
+          IsEnabled="{Binding IsEditing}">
+
+        <Grid.RowDefinitions>
+            <!-- Artist -->
+            <RowDefinition Height="Auto"/>
+            <!-- Performance -->
+            <RowDefinition Height="Auto"/>
+            <!-- Royalty up front-->
+            <RowDefinition Height="Auto"/>
+            <!-- End royalty -->
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Artist"/>
+
+        <TextBox Grid.Row="0"
+                 Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding ArtistId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Grid.Row="1"
+                   Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Performance"/>
+
+        <TextBox Grid.Row="1"
+                 Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding PerformanceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Grid.Row="2"
+                   Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Royalty up front"/>
+
+        <TextBox Grid.Row="2"
+                 Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding RoyaltyUpFront, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Grid.Row="3"
+                   Grid.Column="0"
+                   Style="{StaticResource PopUpWindowBodyTextStyle}"
+                   Text="Royalty at end"/>
+
+        <TextBox Grid.Row="3"
+                 Grid.Column="1"
+                 Style="{StaticResource PopUpWindowTextBoxTextStyle}"
+                 Text="{Binding RoyaltyAtEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+    </Grid>
+</UserControl>

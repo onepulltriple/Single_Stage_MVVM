@@ -11,6 +11,9 @@
     <Compile Update="Views\EditorViews\ArtistEditorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\EditorViews\ArtistPerformanceEditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\EditorViews\PerformanceEditorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

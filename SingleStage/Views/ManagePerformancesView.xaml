@@ -187,8 +187,21 @@
             </Grid.RowDefinitions>
 
             <!-- performance editor with separated date and time fields -->
-            <editorviews:PerformanceEditorView Grid.Row="0"
-                                               DataContext="{Binding Editor}"/>
+            <editorviews:PerformanceEditorView 
+                Grid.Row="0"
+                DataContext="{Binding PerformanceEditor}"
+                Visibility="{Binding DataContext.InManageArtistPerformancesMode, 
+                            RelativeSource={RelativeSource AncestorType={x:Type local:ManagePerformancesView}},
+                            Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+            <!-- artistperformance editor -->
+            <editorviews:ArtistPerformanceEditorView 
+                Grid.Row="0"
+                DataContext="{Binding ArtistPerformanceEditor}"
+                Visibility="{Binding DataContext.InManageArtistPerformancesMode, 
+                            RelativeSource={RelativeSource AncestorType={x:Type local:ManagePerformancesView}},
+                            Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
 
             <!-- part of show label and combobox-->
             <Grid Grid.Row="1"
@@ -207,7 +220,7 @@
                           ItemsSource="{Binding ListOfShows}"
                           SelectedValuePath="Id"
                           Style="{StaticResource PopUpWindowComboBoxStyle}"
-                          SelectedValue="{Binding Editor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedValue="{Binding PerformanceEditor.ShowId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Margin="0,6,6,6">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

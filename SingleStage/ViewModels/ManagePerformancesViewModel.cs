@@ -30,7 +30,7 @@ namespace SingleStage.ViewModels
                 OnPropertyChanged(nameof(SelectedPerformance));
 
                 // cancel editor edits when selection changes
-                Editor.Cancel();
+                PerformanceEditor.Cancel();
 
                 UpdateCommandStates();
             }
@@ -50,7 +50,7 @@ namespace SingleStage.ViewModels
 
                 ScheduleErrorMessage = string.Empty; // clear schedule error
 
-                Editor.Cancel();
+                PerformanceEditor.Cancel();
                 SelectedPerformance = null;
 
                 ApplyPerformanceFilter();
@@ -82,12 +82,13 @@ namespace SingleStage.ViewModels
                 if (!string.IsNullOrEmpty(ScheduleErrorMessage))
                     return ScheduleErrorMessage;
 
-                return Editor.ErrorMessage;
+                return PerformanceEditor.ErrorMessage;
             }
         }
 
 
-        public PerformanceEditorViewModel Editor { get; }
+        public PerformanceEditorViewModel PerformanceEditor { get; }
+        public ArtistPerformanceEditorViewModel ArtistPerformanceEditor { get; }
 
         public RelayCommand CreateCommand { get; }
         public RelayCommand EditCommand { get; }
@@ -115,13 +116,17 @@ namespace SingleStage.ViewModels
 
                 _managementMode = value;
 
-                Editor.Cancel();
+                PerformanceEditor.Cancel();
+                ArtistPerformanceEditor.Cancel();
+
                 ScheduleErrorMessage = string.Empty;
-                SelectedPerformance = null;
-                // SelectedArtistPerformance = null;
+
+                //SelectedPerformance = null; // selected performance survives the mode switch
+                //SelectedArtistPerformance = null;
 
                 OnPropertyChanged(nameof(ManagementMode));
                 OnPropertyChanged(nameof(InManageArtistPerformancesMode));
+
                 UpdateCommandStates();
             }
         }
@@ -130,8 +135,8 @@ namespace SingleStage.ViewModels
         {
             get => ManagementMode == PerformanceManagementMode.ArtistPerformances;
             set => ManagementMode = value
-                ? PerformanceManagementMode.ArtistPerformances // true
-                : PerformanceManagementMode.Performances; // false
+                ? PerformanceManagementMode.ArtistPerformances // true --> show ArtistPerformanceEditorView
+                : PerformanceManagementMode.Performances; // false --> show PerformanceEditorView
         }
 
         #endregion
@@ -146,11 +151,17 @@ namespace SingleStage.ViewModels
             _showDAC = showDAC;
             _performanceScheduleValidator = performanceScheduleValidator;
 
-            Editor = new PerformanceEditorViewModel();
-            
-            Editor.PropertyChanged += (_, _) =>
+            PerformanceEditor = new PerformanceEditorViewModel();
+            ArtistPerformanceEditor = new ArtistPerformanceEditorViewModel();
+
+            PerformanceEditor.PropertyChanged += (_, _) =>
             {
-                //ScheduleErrorMessage = string.Empty;
+                // the schedule error should persist even while the user modifies the editor
+                OnPropertyChanged(nameof(ErrorMessage));
+                UpdateCommandStates();
+            };
+            ArtistPerformanceEditor.PropertyChanged += (_, _) =>
+            {
                 // the schedule error should persist even while the user modifies the editor
                 OnPropertyChanged(nameof(ErrorMessage));
                 UpdateCommandStates();
@@ -231,7 +242,7 @@ namespace SingleStage.ViewModels
 
             if (!FilterByShowId.HasValue)
             {
-                Editor.BeginCreate();
+                PerformanceEditor.BeginCreate();
 
                 UpdateCommandStates();
 
@@ -243,7 +254,7 @@ namespace SingleStage.ViewModels
 
             if (selectedShow is null)
             {
-                Editor.BeginCreate();
+                PerformanceEditor.BeginCreate();
 
                 UpdateCommandStates();
 
@@ -259,7 +270,7 @@ namespace SingleStage.ViewModels
                 return;
             }
 
-            Editor.BeginCreate(
+            PerformanceEditor.BeginCreate(
                 slot.Value.Start,
                 slot.Value.End,
                 selectedShow.Id);
@@ -309,7 +320,7 @@ namespace SingleStage.ViewModels
 
             ScheduleErrorMessage = string.Empty;
 
-            Editor.BeginEdit(SelectedPerformance);
+            PerformanceEditor.BeginEdit(SelectedPerformance);
 
             UpdateCommandStates();
         }
@@ -320,11 +331,11 @@ namespace SingleStage.ViewModels
 
             ScheduleErrorMessage = string.Empty;
 
-            if (Editor.WorkingCopyPerformance is null || !Editor.IsValid)
+            if (PerformanceEditor.WorkingCopyPerformance is null || !PerformanceEditor.IsValid)
                 return;
 
             string? validationError = _performanceScheduleValidator.Validate(
-                Editor.WorkingCopyPerformance,
+                PerformanceEditor.WorkingCopyPerformance,
                 ListOfPerformances,
                 ListOfShows);
 
@@ -334,20 +345,20 @@ namespace SingleStage.ViewModels
                 return;
             }
 
-            if (Editor.WorkingCopyPerformance.Id == 0)
+            if (PerformanceEditor.WorkingCopyPerformance.Id == 0)
             {
-                await _performanceDAC.AddAsync(Editor.WorkingCopyPerformance);
+                await _performanceDAC.AddAsync(PerformanceEditor.WorkingCopyPerformance);
             }
             else
             {
-                await _performanceDAC.UpdateAsync(Editor.WorkingCopyPerformance);
+                await _performanceDAC.UpdateAsync(PerformanceEditor.WorkingCopyPerformance);
             }
             
-            savedPerformanceId = Editor.WorkingCopyPerformance.Id;
+            savedPerformanceId = PerformanceEditor.WorkingCopyPerformance.Id;
 
             await InitialiseAsync();
 
-            Editor.Cancel();
+            PerformanceEditor.Cancel();
 
             SelectedPerformance = ListOfPerformances.FirstOrDefault(
                 performance => performance.Id == savedPerformanceId);
@@ -365,7 +376,7 @@ namespace SingleStage.ViewModels
 
             await InitialiseAsync();
 
-            Editor.Cancel();
+            PerformanceEditor.Cancel();
 
             SelectedPerformance = null;
 
@@ -376,14 +387,14 @@ namespace SingleStage.ViewModels
         {
             ScheduleErrorMessage = string.Empty;
 
-            Editor.Cancel();
+            PerformanceEditor.Cancel();
 
             UpdateCommandStates();
         }
 
         private bool CanCreatePerformance(object? parameter)
         {
-            return !Editor.IsEditing;
+            return !PerformanceEditor.IsEditing;
         } 
 
         private bool CanEditPerformance(object? parameter)
@@ -394,7 +405,7 @@ namespace SingleStage.ViewModels
         private bool CanSavePerformance(object? parameter)
         {
             // require working copy and valid parsed times, etc.
-            return Editor.WorkingCopyPerformance is not null && Editor.IsValid;
+            return PerformanceEditor.WorkingCopyPerformance is not null && PerformanceEditor.IsValid;
         }
 
         private bool CanDeletePerformance(object? parameter)
@@ -404,7 +415,7 @@ namespace SingleStage.ViewModels
 
         private bool CanCancelEdit(object? parameter)
         {
-            return Editor.IsEditing;
+            return PerformanceEditor.IsEditing;
         }
 
         private void UpdateCommandStates()

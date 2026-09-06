@@ -1,8 +1,9 @@
-using System.Collections.ObjectModel;
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
+using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace SingleStage.ViewModels
 {
@@ -12,9 +13,10 @@ namespace SingleStage.ViewModels
         private readonly ShowDAC _showDAC;
         private readonly PerformanceScheduleValidator _performanceScheduleValidator;
 
-        public ObservableCollection<Performance> ListOfPerformances { get; } = new();
-        public ObservableCollection<Show> ListOfShows { get; } = new();
         private readonly List<Performance> _allPerformances = new();
+        public ObservableCollection<Show> ListOfShows { get; } = new();
+        public ObservableCollection<Performance> ListOfPerformances { get; } = new();
+        //public ObservableCollection<Artist> ListOfArtists { get; } = new();
 
         private Performance? _selectedPerformance;
         public Performance? SelectedPerformance
@@ -126,6 +128,7 @@ namespace SingleStage.ViewModels
 
                 OnPropertyChanged(nameof(ManagementMode));
                 OnPropertyChanged(nameof(InManageArtistPerformancesMode));
+                OnPropertyChanged(nameof(RowDetailsVisibilityMode));
 
                 UpdateCommandStates();
             }
@@ -137,6 +140,13 @@ namespace SingleStage.ViewModels
             set => ManagementMode = value
                 ? PerformanceManagementMode.ArtistPerformances // true --> show ArtistPerformanceEditorView
                 : PerformanceManagementMode.Performances; // false --> show PerformanceEditorView
+        }
+
+        public DataGridRowDetailsVisibilityMode RowDetailsVisibilityMode
+        {
+            get => InManageArtistPerformancesMode
+                ? DataGridRowDetailsVisibilityMode.Visible
+                : DataGridRowDetailsVisibilityMode.Collapsed;
         }
 
         #endregion

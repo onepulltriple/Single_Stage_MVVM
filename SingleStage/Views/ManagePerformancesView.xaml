@@ -130,7 +130,7 @@
                       AutoGenerateColumns="False"
                       ItemsSource="{Binding ListOfPerformances}"
                       SelectedItem="{Binding SelectedPerformance, Mode=TwoWay}"
-                      RowDetailsVisibilityMode="Collapsed"
+                      RowDetailsVisibilityMode="{Binding RowDetailsVisibilityMode}"
                       HeadersVisibility="Column">
 
                 <DataGrid.Columns>
@@ -139,7 +139,7 @@
                                         Binding="{Binding Description}"
                                         Width="227"/>
 
-                    <DataGridTextColumn Header="Part of Show"
+                    <DataGridTextColumn Header="Part of show"
                                         ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                         Binding="{Binding Show.Name}"
                                         Width="200"/>
@@ -155,26 +155,19 @@
                                         Width="140"/>
                 </DataGrid.Columns>
 
-                <!--<DataGrid.RowDetailsTemplate>
+                <DataGrid.RowDetailsTemplate>
                     <DataTemplate>
-                        <Border Padding="20,0,10,6">
-                            <TextBlock TextWrapping="Wrap">
-                                <Run Text="Artists: "
-                                     FontWeight="SemiBold"/>
-                                <Run>
-                                    <Run.Text>
-                                        <MultiBinding StringFormat="{}{0}">
-                                            <MultiBinding.Converter>
-                                                <local:ArtistPerformanceCollectionConverter/>
-                                            </MultiBinding.Converter>
-                                            <Binding Path="ArtistPerformances"/>
-                                        </MultiBinding>
-                                    </Run.Text>
-                                </Run>
+                        <Border Padding="30,0,10,0"
+                                Height="30">
+                            <TextBlock TextWrapping="Wrap"
+                                       VerticalAlignment="Center">
+                                <Run Text="Artists: "/>
+                                <Run Text="{Binding ArtistPerformances,
+                                                    Converter={StaticResource ArtistPerformanceCollectionConverter}}"/>
                             </TextBlock>
                         </Border>
                     </DataTemplate>
-                </DataGrid.RowDetailsTemplate>-->
+                </DataGrid.RowDetailsTemplate>
             </DataGrid>
         </Grid>
 

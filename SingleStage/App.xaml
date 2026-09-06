@@ -27,6 +27,7 @@
 
             <!--custom-->
             <infrastructure:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+            <infrastructure:ArtistPerformanceCollectionConverter x:Key="ArtistPerformanceCollectionConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>

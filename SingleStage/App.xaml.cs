@@ -33,6 +33,7 @@ namespace SingleStage
                       // whenever something asks for an IArtistDAC, give it an ArtistDAC
                     //services.AddTransient<ArtistPerformance>();
                     services.AddTransient<PerformanceDAC>();
+                    services.AddTransient<ArtistPerformanceDAC>();
                     services.AddTransient<ShowDAC>();
                     services.AddTransient<TicketholderDAC>();
                     services.AddTransient<EmployeeDAC>();

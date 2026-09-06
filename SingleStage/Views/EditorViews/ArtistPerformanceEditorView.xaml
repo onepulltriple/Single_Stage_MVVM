@@ -12,9 +12,9 @@
 
         <Grid.RowDefinitions>
             <!-- Artist -->
-            <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="Auto"/>-->
             <!-- Performance -->
-            <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="Auto"/>-->
             <!-- Royalty up front-->
             <RowDefinition Height="Auto"/>
             <!-- End royalty -->
@@ -27,7 +27,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0"
+        <!--<TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Artist"/>
@@ -45,24 +45,24 @@
         <TextBox Grid.Row="1"
                  Grid.Column="1"
                  Style="{StaticResource PopUpWindowTextBoxTextStyle}"
-                 Text="{Binding PerformanceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding PerformanceId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="0"
                    Grid.Column="0"
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Royalty up front"/>
 
-        <TextBox Grid.Row="2"
+        <TextBox Grid.Row="0"
                  Grid.Column="1"
                  Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                  Text="{Binding RoyaltyUpFront, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Grid.Row="3"
+        <TextBlock Grid.Row="1"
                    Grid.Column="0"
                    Style="{StaticResource PopUpWindowBodyTextStyle}"
                    Text="Royalty at end"/>
 
-        <TextBox Grid.Row="3"
+        <TextBox Grid.Row="1"
                  Grid.Column="1"
                  Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                  Text="{Binding RoyaltyAtEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

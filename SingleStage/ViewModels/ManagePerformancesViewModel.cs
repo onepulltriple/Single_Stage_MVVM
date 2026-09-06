@@ -9,14 +9,16 @@ namespace SingleStage.ViewModels
 {
     public class ManagePerformancesViewModel : ViewModelBase
     {
-        private readonly PerformanceDAC _performanceDAC;
         private readonly ShowDAC _showDAC;
+        private readonly PerformanceDAC _performanceDAC;
+        private readonly ArtistPerformanceDAC _artistPerformanceDAC;
         private readonly PerformanceScheduleValidator _performanceScheduleValidator;
 
         private readonly List<Performance> _allPerformances = new();
         public ObservableCollection<Show> ListOfShows { get; } = new();
         public ObservableCollection<Performance> ListOfPerformances { get; } = new();
-        //public ObservableCollection<Artist> ListOfArtists { get; } = new();
+        public ObservableCollection<ArtistPerformance> ListOfArtistPerformances { get; } = new();
+
 
         private Performance? _selectedPerformance;
         public Performance? SelectedPerformance
@@ -31,12 +33,42 @@ namespace SingleStage.ViewModels
 
                 OnPropertyChanged(nameof(SelectedPerformance));
 
-                // cancel editor edits when selection changes
+                // a different performance means any ArtistPerformance edit
+                // belongs to the old performance, so abandon it
                 PerformanceEditor.Cancel();
+                ArtistPerformanceEditor.Cancel();
+
+                // the selected ArtistPerformance also belongs to the old performance, so set it to null
+                SelectedArtistPerformance = null;
+
+                // repopulate the ArtistPerformance picker
+                PopulateArtistPerformances();
 
                 UpdateCommandStates();
             }
         }
+
+        private ArtistPerformance? _selectedArtistPerformance;
+        public ArtistPerformance? SelectedArtistPerformance
+        {
+            get => _selectedArtistPerformance;
+            set
+            {
+                if (_selectedArtistPerformance == value)
+                    return;
+
+                _selectedArtistPerformance = value;
+
+                OnPropertyChanged(nameof(SelectedArtistPerformance));
+
+                // cancel editor edits when selection changes
+                ArtistPerformanceEditor.Cancel();
+
+                UpdateCommandStates();
+            }
+        }
+
+
 
         private int? _filterByShowId;
         public int? FilterByShowId
@@ -124,7 +156,7 @@ namespace SingleStage.ViewModels
                 ScheduleErrorMessage = string.Empty;
 
                 //SelectedPerformance = null; // selected performance survives the mode switch
-                //SelectedArtistPerformance = null;
+                SelectedArtistPerformance = null;
 
                 OnPropertyChanged(nameof(ManagementMode));
                 OnPropertyChanged(nameof(InManageArtistPerformancesMode));
@@ -151,14 +183,21 @@ namespace SingleStage.ViewModels
 
         #endregion
 
-        public ManagePerformancesViewModel(PerformanceDAC performanceDAC, ShowDAC showDAC, PerformanceScheduleValidator performanceScheduleValidator)
+        // constructor
+        public ManagePerformancesViewModel(
+            ShowDAC showDAC, 
+            PerformanceDAC performanceDAC, 
+            ArtistPerformanceDAC artistPerformanceDAC,
+            PerformanceScheduleValidator performanceScheduleValidator)
         {
-            ArgumentNullException.ThrowIfNull(performanceDAC);
             ArgumentNullException.ThrowIfNull(showDAC);
+            ArgumentNullException.ThrowIfNull(performanceDAC);
+            ArgumentNullException.ThrowIfNull(artistPerformanceDAC);
             ArgumentNullException.ThrowIfNull(performanceScheduleValidator);
 
-            _performanceDAC = performanceDAC;
             _showDAC = showDAC;
+            _performanceDAC = performanceDAC;
+            _artistPerformanceDAC = artistPerformanceDAC;
             _performanceScheduleValidator = performanceScheduleValidator;
 
             PerformanceEditor = new PerformanceEditorViewModel();
@@ -193,7 +232,7 @@ namespace SingleStage.ViewModels
 
         }
 
-        // loads the lists
+        // load the lists
         public async Task InitialiseAsync()
         {
             int? currentShowId = FilterByShowId;
@@ -252,6 +291,21 @@ namespace SingleStage.ViewModels
         {
             FilterByShowId = null;
         }
+
+        private void PopulateArtistPerformances()
+        {
+            ListOfArtistPerformances.Clear();
+
+            if (SelectedPerformance is null)
+                return;
+
+            foreach (ArtistPerformance artistPerformance in SelectedPerformance.ArtistPerformances
+                         .OrderBy(ap => ap.Artist.Name))
+            {
+                ListOfArtistPerformances.Add(artistPerformance);
+            }
+        }
+
 
         #region dispatcher methods
         private void Create()
@@ -544,42 +598,155 @@ namespace SingleStage.ViewModels
         #region Manage artist performances
         private void CreateArtistPerformance()
         {
-            
+            if (SelectedPerformance is null)
+                return;
+
+            ArtistPerformanceEditor.BeginCreate(SelectedPerformance.Id);
+
+            UpdateCommandStates();
         }
 
         private void EditArtistPerformance()
         {
-            
+            if (SelectedArtistPerformance is null)
+                return;
+
+            ArtistPerformanceEditor.BeginEdit(SelectedArtistPerformance);
+
+            UpdateCommandStates();
         }
 
         private async Task SaveArtistPerformance()
         {
-            
+            if (ArtistPerformanceEditor.WorkingCopyArtistPerformance is null
+                || !ArtistPerformanceEditor.IsValid)
+                return;
+
+            ArtistPerformance workingCopy =
+                ArtistPerformanceEditor.WorkingCopyArtistPerformance;
+
+            int savedArtistPerformanceId = workingCopy.Id;
+            int performanceId = workingCopy.PerformanceId;
+
+            if (workingCopy.Id == 0)
+            {
+                await _artistPerformanceDAC.AddAsync(workingCopy);
+                savedArtistPerformanceId = workingCopy.Id;
+            }
+            else
+            {
+                await _artistPerformanceDAC.UpdateAsync(workingCopy);
+            }
+
+            ArtistPerformanceEditor.Cancel();
+
+            Performance? refreshedPerformance =
+                await _performanceDAC.GetByIdAsync(performanceId);
+
+            if (refreshedPerformance is null)
+            {
+                SelectedPerformance = null;
+                return;
+            }
+
+            Performance? oldPerformance =
+                ListOfPerformances.FirstOrDefault(p => p.Id == performanceId);
+
+            if (oldPerformance is not null)
+            {
+                int index = ListOfPerformances.IndexOf(oldPerformance);
+                ListOfPerformances[index] = refreshedPerformance;
+            }
+
+            int allPerformancesIndex =
+                _allPerformances.FindIndex(p => p.Id == performanceId);
+
+            if (allPerformancesIndex >= 0)
+            {
+                _allPerformances[allPerformancesIndex] = refreshedPerformance;
+            }
+
+            SelectedPerformance = refreshedPerformance;
+
+            PopulateArtistPerformances();
+
+            SelectedArtistPerformance =
+                ListOfArtistPerformances.FirstOrDefault(
+                    ap => ap.Id == savedArtistPerformanceId);
+
+            UpdateCommandStates();
         }
+
 
         private async Task DeleteArtistPerformance()
         {
-            
+            if (SelectedArtistPerformance is null)
+                return;
+
+            int performanceId = SelectedArtistPerformance.PerformanceId;
+
+            await _artistPerformanceDAC.DeleteAsync(
+                SelectedArtistPerformance.Id);
+
+            ArtistPerformanceEditor.Cancel();
+            SelectedArtistPerformance = null;
+
+            Performance? refreshedPerformance =
+                await _performanceDAC.GetByIdAsync(performanceId);
+
+            if (refreshedPerformance is null)
+            {
+                SelectedPerformance = null;
+                return;
+            }
+
+            Performance? oldPerformance =
+                ListOfPerformances.FirstOrDefault(p => p.Id == performanceId);
+
+            if (oldPerformance is not null)
+            {
+                int index = ListOfPerformances.IndexOf(oldPerformance);
+                ListOfPerformances[index] = refreshedPerformance;
+            }
+
+            int allPerformancesIndex =
+                _allPerformances.FindIndex(p => p.Id == performanceId);
+
+            if (allPerformancesIndex >= 0)
+            {
+                _allPerformances[allPerformancesIndex] = refreshedPerformance;
+            }
+
+            SelectedPerformance = refreshedPerformance;
+
+            PopulateArtistPerformances();
+
+            UpdateCommandStates();
         }
+
 
         private bool CanCreateArtistPerformance(object? parameter)
         {
-            return true;
+            return SelectedPerformance is not null
+                && !ArtistPerformanceEditor.IsEditing;
         }
 
         private bool CanEditArtistPerformance(object? parameter)
         {
-            return true;
+            return SelectedArtistPerformance is not null
+                && !ArtistPerformanceEditor.IsEditing;
         }
 
         private bool CanSaveArtistPerformance(object? parameter)
         {
-            return true;
+            return ArtistPerformanceEditor.WorkingCopyArtistPerformance is not null
+                && ArtistPerformanceEditor.IsValid;
         }
 
         private bool CanDeleteArtistPerformance(object? parameter)
         {
-            return true;
+            return SelectedArtistPerformance is not null
+                && !ArtistPerformanceEditor.IsEditing;
         }
 
 

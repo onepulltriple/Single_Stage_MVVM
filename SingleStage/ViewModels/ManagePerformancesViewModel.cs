@@ -177,12 +177,19 @@ namespace SingleStage.ViewModels
                 UpdateCommandStates();
             };
 
-            CreateCommand = new RelayCommand(_ => CreatePerformance(), _ => CanCreatePerformance(null));
-            EditCommand = new RelayCommand(_ => EditPerformance(), _ => CanEditPerformance(null));
-            SaveCommand = new AsyncRelayCommand(async _ => await SavePerformance(), _ => CanSavePerformance(null));
-            DeleteCommand = new AsyncRelayCommand(async _ => await DeletePerformance(), _ => CanDeletePerformance(null));
-            CancelCommand = new RelayCommand(_ => CancelEdit(), _ => CanCancelEdit(null));
-            ListAllCommand = new RelayCommand(_ => ListAllPerformances());
+            CreateCommand = 
+                new RelayCommand(_ => Create(), _ => CanCreate(null));
+            EditCommand = 
+                new RelayCommand(_ => Edit(), _ => CanEdit(null));
+            SaveCommand = 
+                new AsyncRelayCommand(async _ => await Save(), _ => CanSave(null));
+            DeleteCommand = 
+                new AsyncRelayCommand(async _ => await Delete(), _ => CanDelete(null));
+            CancelCommand = 
+                new RelayCommand(_ => CancelEdit(), _ => CanCancelEdit(null));
+
+            ListAllCommand = 
+                new RelayCommand(_ => ListAllPerformances());
 
         }
 
@@ -246,6 +253,124 @@ namespace SingleStage.ViewModels
             FilterByShowId = null;
         }
 
+        #region dispatcher methods
+        private void Create()
+        {
+            switch (ManagementMode)
+            {
+                case PerformanceManagementMode.Performances:
+                    CreatePerformance();
+                    break;
+
+                case PerformanceManagementMode.ArtistPerformances:
+                    CreateArtistPerformance();
+                    break;
+            }
+        }
+
+        private bool CanCreate(object? parameter)
+        {
+            return ManagementMode switch
+            {
+                PerformanceManagementMode.Performances =>
+                    CanCreatePerformance(parameter),
+
+                PerformanceManagementMode.ArtistPerformances =>
+                    CanCreateArtistPerformance(parameter),
+
+                _ => false
+            };
+        }
+
+        private void Edit()
+        {
+            switch (ManagementMode)
+            {
+                case PerformanceManagementMode.Performances:
+                    EditPerformance();
+                    break;
+
+                case PerformanceManagementMode.ArtistPerformances:
+                    EditArtistPerformance();
+                    break;
+            }
+        }
+
+        private bool CanEdit(object? parameter)
+        {
+            return ManagementMode switch
+            {
+                PerformanceManagementMode.Performances =>
+                    CanEditPerformance(parameter),
+
+                PerformanceManagementMode.ArtistPerformances =>
+                    CanEditArtistPerformance(parameter),
+
+                _ => false
+            };
+        }
+
+        private async Task Save()
+        {
+            switch (ManagementMode)
+            {
+                case PerformanceManagementMode.Performances:
+                    await SavePerformance();
+                    break;
+
+                case PerformanceManagementMode.ArtistPerformances:
+                    await SaveArtistPerformance();
+                    break;
+            }
+        }
+
+        private bool CanSave(object? parameter)
+        {
+            return ManagementMode switch
+            {
+                PerformanceManagementMode.Performances =>
+                    CanSavePerformance(parameter),
+
+                PerformanceManagementMode.ArtistPerformances =>
+                    CanSaveArtistPerformance(parameter),
+
+                _ => false
+            };
+        }
+
+        private async Task Delete()
+        {
+            switch (ManagementMode)
+            {
+                case PerformanceManagementMode.Performances:
+                    await DeletePerformance();
+                    break;
+
+                case PerformanceManagementMode.ArtistPerformances:
+                    await DeleteArtistPerformance();
+                    break;
+            }
+        }
+
+        private bool CanDelete(object? parameter)
+        {
+            return ManagementMode switch
+            {
+                PerformanceManagementMode.Performances =>
+                    CanDeletePerformance(parameter),
+
+                PerformanceManagementMode.ArtistPerformances =>
+                    CanDeleteArtistPerformance(parameter),
+
+                _ => false
+            };
+        }
+
+
+        #endregion
+
+
+        #region Manage performances
         private void CreatePerformance()
         {
             ScheduleErrorMessage = string.Empty;
@@ -376,7 +501,6 @@ namespace SingleStage.ViewModels
             UpdateCommandStates();
         }
 
-
         private async Task DeletePerformance()
         {
             if (SelectedPerformance is null) 
@@ -389,15 +513,6 @@ namespace SingleStage.ViewModels
             PerformanceEditor.Cancel();
 
             SelectedPerformance = null;
-
-            UpdateCommandStates();
-        }
-
-        private void CancelEdit()
-        {
-            ScheduleErrorMessage = string.Empty;
-
-            PerformanceEditor.Cancel();
 
             UpdateCommandStates();
         }
@@ -423,9 +538,83 @@ namespace SingleStage.ViewModels
             return SelectedPerformance is not null;
         }
 
+
+        #endregion
+
+        #region Manage artist performances
+        private void CreateArtistPerformance()
+        {
+            
+        }
+
+        private void EditArtistPerformance()
+        {
+            
+        }
+
+        private async Task SaveArtistPerformance()
+        {
+            
+        }
+
+        private async Task DeleteArtistPerformance()
+        {
+            
+        }
+
+        private bool CanCreateArtistPerformance(object? parameter)
+        {
+            return true;
+        }
+
+        private bool CanEditArtistPerformance(object? parameter)
+        {
+            return true;
+        }
+
+        private bool CanSaveArtistPerformance(object? parameter)
+        {
+            return true;
+        }
+
+        private bool CanDeleteArtistPerformance(object? parameter)
+        {
+            return true;
+        }
+
+
+        #endregion
+        
+        private void CancelEdit()
+        {
+            ScheduleErrorMessage = string.Empty;
+
+            switch (ManagementMode)
+            {
+                case PerformanceManagementMode.Performances:
+                    PerformanceEditor.Cancel();
+                    break;
+
+                case PerformanceManagementMode.ArtistPerformances:
+                    ArtistPerformanceEditor.Cancel();
+                    break;
+            }
+
+            UpdateCommandStates();
+        }
+
         private bool CanCancelEdit(object? parameter)
         {
-            return PerformanceEditor.IsEditing;
+            return ManagementMode switch
+            {
+                PerformanceManagementMode.Performances =>
+                    PerformanceEditor.IsEditing,
+
+                PerformanceManagementMode.ArtistPerformances =>
+                    ArtistPerformanceEditor.IsEditing,
+
+                _ => false
+            };
         }
 
         private void UpdateCommandStates()

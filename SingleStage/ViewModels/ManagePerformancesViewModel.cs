@@ -388,6 +388,21 @@ namespace SingleStage.ViewModels
                     .FirstOrDefault(ap => ap.ArtistId == SelectedArtistId.Value);
         }
 
+        private async Task RefreshPerformances()
+        {
+            var performances = await _performanceDAC.GetAllAsync();
+
+            _allPerformances.Clear();
+            _allPerformances.AddRange(performances);
+
+            ApplyPerformanceFilter();
+
+            SelectedArtistPerformance = null;
+            SelectedArtistId = null;
+            SelectedPerformance = null;
+        }
+
+
 
         #region dispatcher methods
         private void Create()
@@ -712,13 +727,9 @@ namespace SingleStage.ViewModels
             ArtistPerformance workingCopy =
                 ArtistPerformanceEditor.WorkingCopyArtistPerformance;
 
-            int savedArtistPerformanceId = workingCopy.Id;
-            int performanceId = workingCopy.PerformanceId;
-
             if (workingCopy.Id == 0)
             {
                 await _artistPerformanceDAC.AddAsync(workingCopy);
-                savedArtistPerformanceId = workingCopy.Id;
             }
             else
             {
@@ -727,99 +738,25 @@ namespace SingleStage.ViewModels
 
             ArtistPerformanceEditor.Cancel();
 
-            Performance? refreshedPerformance =
-                await _performanceDAC.GetByIdAsync(performanceId);
-
-            if (refreshedPerformance is null)
-            {
-                SelectedPerformance = null;
-                return;
-            }
-
-            Performance? oldPerformance =
-                ListOfPerformances.FirstOrDefault(p => p.Id == performanceId);
-
-            if (oldPerformance is not null)
-            {
-                int index = ListOfPerformances.IndexOf(oldPerformance);
-                ListOfPerformances[index] = refreshedPerformance;
-            }
-
-            int allPerformancesIndex =
-                _allPerformances.FindIndex(p => p.Id == performanceId);
-
-            if (allPerformancesIndex >= 0)
-            {
-                _allPerformances[allPerformancesIndex] = refreshedPerformance;
-            }
-
-            //_selectedPerformance = refreshedPerformance;
-            //OnPropertyChanged(nameof(SelectedPerformance));
-            
-            SelectedPerformance = refreshedPerformance;
-
-            PopulateArtistPerformances();
-
-            SelectedArtistPerformance = null;
-            SelectedPerformance = null;
-
-            //SelectedArtistPerformance =
-            //    ListOfArtistPerformances.FirstOrDefault(
-            //        ap => ap.Id == savedArtistPerformanceId);
+            await RefreshPerformances();
 
             UpdateCommandStates();
         }
-
 
         private async Task DeleteArtistPerformance()
         {
             if (SelectedArtistPerformance is null)
                 return;
 
-            int performanceId = SelectedArtistPerformance.PerformanceId;
-
             await _artistPerformanceDAC.DeleteAsync(
                 SelectedArtistPerformance.Id);
 
             ArtistPerformanceEditor.Cancel();
-            SelectedArtistPerformance = null;
 
-            Performance? refreshedPerformance =
-                await _performanceDAC.GetByIdAsync(performanceId);
-
-            if (refreshedPerformance is null)
-            {
-                SelectedPerformance = null;
-                return;
-            }
-
-            Performance? oldPerformance =
-                ListOfPerformances.FirstOrDefault(p => p.Id == performanceId);
-
-            if (oldPerformance is not null)
-            {
-                int index = ListOfPerformances.IndexOf(oldPerformance);
-                ListOfPerformances[index] = refreshedPerformance;
-            }
-
-            int allPerformancesIndex =
-                _allPerformances.FindIndex(p => p.Id == performanceId);
-
-            if (allPerformancesIndex >= 0)
-            {
-                _allPerformances[allPerformancesIndex] = refreshedPerformance;
-            }
-
-            //_selectedPerformance = refreshedPerformance;
-            //OnPropertyChanged(nameof(SelectedPerformance));
-
-            SelectedPerformance = refreshedPerformance;
-
-            PopulateArtistPerformances();
+            await RefreshPerformances();
 
             UpdateCommandStates();
         }
-
 
         private bool CanCreateArtistPerformance(object? parameter)
         {

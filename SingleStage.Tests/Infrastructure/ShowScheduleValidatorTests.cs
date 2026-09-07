@@ -183,5 +183,83 @@ namespace SingleStage.Tests.Services
             _validator.GetConflict(newShow, new[] { existingShow })
                 .Should().BeNull();
         }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowStartsAtOpeningTime_ReturnsTrue()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 10, 0, 0),
+                EndTime = new DateTime(2026, 9, 1, 12, 0, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeTrue();
+        }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowStartsBeforeOpeningTime_ReturnsFalse()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 9, 59, 0),
+                EndTime = new DateTime(2026, 9, 1, 12, 0, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeFalse();
+        }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowEndsAtMidnight_ReturnsTrue()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 22, 0, 0),
+                EndTime = new DateTime(2026, 9, 2, 0, 0, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeTrue();
+        }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowEndsAfterMidnight_ReturnsFalse()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 22, 0, 0),
+                EndTime = new DateTime(2026, 9, 2, 0, 1, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeFalse();
+        }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowStartsBeforeOpeningAndEndsAfterOpening_ReturnsFalse()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 9, 0, 0),
+                EndTime = new DateTime(2026, 9, 1, 11, 0, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeFalse();
+        }
+
+        [Test]
+        public void IsWithinOpeningHours_WhenShowIsWithinOpeningHours_ReturnsTrue()
+        {
+            var show = new Show
+            {
+                StartTime = new DateTime(2026, 9, 1, 19, 0, 0),
+                EndTime = new DateTime(2026, 9, 1, 23, 0, 0)
+            };
+
+            _validator.IsWithinOpeningHours(show)
+                .Should().BeTrue();
+        }
     }
 }

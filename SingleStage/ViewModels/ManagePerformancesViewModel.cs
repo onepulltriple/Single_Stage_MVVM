@@ -12,12 +12,14 @@ namespace SingleStage.ViewModels
         private readonly ShowDAC _showDAC;
         private readonly PerformanceDAC _performanceDAC;
         private readonly ArtistPerformanceDAC _artistPerformanceDAC;
+        private readonly ArtistDAC _artistDAC;
         private readonly PerformanceScheduleValidator _performanceScheduleValidator;
 
         private readonly List<Performance> _allPerformances = new();
         public ObservableCollection<Show> ListOfShows { get; } = new();
         public ObservableCollection<Performance> ListOfPerformances { get; } = new();
         public ObservableCollection<ArtistPerformance> ListOfArtistPerformances { get; } = new();
+        public ObservableCollection<Artist> ListOfArtists { get; } = new();
 
 
         private Performance? _selectedPerformance;
@@ -33,16 +35,18 @@ namespace SingleStage.ViewModels
 
                 OnPropertyChanged(nameof(SelectedPerformance));
 
-                // a different performance means any ArtistPerformance edit
-                // belongs to the old performance, so abandon it
+                // selecting a different performance means
+                // any ArtistPerformance edit belongs to the old performance, so abandon it
                 PerformanceEditor.Cancel();
                 ArtistPerformanceEditor.Cancel();
 
                 // the selected ArtistPerformance also belongs to the old performance, so set it to null
                 SelectedArtistPerformance = null;
+                SelectedArtistId = null;
 
                 // repopulate the ArtistPerformance picker
                 PopulateArtistPerformances();
+                OnPropertyChanged(nameof(ArtistPickerItems));
 
                 UpdateCommandStates();
             }
@@ -68,6 +72,29 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private int? _selectedArtistId;
+        public int? SelectedArtistId
+        {
+            get => _selectedArtistId;
+            set
+            {
+                if (_selectedArtistId == value)
+                    return;
+
+                _selectedArtistId = value;
+                OnPropertyChanged(nameof(SelectedArtistId));
+                
+                // when creating, pass the selected artist to the editor
+                if (ArtistPerformanceEditor.IsEditing &&
+                    ArtistPerformanceEditor.WorkingCopyArtistPerformance?.Id == 0 &&
+                    value.HasValue)
+                {
+                    ArtistPerformanceEditor.ArtistId = value.Value;
+                }
+
+                UpdateSelectedArtistPerformance();
+            }
+        }
 
 
         private int? _filterByShowId;
@@ -92,9 +119,30 @@ namespace SingleStage.ViewModels
             }
         }
 
+        public IEnumerable<Artist> ArtistPickerItems
+        {
+            get
+            {
+                if (ArtistPerformanceEditor.WorkingCopyArtistPerformance?.Id == 0)
+                {
+                    // creating: return all artists except those already attached to the performance
+                    var existingArtistIds = ListOfArtistPerformances
+                        .Select(ap => ap.ArtistId)
+                        .ToHashSet();
+
+                    return ListOfArtists
+                        .Where(artist => !existingArtistIds.Contains(artist.Id))
+                        .OrderBy(artist => artist.Name);
+                }
+
+                // editing: return all artists attached to that performance
+                return ListOfArtistPerformances
+                    .Select(ap => ap.Artist)
+                    .OrderBy(artist => artist.Name);
+            }
+        }
 
         private string _scheduleErrorMessage = string.Empty;
-
         public string ScheduleErrorMessage
         {
             get => _scheduleErrorMessage;
@@ -116,7 +164,16 @@ namespace SingleStage.ViewModels
                 if (!string.IsNullOrEmpty(ScheduleErrorMessage))
                     return ScheduleErrorMessage;
 
-                return PerformanceEditor.ErrorMessage;
+                return ManagementMode switch
+                {
+                    PerformanceManagementMode.Performances =>
+                        PerformanceEditor.ErrorMessage,
+
+                    PerformanceManagementMode.ArtistPerformances =>
+                        ArtistPerformanceEditor.ErrorMessage,
+
+                    _ => string.Empty
+                };
             }
         }
 
@@ -188,16 +245,19 @@ namespace SingleStage.ViewModels
             ShowDAC showDAC, 
             PerformanceDAC performanceDAC, 
             ArtistPerformanceDAC artistPerformanceDAC,
+            ArtistDAC artistDAC,
             PerformanceScheduleValidator performanceScheduleValidator)
         {
             ArgumentNullException.ThrowIfNull(showDAC);
             ArgumentNullException.ThrowIfNull(performanceDAC);
             ArgumentNullException.ThrowIfNull(artistPerformanceDAC);
+            ArgumentNullException.ThrowIfNull(artistDAC);
             ArgumentNullException.ThrowIfNull(performanceScheduleValidator);
 
             _showDAC = showDAC;
             _performanceDAC = performanceDAC;
             _artistPerformanceDAC = artistPerformanceDAC;
+            _artistDAC = artistDAC;
             _performanceScheduleValidator = performanceScheduleValidator;
 
             PerformanceEditor = new PerformanceEditorViewModel();
@@ -209,10 +269,12 @@ namespace SingleStage.ViewModels
                 OnPropertyChanged(nameof(ErrorMessage));
                 UpdateCommandStates();
             };
-            ArtistPerformanceEditor.PropertyChanged += (_, _) =>
+            ArtistPerformanceEditor.PropertyChanged += (_, e) =>
             {
                 // the schedule error should persist even while the user modifies the editor
                 OnPropertyChanged(nameof(ErrorMessage));
+
+                OnPropertyChanged(nameof(ArtistPickerItems));
                 UpdateCommandStates();
             };
 
@@ -239,6 +301,7 @@ namespace SingleStage.ViewModels
 
             var performances = await _performanceDAC.GetAllAsync();
             var shows = await _showDAC.GetAllAsync();
+            var artists = await _artistDAC.GetAllAsync();
 
             _allPerformances.Clear();
             foreach (Performance performance in performances)
@@ -250,6 +313,12 @@ namespace SingleStage.ViewModels
             foreach (Show show in shows.OrderBy(show => show.StartTime))
             {
                 ListOfShows.Add(show);
+            }
+
+            ListOfArtists.Clear();
+            foreach (Artist artist in artists.OrderBy(artist => artist.Name))
+            {
+                ListOfArtists.Add(artist);
             }
 
             // restore the previous filter if that show still exists.
@@ -304,6 +373,19 @@ namespace SingleStage.ViewModels
             {
                 ListOfArtistPerformances.Add(artistPerformance);
             }
+        }
+
+        private void UpdateSelectedArtistPerformance()
+        {
+            if (SelectedPerformance is null || !SelectedArtistId.HasValue)
+            {
+                SelectedArtistPerformance = null;
+                return;
+            }
+
+            SelectedArtistPerformance =
+                SelectedPerformance.ArtistPerformances
+                    .FirstOrDefault(ap => ap.ArtistId == SelectedArtistId.Value);
         }
 
 
@@ -419,8 +501,6 @@ namespace SingleStage.ViewModels
                 _ => false
             };
         }
-
-
         #endregion
 
 
@@ -601,7 +681,12 @@ namespace SingleStage.ViewModels
             if (SelectedPerformance is null)
                 return;
 
+            SelectedArtistPerformance = null;
+            SelectedArtistId = null;
+
             ArtistPerformanceEditor.BeginCreate(SelectedPerformance.Id);
+
+            OnPropertyChanged(nameof(ArtistPickerItems));
 
             UpdateCommandStates();
         }
@@ -612,6 +697,8 @@ namespace SingleStage.ViewModels
                 return;
 
             ArtistPerformanceEditor.BeginEdit(SelectedArtistPerformance);
+
+            OnPropertyChanged(nameof(ArtistPickerItems));
 
             UpdateCommandStates();
         }
@@ -666,13 +753,19 @@ namespace SingleStage.ViewModels
                 _allPerformances[allPerformancesIndex] = refreshedPerformance;
             }
 
+            //_selectedPerformance = refreshedPerformance;
+            //OnPropertyChanged(nameof(SelectedPerformance));
+            
             SelectedPerformance = refreshedPerformance;
 
             PopulateArtistPerformances();
 
-            SelectedArtistPerformance =
-                ListOfArtistPerformances.FirstOrDefault(
-                    ap => ap.Id == savedArtistPerformanceId);
+            SelectedArtistPerformance = null;
+            SelectedPerformance = null;
+
+            //SelectedArtistPerformance =
+            //    ListOfArtistPerformances.FirstOrDefault(
+            //        ap => ap.Id == savedArtistPerformanceId);
 
             UpdateCommandStates();
         }
@@ -716,6 +809,9 @@ namespace SingleStage.ViewModels
             {
                 _allPerformances[allPerformancesIndex] = refreshedPerformance;
             }
+
+            //_selectedPerformance = refreshedPerformance;
+            //OnPropertyChanged(nameof(SelectedPerformance));
 
             SelectedPerformance = refreshedPerformance;
 

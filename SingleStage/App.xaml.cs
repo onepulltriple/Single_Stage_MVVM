@@ -31,7 +31,7 @@ namespace SingleStage
                     // DACs - register concrete types (constructor takes SingleStageMvvmContext)
                     services.AddTransient<IArtistDAC, ArtistDAC>(); 
                       // whenever something asks for an IArtistDAC, give it an ArtistDAC
-                    //services.AddTransient<ArtistPerformance>();
+                    services.AddTransient<ArtistDAC>();
                     services.AddTransient<PerformanceDAC>();
                     services.AddTransient<ArtistPerformanceDAC>();
                     services.AddTransient<ShowDAC>();

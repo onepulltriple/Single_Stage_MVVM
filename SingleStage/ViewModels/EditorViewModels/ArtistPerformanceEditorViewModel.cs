@@ -102,7 +102,6 @@ namespace SingleStage.ViewModels.EditorViewModels
         }
 
         private string _errorMessage = string.Empty;
-
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -143,14 +142,28 @@ namespace SingleStage.ViewModels.EditorViewModels
                 return;
             }
 
-            if (RoyaltyUpFront.HasValue && RoyaltyUpFront.Value < 0)
+            if (!RoyaltyUpFront.HasValue)
+            {
+                ErrorMessage = "Up-front royalty must be entered.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (RoyaltyUpFront.Value < 0)
             {
                 ErrorMessage = "Up-front royalty cannot be negative.";
                 RaiseValidityChanged();
                 return;
             }
 
-            if (RoyaltyAtEnd.HasValue && RoyaltyAtEnd.Value < 0)
+            if (!RoyaltyAtEnd.HasValue)
+            {
+                ErrorMessage = "End royalty must be entered.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (RoyaltyAtEnd.Value < 0)
             {
                 ErrorMessage = "End royalty cannot be negative.";
                 RaiseValidityChanged();

@@ -251,14 +251,20 @@
                 <!--Text="Performance by"-->
 
                 <ComboBox Grid.Column="1"
-                          ItemsSource="{Binding ListOfArtistPerformances}"
-                          SelectedItem="{Binding SelectedArtistPerformance, Mode=TwoWay}"
+                          ItemsSource="{Binding ArtistPickerItems}"
+                          SelectedValuePath="Id"
+                          SelectedValue="{Binding SelectedArtistId,
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}"
                           Style="{StaticResource PopUpWindowComboBoxStyle}"
                           Margin="0,6,6,6">
-                    
+                          <!--SelectedValue="{Binding ArtistPerformanceEditor.ArtistId,
+                                                  Mode=TwoWay,
+                                                  UpdateSourceTrigger=PropertyChanged}"-->
+
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Artist.Name}"/>
+                            <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

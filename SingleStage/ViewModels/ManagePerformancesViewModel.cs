@@ -48,6 +48,7 @@ namespace SingleStage.ViewModels
                 PopulateArtistPerformances();
                 OnPropertyChanged(nameof(ArtistPickerItems));
 
+                UpdateInstructionMessage();
                 UpdateCommandStates();
             }
         }
@@ -177,6 +178,20 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private string _instructionMessage = string.Empty;
+        public string InstructionMessage
+        {
+            get => _instructionMessage;
+            private set
+            {
+                if (_instructionMessage == value)
+                    return;
+
+                _instructionMessage = value;
+                OnPropertyChanged(nameof(InstructionMessage));
+            }
+        }
+
 
         public PerformanceEditorViewModel PerformanceEditor { get; }
         public ArtistPerformanceEditorViewModel ArtistPerformanceEditor { get; }
@@ -218,6 +233,8 @@ namespace SingleStage.ViewModels
                 OnPropertyChanged(nameof(ManagementMode));
                 OnPropertyChanged(nameof(InManageArtistPerformancesMode));
                 OnPropertyChanged(nameof(RowDetailsVisibilityMode));
+
+                UpdateInstructionMessage();
 
                 UpdateCommandStates();
             }
@@ -402,6 +419,36 @@ namespace SingleStage.ViewModels
             SelectedPerformance = null;
         }
 
+        private void UpdateInstructionMessage()
+        {
+            if (ManagementMode == PerformanceManagementMode.ArtistPerformances)
+            {
+                if (SelectedPerformance is null)
+                {
+                    InstructionMessage =
+                        "Select a performance to begin creating or editing an artist's performance.";
+                }
+                else
+                {
+                    InstructionMessage =
+                        "To add an artist to a performance, select a performance, then click 'Create'.\n\nTo edit an existing artist's performance,\nselect a performance and an artist, then click 'Edit'.";
+                }
+
+                return;
+            }
+
+            // Performance management mode
+            if (SelectedPerformance is null)
+            {
+                InstructionMessage =
+                    "Select a performance to edit, or click 'Create' to add a new performance.";
+            }
+            else
+            {
+                InstructionMessage =
+                    "Click 'Edit' to modify the selected performance, or click 'Create' to add a new performance.";
+            }
+        }
 
 
         #region dispatcher methods
@@ -523,9 +570,12 @@ namespace SingleStage.ViewModels
         private void CreatePerformance()
         {
             ScheduleErrorMessage = string.Empty;
+            InstructionMessage = string.Empty;
 
             if (!FilterByShowId.HasValue)
             {
+                InstructionMessage = "Select a show first. The new performance will be placed in the first available time slot.";
+
                 PerformanceEditor.BeginCreate();
 
                 UpdateCommandStates();
@@ -538,6 +588,8 @@ namespace SingleStage.ViewModels
 
             if (selectedShow is null)
             {
+                InstructionMessage = "Enter the performance details. The suggested time will be the first available slot in the selected show.";
+
                 PerformanceEditor.BeginCreate();
 
                 UpdateCommandStates();
@@ -603,6 +655,9 @@ namespace SingleStage.ViewModels
                 return;
 
             ScheduleErrorMessage = string.Empty;
+
+            InstructionMessage =
+                "Edit the performance details below, then click 'Save' to apply your changes.";
 
             PerformanceEditor.BeginEdit(SelectedPerformance);
 
@@ -696,6 +751,10 @@ namespace SingleStage.ViewModels
             if (SelectedPerformance is null)
                 return;
 
+            ScheduleErrorMessage = string.Empty;
+            InstructionMessage =
+                "Select an artist and enter their royalty details, then click 'Save' to apply your changes.";
+
             SelectedArtistPerformance = null;
             SelectedArtistId = null;
 
@@ -710,6 +769,10 @@ namespace SingleStage.ViewModels
         {
             if (SelectedArtistPerformance is null)
                 return;
+
+            ScheduleErrorMessage = string.Empty;
+            InstructionMessage =
+                "Edit the artist's royalty details, then click 'Save' to apply your changes.";
 
             ArtistPerformanceEditor.BeginEdit(SelectedArtistPerformance);
 
@@ -740,6 +803,7 @@ namespace SingleStage.ViewModels
 
             await RefreshPerformances();
 
+            UpdateInstructionMessage();
             UpdateCommandStates();
         }
 
@@ -755,6 +819,7 @@ namespace SingleStage.ViewModels
 
             await RefreshPerformances();
 
+            UpdateInstructionMessage();
             UpdateCommandStates();
         }
 
@@ -788,6 +853,7 @@ namespace SingleStage.ViewModels
         private void CancelEdit()
         {
             ScheduleErrorMessage = string.Empty;
+            InstructionMessage = string.Empty;
 
             switch (ManagementMode)
             {

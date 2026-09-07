@@ -274,18 +274,29 @@
                                                      DataContext="{Binding ArtistPerformanceEditor}"/>
             
         </Grid>
-        
+
 
         <!-- second column -->
-        <!-- error message row -->
-        <TextBlock Grid.Row="2"
-                   Grid.Column="1"
-                   Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                   Text="{Binding ErrorMessage}"
-                   TextWrapping="Wrap"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Bottom"
-                   d:Text="error message"/>
+        <!-- messages row -->
+        <StackPanel Grid.Row="2"
+            Grid.Column="1"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Center">
+
+            <TextBlock Style="{StaticResource PopUpWindowBodyTextStyle}"
+               Text="{Binding InstructionMessage}"
+               TextWrapping="Wrap"
+               HorizontalAlignment="Center"
+               TextAlignment="Center"
+               d:Text="instruction message"/>
+
+            <TextBlock Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+               Text="{Binding ErrorMessage}"
+               TextWrapping="Wrap"
+               HorizontalAlignment="Center"
+               TextAlignment="Center"
+               d:Text="error message"/>
+        </StackPanel>
 
         <!-- footer (both columns) -->
         <!-- CRUD action bar -->

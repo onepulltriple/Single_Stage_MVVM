@@ -12,10 +12,18 @@ namespace SingleStage.Infrastructure
             if (string.IsNullOrWhiteSpace(text))
                 return false;
 
-            if (TimeSpan.TryParse(text.Trim(), out time))
+            string trimmedText = text.Trim();
+
+            if (trimmedText == "24:00")
+            {
+                time = TimeSpan.FromHours(24);
+                return true;
+            }
+
+            if (TimeSpan.TryParse(trimmedText, out time))
                 return true;
 
-            if (DateTime.TryParse(text.Trim(), CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dateTime))
+            if (DateTime.TryParse(trimmedText, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime dateTime))
             {
                 time = dateTime.TimeOfDay;
                 return true;

@@ -29,7 +29,7 @@ namespace SingleStage.ViewModels
         /// Pixel offset from midnight.
         /// </summary>
         public double Top =>
-            StartTime.TimeOfDay.TotalHours * PixelsPerHour;
+            (StartTime.TimeOfDay.TotalHours - CalendarLayout.StartHour) * PixelsPerHour;
 
         /// <summary>
         /// Pixel height of the show block.

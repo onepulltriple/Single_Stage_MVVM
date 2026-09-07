@@ -10,7 +10,9 @@ namespace SingleStage.ViewModels
         public CalendarHourViewModel(int hour)
         {
             Label = $"{hour:00}:00";
-            Top = hour * CalendarLayout.PixelsPerHour;
+
+            //Top = hour * CalendarLayout.PixelsPerHour;
+            Top = (hour - CalendarLayout.StartHour) * CalendarLayout.PixelsPerHour;
         }
     }
 }

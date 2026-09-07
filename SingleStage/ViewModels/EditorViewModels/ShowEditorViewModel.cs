@@ -240,6 +240,14 @@ namespace SingleStage.ViewModels.EditorViewModels
             WorkingCopyShow.StartTime = combinedStart;
             WorkingCopyShow.EndTime = combinedEnd;
 
+            var scheduleValidator = new ShowScheduleValidator();
+            if (!scheduleValidator.IsWithinOpeningHours(WorkingCopyShow))
+            {
+                ErrorMessage = "Show must be entirely within opening hours (10:00 - 24:00).";
+                RaiseValidityChanged();
+                return;
+            }
+
             OnPropertyChanged(nameof(StartTime));
             OnPropertyChanged(nameof(EndTime));
 

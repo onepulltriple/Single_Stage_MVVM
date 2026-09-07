@@ -1,7 +1,8 @@
-﻿using System;
+﻿using SingleStage.Calendar;
+using SingleStage.Entities;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SingleStage.Entities;
 
 namespace SingleStage.ViewModels
 {
@@ -140,9 +141,11 @@ namespace SingleStage.ViewModels
 
         private void CreateHours()
         {
-            for (int i = 0; i < 24; i++)
+            for (int hour = CalendarLayout.StartHour;
+                 hour <= CalendarLayout.EndHour;
+                 hour++)
             {
-                Hours.Add(new CalendarHourViewModel(i));
+                Hours.Add(new CalendarHourViewModel(hour));
             }
         }
     }

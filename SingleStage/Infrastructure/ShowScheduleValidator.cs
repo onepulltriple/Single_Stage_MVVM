@@ -1,4 +1,5 @@
 ﻿using SingleStage.Entities;
+using SingleStage.Calendar;
 
 namespace SingleStage.Infrastructure
 {
@@ -10,6 +11,15 @@ namespace SingleStage.Infrastructure
                 existing.Id != show.Id &&
                 show.StartTime < existing.EndTime &&
                 show.EndTime > existing.StartTime);
+        }
+
+        public bool IsWithinOpeningHours(Show show)
+        {
+            DateTime openingTime = show.StartTime.Date.AddHours(CalendarLayout.StartHour);
+            DateTime closingTime = show.StartTime.Date.AddHours(CalendarLayout.EndHour + 1); // closes at end of listed hour
+
+            return show.StartTime >= openingTime &&
+                   show.EndTime <= closingTime;
         }
     }
 }

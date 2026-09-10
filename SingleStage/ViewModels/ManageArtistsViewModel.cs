@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using SingleStage.DAC;
 using SingleStage.DAC.Interfaces;
+using SingleStage.Infrastructure.EventArguments;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
@@ -44,6 +45,8 @@ namespace SingleStage.ViewModels
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
+
+        public event EventHandler<DeleteArtistConfirmationEventArguments>? DeleteArtistConfirmationRequested;
 
         public ManageArtistsViewModel(IArtistDAC artistDAC)
         {
@@ -121,6 +124,20 @@ namespace SingleStage.ViewModels
         private async Task DeleteArtist()
         {
             if (SelectedArtist is null)
+                return;
+
+            var artist = SelectedArtist;
+
+            var performanceCount =
+                await _artistDAC.GetPerformanceCountAsync(artist.Id);
+
+            var args = new DeleteArtistConfirmationEventArguments(
+                artist,
+                performanceCount);
+
+            DeleteArtistConfirmationRequested?.Invoke(this, args);
+
+            if (!args.Confirmed)
                 return;
 
             await _artistDAC.DeleteAsync(SelectedArtist.Id);

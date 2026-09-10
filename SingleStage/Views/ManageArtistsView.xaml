@@ -8,6 +8,7 @@
              mc:Ignorable="d"
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageArtistsView_Loaded"
+             Unloaded="ManageArtistsView_Unloaded"
              PreviewKeyDown="ManageArtistsView_PreviewKeyDown"
              d:DesignHeight="550" d:DesignWidth="1000"
              >

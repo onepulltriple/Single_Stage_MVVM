@@ -17,21 +17,13 @@
 
         <Button Grid.Column="0"
                 Style="{StaticResource CrudActionBarButtonStyle}"
-                Command="{Binding CancelCommand}">
-            <TextBlock Text="Cancel"
+                Command="{Binding CreateCommand}">
+            <TextBlock Text="New"
                        Style="{StaticResource PopUpWindowButtonTextStyle}"
                        />
         </Button>
 
         <Button Grid.Column="1"
-                Style="{StaticResource CrudActionBarButtonStyle}"
-                Command="{Binding CreateCommand}">
-            <TextBlock Text="Create"
-                       Style="{StaticResource PopUpWindowButtonTextStyle}"
-                       />
-        </Button>
-
-        <Button Grid.Column="2"
                 Style="{StaticResource CrudActionBarButtonStyle}"
                 Command="{Binding EditCommand}">
             <TextBlock Text="Edit"
@@ -39,7 +31,7 @@
                        />
         </Button>
 
-        <Button Grid.Column="3"
+        <Button Grid.Column="2"
                 Style="{StaticResource CrudActionBarButtonStyle}"
                 Command="{Binding SaveCommand}">
             <TextBlock Text="Save"
@@ -47,10 +39,18 @@
                        />
         </Button>
 
-        <Button Grid.Column="4"
+        <Button Grid.Column="3"
                 Style="{StaticResource CrudActionBarButtonStyle}"
                 Command="{Binding DeleteCommand}">
             <TextBlock Text="Delete"
+                       Style="{StaticResource PopUpWindowButtonTextStyle}"
+                       />
+        </Button>
+
+        <Button Grid.Column="4"
+                Style="{StaticResource CrudActionBarButtonStyle}"
+                Command="{Binding CancelCommand}">
+            <TextBlock Text="Cancel"
                        Style="{StaticResource PopUpWindowButtonTextStyle}"
                        />
         </Button>

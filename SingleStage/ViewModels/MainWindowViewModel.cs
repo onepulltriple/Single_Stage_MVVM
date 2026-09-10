@@ -19,13 +19,16 @@ namespace SingleStage.ViewModels
         private CalendarWeekViewModel Calendar =>
             CalendarWeekViewModel ?? throw new InvalidOperationException("The calendar has not been initialized.");
 
-        public DateTime CurrentWeek => Calendar.WeekStart;
+        public DateTime CalendarStartDate => Calendar.CalendarStartDate;
+
+        public DateTime CurrentWeekMonday => GetMonday(CalendarStartDate);
+
 
         public int CalendarWeek =>
-            System.Globalization.ISOWeek.GetWeekOfYear(CurrentWeek);
+            System.Globalization.ISOWeek.GetWeekOfYear(CurrentWeekMonday);
 
         public string WeekDisplayText =>
-            $"Week {CalendarWeek}:  {CurrentWeek:MMMM d} - {CurrentWeek.AddDays(6):MMMM d}, {CurrentWeek:yyyy}";
+            $"Week {CalendarWeek}:  {CurrentWeekMonday:MMMM d} - {CurrentWeekMonday.AddDays(6):MMMM d}, {CurrentWeekMonday:yyyy}";
 
         public int SelectedShowTicketCount { get; private set; }
 
@@ -59,6 +62,11 @@ namespace SingleStage.ViewModels
         public ICommand NextWeekCommand { get; }
 
         public ICommand TodayCommand { get; }
+
+        public ICommand PreviousDayCommand { get; }
+
+        public ICommand NextDayCommand { get; }
+
         #endregion
 
 
@@ -107,6 +115,12 @@ namespace SingleStage.ViewModels
 
             TodayCommand =
                 new RelayCommand(Today);
+
+            PreviousDayCommand =
+                new RelayCommand(PreviousDay);
+
+            NextDayCommand =
+                new RelayCommand(NextDay);
         }
 
         // initialization
@@ -114,18 +128,19 @@ namespace SingleStage.ViewModels
         {
             List<Show> shows = await _showDAC.GetAllAsync();
 
-            DateTime weekStart = GetMonday(DateTime.Today);
+            DateTime calendarStartDate = GetMonday(DateTime.Today);
 
             CalendarWeekViewModel = new CalendarWeekViewModel(
-                weekStart,
+                calendarStartDate,
                 shows
-                );
+            );
+
 
             CalendarWeekViewModel.PropertyChanged += CalendarWeekViewModel_PropertyChanged;
             CalendarWeekViewModel.OpenShowRequested += CalendarWeekViewModel_OpenShowRequested;
 
             OnPropertyChanged(nameof(CalendarWeekViewModel));
-            OnPropertyChanged(nameof(CurrentWeek));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
 
@@ -162,6 +177,7 @@ namespace SingleStage.ViewModels
         }
 
 
+        #region calendar navigation
         private static DateTime GetMonday(DateTime date)
         {
             int day = (int)date.DayOfWeek;
@@ -173,31 +189,58 @@ namespace SingleStage.ViewModels
             return date.Date.AddDays(-(day - 1));
         }
 
-
-        #region calendar navigation
         private void PreviousWeek()
         {
-            Calendar.WeekStart = Calendar.WeekStart.AddDays(-7);
+            Calendar.CalendarStartDate = Calendar.CalendarStartDate.AddDays(-7);
 
-            OnPropertyChanged(nameof(CurrentWeek));
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
 
         private void NextWeek()
         {
-            Calendar.WeekStart = Calendar.WeekStart.AddDays(7);
+            Calendar.CalendarStartDate = Calendar.CalendarStartDate.AddDays(7);
 
-            OnPropertyChanged(nameof(CurrentWeek));
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
 
         private void Today()
         {
-            Calendar.WeekStart = GetMonday(DateTime.Today);
+            Calendar.CalendarStartDate = GetMonday(DateTime.Today);
 
-            OnPropertyChanged(nameof(CurrentWeek));
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
+
+        private void PreviousDay()
+        {
+            Calendar.CalendarStartDate =
+                Calendar.CalendarStartDate.AddDays(-1);
+
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
+            OnPropertyChanged(nameof(WeekDisplayText));
+        }
+
+        private void NextDay()
+        {
+            Calendar.CalendarStartDate =
+                Calendar.CalendarStartDate.AddDays(1);
+
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
+            OnPropertyChanged(nameof(WeekDisplayText));
+        }
+
         #endregion
 
         #region other methods

@@ -10,6 +10,14 @@
         Background="{StaticResource DefaultBackgroundBrush}"
         Style="{StaticResource MainWindowStyle}"
         >
+
+    <Window.InputBindings>
+        <KeyBinding Key="Left"
+                Command="{Binding PreviousDayCommand}"/>
+
+        <KeyBinding Key="Right"
+                Command="{Binding NextDayCommand}"/>
+    </Window.InputBindings>
     
     <DockPanel>
         <!--main menu-->
@@ -57,7 +65,9 @@
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -66,16 +76,30 @@
                         Style="{StaticResource MainWindowButtonStyle}"
                         Command="{Binding PreviousWeekCommand}"
                         >
-                    <TextBlock Text="&lt; Previous Week"
+                    <TextBlock Text="Previous Week"
                        Style="{StaticResource MainWindowButtonTextBlockStyle}"
                        />
                 </Button>
-                
-                <TextBlock Grid.Column="1"
+
+                <Button Grid.Column="1"
+                        Style="{StaticResource MainWindowButtonStyle}"
+                        Command="{Binding PreviousDayCommand}">
+                    <TextBlock Text="&lt;"
+                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
+                </Button>
+
+                <TextBlock Grid.Column="2"
                            Style="{StaticResource TitleTextStyle}"
                            Text="{Binding WeekDisplayText}"/>
 
-                <Button Grid.Column="2"
+                <Button Grid.Column="3"
+                        Style="{StaticResource MainWindowButtonStyle}"
+                        Command="{Binding NextDayCommand}">
+                    <TextBlock Text="&gt;"
+                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
+                </Button>
+
+                <Button Grid.Column="4"
                         Style="{StaticResource MainWindowButtonStyle}"
                         Command="{Binding TodayCommand}"
                         >
@@ -84,11 +108,11 @@
                        />
                 </Button>
 
-                <Button Grid.Column="3"
+                <Button Grid.Column="5"
                         Style="{StaticResource MainWindowButtonStyle}"
                         Command="{Binding NextWeekCommand}"
                         >
-                    <TextBlock Text="Next Week &gt;"
+                    <TextBlock Text="Next Week"
                        Style="{StaticResource MainWindowButtonTextBlockStyle}"
                        />
                 </Button>

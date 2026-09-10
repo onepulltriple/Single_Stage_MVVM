@@ -25,31 +25,13 @@ namespace SingleStage.ViewModels
         public string TimeText =>
             $"{StartTime:HH:mm} - {EndTime:HH:mm}";
 
-        /// <summary>
-        /// Pixel offset from midnight.
-        /// </summary>
+        // Pixel offset from midnight.
         public double Top =>
             (StartTime.TimeOfDay.TotalHours - CalendarLayout.StartHour) * PixelsPerHour;
 
-        /// <summary>
-        /// Pixel height of the show block.
-        /// </summary>
+        // Pixel height of the show block.
         public double Height =>
             (EndTime - StartTime).TotalHours * PixelsPerHour;
 
-        /// <summary>
-        /// Monday = 0 ... Sunday = 6
-        /// </summary>
-        public int DayIndex
-        {
-            get
-            {
-                int day = (int)StartTime.DayOfWeek;
-
-                return day == 0
-                    ? 6
-                    : day - 1;
-            }
-        }
     }
 }

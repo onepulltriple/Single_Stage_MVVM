@@ -40,49 +40,49 @@
             <Border Grid.Row="0"
                     Grid.Column="1"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding MondayHeader}"
+                    <TextBlock Text="{Binding FirstDayHeader}"
                                Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="2"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding TuesdayHeader}"
+                    <TextBlock Text="{Binding SecondDayHeader}"
                                 Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="3"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding WednesdayHeader}"
+                    <TextBlock Text="{Binding ThirdDayHeader}"
                                 Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="4"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding ThursdayHeader}"
+                    <TextBlock Text="{Binding FourthDayHeader}"
                                Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="5"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding FridayHeader}"
+                    <TextBlock Text="{Binding FifthDayHeader}"
                                Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="6"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding SaturdayHeader}"
+                    <TextBlock Text="{Binding SixthDayHeader}"
                                Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
 
             <Border Grid.Row="0"
                     Grid.Column="7"
                     Style="{StaticResource CalendarDayBorderStyle}">
-                    <TextBlock Text="{Binding SundayHeader}"
+                    <TextBlock Text="{Binding SeventhDayHeader}"
                                 Style="{StaticResource CalendarDayHeaderStyle}"/>
             </Border>
             
@@ -122,7 +122,7 @@
                     Style="{StaticResource CalendarDayBorderStyle}">
                 
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Monday}"
+                    <ItemsControl ItemsSource="{Binding FirstDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -133,7 +133,7 @@
                     Grid.Column="2"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Tuesday}"
+                    <ItemsControl ItemsSource="{Binding SecondDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -144,7 +144,7 @@
                     Grid.Column="3"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Wednesday}"
+                    <ItemsControl ItemsSource="{Binding ThirdDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -155,7 +155,7 @@
                     Grid.Column="4"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Thursday}"
+                    <ItemsControl ItemsSource="{Binding FourthDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -166,7 +166,7 @@
                     Grid.Column="5"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Friday}"
+                    <ItemsControl ItemsSource="{Binding FifthDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -177,7 +177,7 @@
                     Grid.Column="6"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Saturday}"
+                    <ItemsControl ItemsSource="{Binding SixthDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>
@@ -188,7 +188,7 @@
                     Grid.Column="7"
                     Style="{StaticResource CalendarDayBorderStyle}">
                 <Canvas Style="{StaticResource CalendarDayCanvasStyle}">
-                    <ItemsControl ItemsSource="{Binding Sunday}"
+                    <ItemsControl ItemsSource="{Binding SeventhDay}"
                                   ItemsPanel="{StaticResource CalendarItemsPanel}"
                                   ItemContainerStyle="{StaticResource CalendarShowPresenterStyle}"
                                   ItemTemplate="{StaticResource CalendarShowTemplate}"/>

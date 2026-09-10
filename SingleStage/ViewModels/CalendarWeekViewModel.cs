@@ -12,30 +12,30 @@ namespace SingleStage.ViewModels
     {
         private readonly List<Show> _shows;
 
-        private DateTime _weekStart;
+        private DateTime _calendarStartDate;
 
-        public DateTime WeekStart
+        public DateTime CalendarStartDate
         {
-            get => _weekStart;
+            get => _calendarStartDate;
             set
             {
-                DateTime newWeekStart = value.Date;
+                DateTime newCalendarStartDate = value.Date;
 
-                if (_weekStart == newWeekStart)
+                if (_calendarStartDate == newCalendarStartDate)
                     return;
 
-                _weekStart = newWeekStart;
+                _calendarStartDate = newCalendarStartDate;
 
                 RefreshShows();
 
-                OnPropertyChanged(nameof(WeekStart));
-                OnPropertyChanged(nameof(MondayHeader));
-                OnPropertyChanged(nameof(TuesdayHeader));
-                OnPropertyChanged(nameof(WednesdayHeader));
-                OnPropertyChanged(nameof(ThursdayHeader));
-                OnPropertyChanged(nameof(FridayHeader));
-                OnPropertyChanged(nameof(SaturdayHeader));
-                OnPropertyChanged(nameof(SundayHeader));
+                OnPropertyChanged(nameof(CalendarStartDate));
+                OnPropertyChanged(nameof(FirstDayHeader));
+                OnPropertyChanged(nameof(SecondDayHeader));
+                OnPropertyChanged(nameof(ThirdDayHeader));
+                OnPropertyChanged(nameof(FourthDayHeader));
+                OnPropertyChanged(nameof(FifthDayHeader));
+                OnPropertyChanged(nameof(SixthDayHeader));
+                OnPropertyChanged(nameof(SeventhDayHeader));
             }
         }
 
@@ -57,19 +57,20 @@ namespace SingleStage.ViewModels
 
         public ObservableCollection<CalendarHourViewModel> Hours { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Monday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> FirstDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Tuesday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> SecondDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Wednesday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> ThirdDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Thursday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> FourthDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Friday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> FifthDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Saturday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> SixthDay { get; } = new();
 
-        public ObservableCollection<CalendarShowViewModel> Sunday { get; } = new();
+        public ObservableCollection<CalendarShowViewModel> SeventhDay { get; } = new();
+
 
         public RelayCommand SelectShowCommand { get; }
 
@@ -79,24 +80,32 @@ namespace SingleStage.ViewModels
 
 
         #region calendar day headers
-        public string MondayHeader =>       _weekStart.ToString("ddd dd MMM");
+        public string FirstDayHeader =>
+            _calendarStartDate.ToString("ddd dd MMM");
 
-        public string TuesdayHeader =>      _weekStart.AddDays(1).ToString("ddd dd MMM");
+        public string SecondDayHeader =>
+            _calendarStartDate.AddDays(1).ToString("ddd dd MMM");
 
-        public string WednesdayHeader =>    _weekStart.AddDays(2).ToString("ddd dd MMM");
+        public string ThirdDayHeader =>
+            _calendarStartDate.AddDays(2).ToString("ddd dd MMM");
 
-        public string ThursdayHeader =>     _weekStart.AddDays(3).ToString("ddd dd MMM");
+        public string FourthDayHeader =>
+            _calendarStartDate.AddDays(3).ToString("ddd dd MMM");
 
-        public string FridayHeader =>       _weekStart.AddDays(4).ToString("ddd dd MMM");
+        public string FifthDayHeader =>
+            _calendarStartDate.AddDays(4).ToString("ddd dd MMM");
 
-        public string SaturdayHeader =>     _weekStart.AddDays(5).ToString("ddd dd MMM");
+        public string SixthDayHeader =>
+            _calendarStartDate.AddDays(5).ToString("ddd dd MMM");
 
-        public string SundayHeader =>       _weekStart.AddDays(6).ToString("ddd dd MMM");
+        public string SeventhDayHeader =>
+            _calendarStartDate.AddDays(6).ToString("ddd dd MMM");
+
         #endregion
 
 
         // constructor
-        public CalendarWeekViewModel(DateTime weekStart, IEnumerable<Show> shows)
+        public CalendarWeekViewModel(DateTime calendarStartDate, IEnumerable<Show> shows)
         {
             _shows = shows.ToList();
 
@@ -106,7 +115,7 @@ namespace SingleStage.ViewModels
 
             CreateHours();
 
-            _weekStart = weekStart.Date;
+            _calendarStartDate = calendarStartDate.Date;
 
             RefreshShows();
         }
@@ -129,57 +138,60 @@ namespace SingleStage.ViewModels
 
         private void RefreshShows()
         {
-            Monday.Clear();
-            Tuesday.Clear();
-            Wednesday.Clear();
-            Thursday.Clear();
-            Friday.Clear();
-            Saturday.Clear();
-            Sunday.Clear();
+            FirstDay.Clear();
+            SecondDay.Clear();
+            ThirdDay.Clear();
+            FourthDay.Clear();
+            FifthDay.Clear();
+            SixthDay.Clear();
+            SeventhDay.Clear();
 
-            DateTime weekEnd = _weekStart.AddDays(7);
+            DateTime calendarEndDate = _calendarStartDate.AddDays(7);
 
             IEnumerable<Show> showsThisWeek =
                 _shows.Where(show =>
-                show.StartTime >= _weekStart &&
-                show.StartTime < weekEnd);
+                    show.StartTime >= _calendarStartDate &&
+                    show.StartTime < calendarEndDate);
 
             foreach (Show show in showsThisWeek)
             {
                 var vm = new CalendarShowViewModel(show);
 
-                switch (vm.DayIndex)
+                int dayIndex = (show.StartTime.Date - _calendarStartDate.Date).Days;
+
+                switch (dayIndex)
                 {
                     case 0:
-                        Monday.Add(vm);
+                        FirstDay.Add(vm);
                         break;
 
                     case 1:
-                        Tuesday.Add(vm);
+                        SecondDay.Add(vm);
                         break;
 
                     case 2:
-                        Wednesday.Add(vm);
+                        ThirdDay.Add(vm);
                         break;
 
                     case 3:
-                        Thursday.Add(vm);
+                        FourthDay.Add(vm);
                         break;
 
                     case 4:
-                        Friday.Add(vm);
+                        FifthDay.Add(vm);
                         break;
 
                     case 5:
-                        Saturday.Add(vm);
+                        SixthDay.Add(vm);
                         break;
 
                     case 6:
-                        Sunday.Add(vm);
+                        SeventhDay.Add(vm);
                         break;
                 }
             }
         }
+
 
         private void CreateHours()
         {

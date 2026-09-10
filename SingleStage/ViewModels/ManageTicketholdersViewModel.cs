@@ -1,8 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using SingleStage.DAC;
+﻿using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
+using SingleStage.Infrastructure.EventArguments;
 using SingleStage.ViewModels.EditorViewModels;
+using System.Collections.ObjectModel;
 
 // manages the ticketholder-management screen as a whole
 // owns the list of ticketholders
@@ -43,6 +44,9 @@ namespace SingleStage.ViewModels
         public AsyncRelayCommand SaveCommand { get; }
         public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
+
+        public event EventHandler<DeleteTicketholderConfirmationEventArguments>? DeleteTicketholderConfirmationRequested;
+
 
         public ManageTicketholdersViewModel(TicketholderDAC ticketholderDAC)
         {
@@ -121,7 +125,21 @@ namespace SingleStage.ViewModels
             if (SelectedTicketholder is null)
                 return;
 
-            await _ticketholderDAC.DeleteAsync(SelectedTicketholder.Id);
+            var ticketholder = SelectedTicketholder;
+
+            var ticketCount =
+                await _ticketholderDAC.GetTicketCountAsync(ticketholder.Id);
+
+            var args = new DeleteTicketholderConfirmationEventArguments(
+                ticketholder,
+                ticketCount);
+
+            DeleteTicketholderConfirmationRequested?.Invoke(this, args);
+
+            if (!args.Confirmed)
+                return;
+
+            await _ticketholderDAC.DeleteAsync(ticketholder.Id);
 
             await InitialiseAsync();
 

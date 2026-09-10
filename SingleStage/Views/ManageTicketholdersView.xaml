@@ -9,6 +9,7 @@
              mc:Ignorable="d" 
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageTicketholdersView_Loaded"
+             Unloaded="ManageTicketholdersView_Unloaded"
              PreviewKeyDown="ManageTicketholdersView_PreviewKeyDown"
              d:DesignHeight="450" d:DesignWidth="800"
              >

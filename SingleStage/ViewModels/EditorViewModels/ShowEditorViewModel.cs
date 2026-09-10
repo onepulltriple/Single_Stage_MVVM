@@ -289,7 +289,7 @@ namespace SingleStage.ViewModels.EditorViewModels
             DateTime defaultStart = DateTime.Today.AddHours(19);
             DateTime defaultEnd = DateTime.Today.AddHours(21);
 
-            this.WorkingCopyShow = new Show
+            WorkingCopyShow = new Show
             {
                 StartTime = defaultStart,
                 EndTime = defaultEnd,
@@ -302,7 +302,7 @@ namespace SingleStage.ViewModels.EditorViewModels
         // shallow clone to avoid editing the original instance directly
         public void BeginEdit(Show show)
         {
-            this.WorkingCopyShow = new Show
+            WorkingCopyShow = new Show
             {
                 Id = show.Id,
                 Name = show.Name,
@@ -315,7 +315,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void Cancel()
         {
-            this.WorkingCopyShow = null;
+            WorkingCopyShow = null;
             ErrorMessage = string.Empty;
             IsValid = false;
         }

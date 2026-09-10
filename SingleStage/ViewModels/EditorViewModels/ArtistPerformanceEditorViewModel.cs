@@ -182,7 +182,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginCreate()
         {
-            this.WorkingCopyArtistPerformance = new ArtistPerformance
+            WorkingCopyArtistPerformance = new ArtistPerformance
             {
                 ArtistId = 0,
                 PerformanceId = 0,
@@ -193,7 +193,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginCreate(int performanceId)
         {
-            this.WorkingCopyArtistPerformance = new ArtistPerformance
+            WorkingCopyArtistPerformance = new ArtistPerformance
             {
                 ArtistId = 0,
                 PerformanceId = performanceId,
@@ -204,7 +204,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginEdit(ArtistPerformance artistPerformance)
         {
-            this.WorkingCopyArtistPerformance = new ArtistPerformance
+            WorkingCopyArtistPerformance = new ArtistPerformance
             {
                 Id = artistPerformance.Id,
                 ArtistId = artistPerformance.ArtistId,
@@ -216,7 +216,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void Cancel()
         {
-            this.WorkingCopyArtistPerformance = null;
+            WorkingCopyArtistPerformance = null;
             ErrorMessage = string.Empty;
             IsValid = false;
         }

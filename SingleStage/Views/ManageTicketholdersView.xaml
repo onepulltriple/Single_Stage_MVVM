@@ -11,13 +11,15 @@
              Loaded="ManageTicketholdersView_Loaded"
              Unloaded="ManageTicketholdersView_Unloaded"
              PreviewKeyDown="ManageTicketholdersView_PreviewKeyDown"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="550" d:DesignWidth="1000"
              >
     
     <Grid Margin="6">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -71,17 +73,32 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <Grid Grid.Row="1"
+              Grid.Column="1">
 
-        <!-- ticketholder editor -->
-        <editorviews:TicketholderEditorView Grid.Row="1"
-                                            Grid.Column="1"
-                                            DataContext="{Binding Editor}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- ticketholder editor -->
+            <editorviews:TicketholderEditorView Grid.Row="0"
+                                                DataContext="{Binding Editor}"/>
+
+            <!-- Error message row -->
+            <TextBlock Grid.Row="1"
+                       Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                       Text="{Binding ErrorMessage}"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"/>
+
+        </Grid>
 
         <!-- CRUD action bar -->
         <shared:CrudActionBarView Grid.Row="2"
                                   Grid.Column="0"
-                                  Grid.ColumnSpan="2"
-                                  />
+                                  Grid.ColumnSpan="2"/>
 
     </Grid>
 </UserControl>

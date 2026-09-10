@@ -5,13 +5,13 @@ using SingleStage.Infrastructure.EventArguments;
 using SingleStage.ViewModels.EditorViewModels;
 using System.Collections.ObjectModel;
 
-// manages the ticketholder-management screen as a whole
-// owns the list of ticketholders
-// owns the currently selected row
-// owns the commands for the screen
-// responds to CRUD button clicks
 namespace SingleStage.ViewModels
 {
+    // manages the ticketholder-management screen as a whole
+    // owns the list of ticketholders
+    // owns the currently selected row
+    // owns the commands for the screen
+    // responds to CRUD button clicks
     public class ManageTicketholdersViewModel : ViewModelBase
     {
         private readonly TicketholderDAC _ticketholderDAC;
@@ -37,6 +37,33 @@ namespace SingleStage.ViewModels
             }
         }
 
+        private string _ticketholderErrorMessage = string.Empty;
+        public string TicketholderErrorMessage
+        {
+            get => _ticketholderErrorMessage;
+            private set
+            {
+                if (_ticketholderErrorMessage == value)
+                    return;
+
+                _ticketholderErrorMessage = value;
+                OnPropertyChanged(nameof(TicketholderErrorMessage));
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        // combined error message from this and editor
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(TicketholderErrorMessage))
+                    return TicketholderErrorMessage;
+
+                return Editor.ErrorMessage;
+            }
+        }
+
         public TicketholderEditorViewModel Editor { get; }
 
         public RelayCommand CreateCommand { get; }
@@ -55,11 +82,23 @@ namespace SingleStage.ViewModels
 
             Editor = new TicketholderEditorViewModel();
 
-            CreateCommand   = new RelayCommand(_ => CreateTicketholder(),   CanCreateTicketholder);
-            EditCommand     = new RelayCommand(_ => EditTicketholder(),     CanEditTicketholder);
-            SaveCommand     = new AsyncRelayCommand(_ => SaveTicketholder(),     CanSaveTicketholder);
-            DeleteCommand   = new AsyncRelayCommand(_ => DeleteTicketholder(),   CanDeleteTicketholder);
-            CancelCommand   = new RelayCommand(_ => CancelEdit(),           CanCancelEdit);
+            // listen for editor changes so command states update when validation state changes
+            Editor.PropertyChanged += (_, _) =>
+            {
+                OnPropertyChanged(nameof(ErrorMessage));
+                UpdateCommandStates();
+            };
+
+            CreateCommand   
+                = new RelayCommand(_ => CreateTicketholder(),   CanCreateTicketholder);
+            EditCommand     
+                = new RelayCommand(_ => EditTicketholder(),     CanEditTicketholder);
+            SaveCommand     
+                = new AsyncRelayCommand(_ => SaveTicketholder(),     CanSaveTicketholder);
+            DeleteCommand   
+                = new AsyncRelayCommand(_ => DeleteTicketholder(),   CanDeleteTicketholder);
+            CancelCommand   
+                = new RelayCommand(_ => CancelEdit(),           CanCancelEdit);
         }
 
         // loads the list
@@ -77,6 +116,8 @@ namespace SingleStage.ViewModels
 
         private void CreateTicketholder()
         {
+            TicketholderErrorMessage = string.Empty;
+
             Editor.BeginCreate();
 
             UpdateCommandStates();
@@ -87,6 +128,8 @@ namespace SingleStage.ViewModels
             if (SelectedTicketholder is null)
                 return;
 
+            TicketholderErrorMessage = string.Empty;
+
             Editor.BeginEdit(SelectedTicketholder);
 
             UpdateCommandStates();
@@ -94,11 +137,14 @@ namespace SingleStage.ViewModels
 
         private async Task SaveTicketholder()
         {
-            if (Editor.WorkingCopyTicketholder is null)
+            TicketholderErrorMessage = string.Empty;
+
+            if (!Editor.IsEditing)
                 return;
 
-            if (string.IsNullOrWhiteSpace(Editor.WorkingCopyTicketholder.Name))
+            if (Editor.WorkingCopyTicketholder is null || !Editor.IsValid)
                 return;
+
 
             if (Editor.WorkingCopyTicketholder.Id == 0)
             {
@@ -125,6 +171,8 @@ namespace SingleStage.ViewModels
             if (SelectedTicketholder is null)
                 return;
 
+            TicketholderErrorMessage = string.Empty;
+
             var ticketholder = SelectedTicketholder;
 
             var ticketCount =
@@ -150,6 +198,8 @@ namespace SingleStage.ViewModels
 
         private void CancelEdit()
         {
+            TicketholderErrorMessage = string.Empty;
+
             Editor.Cancel();
 
             UpdateCommandStates();
@@ -167,7 +217,8 @@ namespace SingleStage.ViewModels
 
         private bool CanSaveTicketholder(object? parameter)
         {
-            return Editor.WorkingCopyTicketholder is not null;
+            return Editor.WorkingCopyTicketholder is not null &&
+                Editor.IsValid;
         }
 
         private bool CanDeleteTicketholder(object? parameter)
@@ -179,6 +230,7 @@ namespace SingleStage.ViewModels
         {
             return Editor.IsEditing;
         }
+
         private void UpdateCommandStates()
         {
             CreateCommand.RaiseCanExecuteChanged();

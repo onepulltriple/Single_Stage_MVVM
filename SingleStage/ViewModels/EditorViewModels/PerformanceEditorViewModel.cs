@@ -271,7 +271,7 @@ namespace SingleStage.ViewModels.EditorViewModels
             DateTime defaultStart = DateTime.Today.AddHours(19);
             DateTime defaultEnd = DateTime.Today.AddHours(21);
 
-            this.WorkingCopyPerformance = new Performance
+            WorkingCopyPerformance = new Performance
             {
                 StartTime = defaultStart,
                 EndTime = defaultEnd,
@@ -295,7 +295,7 @@ namespace SingleStage.ViewModels.EditorViewModels
         public void BeginEdit(Performance performance)
         {
             // shallow clone to avoid editing the original instance directly
-            this.WorkingCopyPerformance = new Performance
+            WorkingCopyPerformance = new Performance
             {
                 Id = performance.Id,
                 Description = performance.Description,
@@ -307,7 +307,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void Cancel()
         {
-            this.WorkingCopyPerformance = null;
+            WorkingCopyPerformance = null;
             ErrorMessage = string.Empty;
             IsValid = false;
         }

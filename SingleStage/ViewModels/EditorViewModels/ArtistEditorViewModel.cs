@@ -1,8 +1,8 @@
 ﻿using SingleStage.Entities;
 
-// manages/represents the artist currently being edited, i.e. owns the working copy
 namespace SingleStage.ViewModels.EditorViewModels
 {
+    // manages/represents the artist currently being edited, i.e. owns the working copy
     public class ArtistEditorViewModel : ViewModelBase
     {
         private Artist? _workingCopyArtist;
@@ -96,7 +96,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void BeginCreate()
         {
-            this.WorkingCopyArtist = new Artist
+            WorkingCopyArtist = new Artist
             {
                 Name = string.Empty
             };
@@ -105,7 +105,7 @@ namespace SingleStage.ViewModels.EditorViewModels
         // shallow clone to avoid editing the original instance directly
         public void BeginEdit(Artist artist)
         {
-            this.WorkingCopyArtist = new Artist
+            WorkingCopyArtist = new Artist
             {
                 Id = artist.Id,
                 Name = artist.Name,
@@ -114,12 +114,9 @@ namespace SingleStage.ViewModels.EditorViewModels
 
         public void Cancel()
         {
-            this.WorkingCopyArtist = null;
+            WorkingCopyArtist = null;
             ErrorMessage = string.Empty;
             IsValid = false;
-
-            OnPropertyChanged(nameof(IsValid));
-            OnPropertyChanged(nameof(ErrorMessage));
         }
     }
 }

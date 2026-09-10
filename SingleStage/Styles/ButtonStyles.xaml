@@ -56,4 +56,40 @@
         <Setter Property="MinHeight"                Value="80"/>
     </Style>
 
+    <Style x:Key="CalendarShowButtonStyle"
+       TargetType="Button">
+        <Setter Property="Background"                   Value="Transparent"/>
+        <Setter Property="BorderThickness"              Value="0"/>
+        <Setter Property="Padding"                      Value="2"/>
+        <Setter Property="HorizontalContentAlignment"   Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment"     Value="Stretch"/>
+        <Setter Property="Focusable"                    Value="False"/>
+        <Setter Property="Cursor"                       Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="CalendarShowButtonBorder"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        BorderThickness="2"
+                        CornerRadius="4">
+                        <ContentPresenter
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CalendarShowButtonBorder" Property="BorderBrush" Value="{StaticResource ButtonIsMouseOverBackground}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="CalendarShowButtonBorder" Property="BorderBrush" Value="{StaticResource ButtonIsPressedBackground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

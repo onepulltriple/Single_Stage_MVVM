@@ -10,22 +10,29 @@
              d:DesignWidth="250"
              d:DataContext="{d:DesignInstance Type=designtimeviewmodels:CalendarShowDesignTimeViewModel, IsDesignTimeCreatable=True}"
              >
-    <Border
-        Height="{Binding Height}"
-        d:Height="80"
-        Style="{StaticResource CalendarShowBorderStyle}"
-        MouseLeftButtonUp="ShowBorder_MouseLeftButtonUp">
+    <Grid>
+        <Border
+            Height="{Binding Height}"
+            d:Height="80"
+            Style="{StaticResource CalendarShowBorderStyle}">
 
-        <StackPanel>
-            <TextBlock
-                FontWeight="Bold"
-                Text="{Binding Name}" 
-                />
+            <StackPanel>
+                <TextBlock
+                    FontWeight="Bold"
+                    Text="{Binding Name}" 
+                    />
 
-            <TextBlock
-                FontSize="11"
-                Text="{Binding TimeText}" 
-                />
-        </StackPanel>
-    </Border>
+                <TextBlock
+                    FontSize="11"
+                    Text="{Binding TimeText}" 
+                    />
+            </StackPanel>
+        </Border>
+        
+        <Button Command="{Binding DataContext.SelectShowCommand,
+                    RelativeSource={RelativeSource AncestorType={x:Type local:CalendarWeekView}}}"
+                    CommandParameter="{Binding}"
+                    Style="{StaticResource CalendarShowButtonStyle}"/>
+
+    </Grid>
 </UserControl>

@@ -7,6 +7,12 @@ namespace SingleStage.DAC
     {
         public PerformanceDAC(SingleStageMvvmContext context) : base(context) { }
 
+        public async Task<int> GetArtistPerformanceCountAsync(int performanceId)
+        {
+            return await _context.ArtistPerformances
+                .CountAsync(ap => ap.PerformanceId == performanceId);
+        }
+
         // include Show and ArtistPerformance/Artist so the UI 
         // can display all information belonging to each performance
         public override async Task<List<Performance>> GetAllAsync()

@@ -216,7 +216,7 @@ namespace SingleStage.ViewModels
             if (!args.Confirmed)
                 return;
 
-            await _showDAC.DeleteAsync(SelectedShow.Id);
+            await _showDAC.DeleteAsync(show.Id);
 
             await InitialiseAsync();
 

@@ -140,7 +140,7 @@ namespace SingleStage.ViewModels
             if (!args.Confirmed)
                 return;
 
-            await _artistDAC.DeleteAsync(SelectedArtist.Id);
+            await _artistDAC.DeleteAsync(artist.Id);
 
             await InitialiseAsync();
 

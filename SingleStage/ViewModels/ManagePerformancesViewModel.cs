@@ -1,6 +1,7 @@
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
+using SingleStage.Infrastructure.EventArguments;
 using SingleStage.ViewModels.EditorViewModels;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
@@ -256,6 +257,9 @@ namespace SingleStage.ViewModels
         }
 
         #endregion
+
+        public event EventHandler<DeletePerformanceConfirmationEventArguments>? DeletePerformanceConfirmationRequested;
+
 
         // constructor
         public ManagePerformancesViewModel(
@@ -710,7 +714,21 @@ namespace SingleStage.ViewModels
             if (SelectedPerformance is null) 
                 return;
 
-            await _performanceDAC.DeleteAsync(SelectedPerformance.Id);
+            var performance = SelectedPerformance;
+
+            var artistPerformanceCount =
+                await _performanceDAC.GetArtistPerformanceCountAsync(performance.Id);
+
+            var args = new DeletePerformanceConfirmationEventArguments(
+                performance,
+                artistPerformanceCount);
+
+            DeletePerformanceConfirmationRequested?.Invoke(this, args);
+
+            if (!args.Confirmed)
+                return;
+
+            await _performanceDAC.DeleteAsync(performance.Id);
 
             await InitialiseAsync();
 

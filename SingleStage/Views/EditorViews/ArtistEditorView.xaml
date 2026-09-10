@@ -32,15 +32,5 @@
                  Style="{StaticResource PopUpWindowTextBoxTextStyle}"
                  Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Grid.Row="1"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="2"
-                   Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
-                   Text="{Binding ErrorMessage}"
-                   TextWrapping="Wrap"
-                   Margin="20"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Bottom"/>
-
     </Grid>
 </UserControl>

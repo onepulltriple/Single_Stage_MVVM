@@ -6,13 +6,13 @@ using SingleStage.Entities;
 using SingleStage.Infrastructure;
 using SingleStage.ViewModels.EditorViewModels;
 
-// manages the artist-management screen as a whole
-// owns the list of artists
-// owns the currently selected row
-// owns the commands for the screen
-// responds to CRUD button clicks
 namespace SingleStage.ViewModels
 {
+    // manages the artist-management screen as a whole
+    // owns the list of artists
+    // owns the currently selected row
+    // owns the commands for the screen
+    // responds to CRUD button clicks
     public class ManageArtistsViewModel : ViewModelBase
     {
         private readonly IArtistDAC _artistDAC;
@@ -38,6 +38,35 @@ namespace SingleStage.ViewModels
             }
         }
 
+
+        private string _artistErrorMessage = string.Empty;
+
+        public string ArtistErrorMessage
+        {
+            get => _artistErrorMessage;
+            private set
+            {
+                if (_artistErrorMessage == value)
+                    return;
+
+                _artistErrorMessage = value;
+                OnPropertyChanged(nameof(ArtistErrorMessage));
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        // combined error message from this and editor
+        public string ErrorMessage
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ArtistErrorMessage))
+                    return ArtistErrorMessage;
+
+                return Editor.ErrorMessage;
+            }
+        }
+
         public ArtistEditorViewModel Editor { get; }
 
         public RelayCommand CreateCommand { get; }
@@ -55,11 +84,23 @@ namespace SingleStage.ViewModels
 
             Editor = new ArtistEditorViewModel();
 
-            CreateCommand   = new RelayCommand(_ => CreateArtist(), CanCreateArtist);
-            EditCommand     = new RelayCommand(_ => EditArtist(),   CanEditArtist);
-            SaveCommand     = new AsyncRelayCommand(_ => SaveArtist(),   CanSaveArtist);
-            DeleteCommand   = new AsyncRelayCommand(_ => DeleteArtist(), CanDeleteArtist);
-            CancelCommand   = new RelayCommand(_ => CancelEdit(),   CanCancelEdit);
+            // listen for editor changes so command states update when validation state changes
+            Editor.PropertyChanged += (_, _) =>
+            {
+                OnPropertyChanged(nameof(ErrorMessage));
+                UpdateCommandStates();
+            };
+
+            CreateCommand   
+                = new RelayCommand(_ => CreateArtist(), CanCreateArtist);
+            EditCommand     
+                = new RelayCommand(_ => EditArtist(),   CanEditArtist);
+            SaveCommand     
+                = new AsyncRelayCommand(_ => SaveArtist(),   CanSaveArtist);
+            DeleteCommand   
+                = new AsyncRelayCommand(_ => DeleteArtist(), CanDeleteArtist);
+            CancelCommand   
+                = new RelayCommand(_ => CancelEdit(),   CanCancelEdit);
         }
 
 
@@ -70,7 +111,7 @@ namespace SingleStage.ViewModels
 
             ListOfArtists.Clear();
 
-            foreach (Artist artist in artists)
+            foreach (Artist artist in artists.OrderBy(a => a.Name))
             {
                 ListOfArtists.Add(artist);
             }
@@ -78,6 +119,8 @@ namespace SingleStage.ViewModels
 
         private void CreateArtist()
         {
+            ArtistErrorMessage = string.Empty;
+
             Editor.BeginCreate();
 
             UpdateCommandStates();
@@ -88,6 +131,8 @@ namespace SingleStage.ViewModels
             if (SelectedArtist is null)
                 return;
 
+            ArtistErrorMessage = string.Empty;
+
             Editor.BeginEdit(SelectedArtist);
 
             UpdateCommandStates();
@@ -95,10 +140,12 @@ namespace SingleStage.ViewModels
 
         private async Task SaveArtist()
         {
-            if (Editor.WorkingCopyArtist is null)
+            ArtistErrorMessage = string.Empty;
+
+            if (!Editor.IsEditing)
                 return;
 
-            if (string.IsNullOrWhiteSpace(Editor.WorkingCopyArtist.Name))
+            if (Editor.WorkingCopyArtist is null || !Editor.IsValid)
                 return;
 
             if (Editor.WorkingCopyArtist.Id == 0)
@@ -126,6 +173,8 @@ namespace SingleStage.ViewModels
             if (SelectedArtist is null)
                 return;
 
+            ArtistErrorMessage = string.Empty;
+
             var artist = SelectedArtist;
 
             var performanceCount =
@@ -151,6 +200,8 @@ namespace SingleStage.ViewModels
 
         private void CancelEdit()
         {
+            ArtistErrorMessage = string.Empty;
+
             Editor.Cancel();
 
             UpdateCommandStates();
@@ -168,7 +219,8 @@ namespace SingleStage.ViewModels
 
         private bool CanSaveArtist(object? parameter)
         {
-            return Editor.WorkingCopyArtist is not null;
+            return Editor.WorkingCopyArtist is not null &&
+                Editor.IsValid;
         }
 
         private bool CanDeleteArtist(object? parameter)

@@ -19,11 +19,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
 
@@ -52,24 +53,35 @@
                                     ElementStyle="{StaticResource DefaultDataGridTextStyle}"
                                     Binding="{Binding Name}"
                                     Width="*"/>
-                <!--<DataGridTextColumn Header="ArtistPerformance"
-                                    Binding="{Binding ArtistPerformance}"
-                                    Width="*"/>-->
             </DataGrid.Columns>
         </DataGrid>
 
+        <Grid Grid.Row="1"
+              Grid.Column="1">
 
-        <!-- artist editor -->
-        <editorviews:ArtistEditorView Grid.Row="1"
-                                      Grid.Column="1"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <!-- artist editor -->
+            <editorviews:ArtistEditorView Grid.Row="0"
                                       DataContext="{Binding Editor}"/>
-
+            
+            <!-- error message row -->
+            <TextBlock Grid.Row="1"
+                       Style="{StaticResource PopUpWindowWarningBodyTextStyle}"
+                       Text="{Binding ErrorMessage}"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"/>
+            
+        </Grid>
+        
         <!-- CRUD action bar -->
         <shared:CrudActionBarView Grid.Row="2"
                                   Grid.Column="0"
-                                  Grid.ColumnSpan="2"
-                                  />
+                                  Grid.ColumnSpan="2"/>
 
     </Grid>
-
 </UserControl>

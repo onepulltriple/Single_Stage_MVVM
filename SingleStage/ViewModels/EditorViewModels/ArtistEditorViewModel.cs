@@ -22,6 +22,8 @@ namespace SingleStage.ViewModels.EditorViewModels
                 OnPropertyChanged(nameof(Name));
 
                 OnPropertyChanged(nameof(IsEditing));
+
+                Validate();
             }
         }
 
@@ -39,15 +41,68 @@ namespace SingleStage.ViewModels.EditorViewModels
                     return;
 
                 WorkingCopyArtist.Name = value;
+
                 OnPropertyChanged(nameof(Name));
+
+                Validate();
             }
+        }
+
+        // validation state & message
+        private string _errorMessage = string.Empty;
+
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            private set
+            {
+                if (_errorMessage == value)
+                    return;
+
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        public bool IsValid { get; private set; } = false;
+
+        private void Validate()
+        {
+            ErrorMessage = string.Empty;
+            IsValid = false;
+
+            if (WorkingCopyArtist is null)
+            {
+                RaiseValidityChanged();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(WorkingCopyArtist.Name))
+            {
+                ErrorMessage = "Name is required.";
+                RaiseValidityChanged();
+                return;
+            }
+
+            IsValid = true;
+            RaiseValidityChanged();
+        }
+
+        private void RaiseValidityChanged()
+        {
+            OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(ErrorMessage));
         }
 
         public void BeginCreate()
         {
-            this.WorkingCopyArtist = new Artist();
+            this.WorkingCopyArtist = new Artist
+            {
+                Name = string.Empty
+            };
         }
 
+        // shallow clone to avoid editing the original instance directly
         public void BeginEdit(Artist artist)
         {
             this.WorkingCopyArtist = new Artist
@@ -60,6 +115,11 @@ namespace SingleStage.ViewModels.EditorViewModels
         public void Cancel()
         {
             this.WorkingCopyArtist = null;
+            ErrorMessage = string.Empty;
+            IsValid = false;
+
+            OnPropertyChanged(nameof(IsValid));
+            OnPropertyChanged(nameof(ErrorMessage));
         }
     }
 }

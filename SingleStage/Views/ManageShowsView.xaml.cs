@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using SingleStage.ViewModels;
+using SingleStage.Infrastructure.EventArguments;
+
 
 namespace SingleStage.Views
 {
@@ -17,6 +19,10 @@ namespace SingleStage.Views
 
         private async void ManageShowsView_Loaded(object sender, RoutedEventArgs e)
         {
+            DataContextChanged += ManageShowsView_DataContextChanged;
+
+            SubscribeToViewModel();
+
             if (DataContext is ManageShowsViewModel viewModel)
             {
                 try
@@ -39,6 +45,50 @@ namespace SingleStage.Views
             }
         }
 
+        private void ManageShowsView_Unloaded(
+            object sender,
+            RoutedEventArgs e)
+        {
+            UnsubscribeFromViewModel();
+
+            DataContextChanged -= ManageShowsView_DataContextChanged;
+        }
+
+        private void SubscribeToViewModel()
+        {
+            if (DataContext is ManageShowsViewModel viewModel)
+            {
+                viewModel.DeleteShowConfirmationRequested +=
+                    ManageShowsView_DeleteShowConfirmationRequested;
+            }
+        }
+
+        private void UnsubscribeFromViewModel()
+        {
+            if (DataContext is ManageShowsViewModel viewModel)
+            {
+                viewModel.DeleteShowConfirmationRequested -=
+                    ManageShowsView_DeleteShowConfirmationRequested;
+            }
+        }
+
+        private void ManageShowsView_DataContextChanged(
+            object sender,
+            DependencyPropertyChangedEventArgs e)
+        {
+            if (e.OldValue is ManageShowsViewModel oldViewModel)
+            {
+                oldViewModel.DeleteShowConfirmationRequested -=
+                    ManageShowsView_DeleteShowConfirmationRequested;
+            }
+
+            if (e.NewValue is ManageShowsViewModel newViewModel)
+            {
+                newViewModel.DeleteShowConfirmationRequested +=
+                    ManageShowsView_DeleteShowConfirmationRequested;
+            }
+        }
+
         private void ManageShowsView_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter)
@@ -50,6 +100,38 @@ namespace SingleStage.Views
                 viewModel.SaveCommand.Execute(null);
                 e.Handled = true;
             }
+        }
+
+        private void ManageShowsView_DeleteShowConfirmationRequested(
+            object? sender,
+            DeleteShowConfirmationEventArguments e)
+        {
+            string message;
+
+            if (e.PerformanceCount > 0)
+            {
+                message =
+                    $"The show '{e.Show.Name}' has " +
+                    $"{e.PerformanceCount} performance" +
+                    $"{(e.PerformanceCount == 1 ? "" : "s")} associated with it.\n\n" +
+                    "These performances will also be deleted.\n\n" +
+                    "Are you sure you want to delete this show?";
+            }
+            else
+            {
+                message =
+                    $"The show '{e.Show.Name}' has no performances associated with it.\n\n" +
+                    "Are you sure you want to delete this show?";
+            }
+
+            var result = MessageBox.Show(
+                message,
+                "Delete Show?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.No);
+
+            e.Confirmed = result == MessageBoxResult.Yes;
         }
     }
 }

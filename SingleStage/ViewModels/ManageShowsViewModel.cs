@@ -2,6 +2,7 @@
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
+using SingleStage.Infrastructure.EventArguments;
 using SingleStage.ViewModels.EditorViewModels;
 using System.Collections.ObjectModel;
 
@@ -76,6 +77,9 @@ namespace SingleStage.ViewModels
         public AsyncRelayCommand DeleteCommand { get; }
         public RelayCommand CancelCommand { get; }
         public AsyncRelayCommand ManagePerformancesCommand { get; }
+
+        public event EventHandler<DeleteShowConfirmationEventArguments>? DeleteShowConfirmationRequested;
+
 
         public ManageShowsViewModel(ShowDAC showDAC, IServiceProvider serviceProvider, ShowScheduleValidator showScheduleValidator)
         {
@@ -196,6 +200,20 @@ namespace SingleStage.ViewModels
         private async Task DeleteShow()
         {
             if (SelectedShow is null)
+                return;
+
+            var show = SelectedShow;
+
+            var performanceCount =
+                await _showDAC.GetPerformanceCountAsync(show.Id);
+
+            var args = new DeleteShowConfirmationEventArguments(
+                show,
+                performanceCount);
+
+            DeleteShowConfirmationRequested?.Invoke(this, args);
+
+            if (!args.Confirmed)
                 return;
 
             await _showDAC.DeleteAsync(SelectedShow.Id);

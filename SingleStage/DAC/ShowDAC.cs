@@ -6,5 +6,11 @@ namespace SingleStage.DAC
     public class ShowDAC : BaseDAC<Show>
     {
         public ShowDAC(SingleStageMvvmContext context) : base(context) { }
+
+        public async Task<int> GetPerformanceCountAsync(int showId)
+        {
+            return await _context.Performances
+                .CountAsync(p => p.ShowId == showId);
+        }
     }
 }

@@ -9,6 +9,7 @@
              mc:Ignorable="d"
              Background="{StaticResource DefaultBackgroundBrush}"
              Loaded="ManageShowsView_Loaded"
+             Unloaded="ManageShowsView_Unloaded"
              PreviewKeyDown="ManageShowsView_PreviewKeyDown"
              d:DesignHeight="650" d:DesignWidth="1000"
              >

@@ -69,19 +69,6 @@ namespace SingleStage.Views
             }
         }
 
-        private void ManageArtistsView_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter)
-                return;
-
-            if (DataContext is ManageArtistsViewModel viewModel &&
-                viewModel.SaveCommand.CanExecute(null))
-            {
-                viewModel.SaveCommand.Execute(null);
-                e.Handled = true;
-            }
-        }
-
         private void ManageArtistsView_DataContextChanged(
             object sender,
             DependencyPropertyChangedEventArgs e)
@@ -96,6 +83,19 @@ namespace SingleStage.Views
             {
                 newViewModel.DeleteArtistConfirmationRequested +=
                     ManageArtistsView_DeleteArtistConfirmationRequested;
+            }
+        }
+
+        private void ManageArtistsView_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter)
+                return;
+
+            if (DataContext is ManageArtistsViewModel viewModel &&
+                viewModel.SaveCommand.CanExecute(null))
+            {
+                viewModel.SaveCommand.Execute(null);
+                e.Handled = true;
             }
         }
 

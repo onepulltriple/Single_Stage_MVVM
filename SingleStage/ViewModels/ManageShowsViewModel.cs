@@ -80,6 +80,8 @@ namespace SingleStage.ViewModels
 
         public event EventHandler<DeleteShowConfirmationEventArguments>? DeleteShowConfirmationRequested;
 
+        public int? InitialShowId { get; set; }
+
 
         public ManageShowsViewModel(ShowDAC showDAC, IServiceProvider serviceProvider, ShowScheduleValidator showScheduleValidator)
         {
@@ -119,6 +121,14 @@ namespace SingleStage.ViewModels
             foreach (Show show in shows.OrderBy(s => s.StartTime))
             {
                 ListOfShows.Add(show);
+            }
+
+            if (InitialShowId.HasValue)
+            {
+                SelectedShow = ListOfShows.FirstOrDefault(
+                    show => show.Id == InitialShowId.Value);
+
+                InitialShowId = null;
             }
         }
 

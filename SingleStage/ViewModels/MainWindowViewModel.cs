@@ -119,6 +119,7 @@ namespace SingleStage.ViewModels
                 );
 
             CalendarWeekViewModel.PropertyChanged += CalendarWeekViewModel_PropertyChanged;
+            CalendarWeekViewModel.OpenShowRequested += CalendarWeekViewModel_OpenShowRequested;
 
             OnPropertyChanged(nameof(CalendarWeekViewModel));
             OnPropertyChanged(nameof(CurrentWeek));
@@ -134,6 +135,27 @@ namespace SingleStage.ViewModels
                 await UpdateSelectedShowTicketCountAsync();
                 OnPropertyChanged(nameof(SelectedShowSoldOutText));
             }
+        }
+
+        private async void CalendarWeekViewModel_OpenShowRequested(object? sender, int showId)
+        {
+            await OpenManageShowsAsync(showId);
+        }
+
+
+        private async Task OpenManageShowsAsync(int showId)
+        {
+            var window = _serviceProvider.GetRequiredService<ManageShowsWindow>();
+
+            var viewModel = _serviceProvider.GetRequiredService<ManageShowsViewModel>();
+
+            viewModel.InitialShowId = showId;
+
+            window.DataContext = viewModel;
+
+            window.ShowDialog();
+
+            await InitializeAsync();
         }
 
 

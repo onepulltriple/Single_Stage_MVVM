@@ -28,11 +28,19 @@
                     />
             </StackPanel>
         </Border>
-        
+
         <Button Command="{Binding DataContext.SelectShowCommand,
                     RelativeSource={RelativeSource AncestorType={x:Type local:CalendarWeekView}}}"
                     CommandParameter="{Binding}"
-                    Style="{StaticResource CalendarShowButtonStyle}"/>
+                    Style="{StaticResource CalendarShowButtonStyle}">
+            
+            <Button.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                          Command="{Binding DataContext.OpenShowCommand,
+                                    RelativeSource={RelativeSource AncestorType={x:Type local:CalendarWeekView}}}"
+                          CommandParameter="{Binding}"/>
+            </Button.InputBindings>
+        </Button>
 
     </Grid>
 </UserControl>

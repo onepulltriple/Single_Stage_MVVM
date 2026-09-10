@@ -71,7 +71,11 @@ namespace SingleStage.ViewModels
 
         public ObservableCollection<CalendarShowViewModel> Sunday { get; } = new();
 
-        public ICommand SelectShowCommand { get; }
+        public RelayCommand SelectShowCommand { get; }
+
+        public RelayCommand OpenShowCommand { get; }
+
+        public event EventHandler<int>? OpenShowRequested;
 
 
         #region calendar day headers
@@ -98,6 +102,8 @@ namespace SingleStage.ViewModels
 
             SelectShowCommand = new RelayCommand(SelectShow);
 
+            OpenShowCommand = new RelayCommand(OpenShow);
+
             CreateHours();
 
             _weekStart = weekStart.Date;
@@ -113,6 +119,13 @@ namespace SingleStage.ViewModels
             SelectedShow = showViewModel.Show;
         }
 
+        private void OpenShow(object? parameter)
+        {
+            if (parameter is CalendarShowViewModel showViewModel)
+            {
+                OpenShowRequested?.Invoke(this, showViewModel.Show.Id);
+            }
+        }
 
         private void RefreshShows()
         {

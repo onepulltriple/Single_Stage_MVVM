@@ -1,8 +1,10 @@
 ﻿using SingleStage.Calendar;
 using SingleStage.Entities;
+using SingleStage.Infrastructure;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace SingleStage.ViewModels
 {
@@ -37,7 +39,21 @@ namespace SingleStage.ViewModels
             }
         }
 
-        public Show? SelectedShow { get; set; }
+        private Show? _selectedShow;
+
+        public Show? SelectedShow
+        {
+            get => _selectedShow;
+            set
+            {
+                if (_selectedShow == value)
+                    return;
+
+                _selectedShow = value;
+                OnPropertyChanged(nameof(SelectedShow));
+            }
+        }
+
 
         public ObservableCollection<CalendarHourViewModel> Hours { get; } = new();
 
@@ -54,6 +70,8 @@ namespace SingleStage.ViewModels
         public ObservableCollection<CalendarShowViewModel> Saturday { get; } = new();
 
         public ObservableCollection<CalendarShowViewModel> Sunday { get; } = new();
+
+        public ICommand SelectShowCommand { get; }
 
 
         #region calendar day headers
@@ -78,12 +96,23 @@ namespace SingleStage.ViewModels
         {
             _shows = shows.ToList();
 
+            SelectShowCommand = new RelayCommand(SelectShow);
+
             CreateHours();
 
             _weekStart = weekStart.Date;
 
             RefreshShows();
         }
+
+        private void SelectShow(object? parameter)
+        {
+            if (parameter is not CalendarShowViewModel showViewModel)
+                return;
+
+            SelectedShow = showViewModel.Show;
+        }
+
 
         private void RefreshShows()
         {

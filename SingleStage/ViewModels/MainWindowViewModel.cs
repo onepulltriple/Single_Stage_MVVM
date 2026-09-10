@@ -24,8 +24,15 @@ namespace SingleStage.ViewModels
         public string WeekDisplayText =>
             $"{CurrentWeek:MMMM d} - {CurrentWeek.AddDays(6):MMMM d}";
 
+        public int SelectedShowTicketCount { get; private set; }
 
-        // menu commands
+        public string SelectedShowSoldOutText =>
+            CalendarWeekViewModel?.SelectedShow?.SoldOut == true
+                ? "(SOLD OUT)"
+                : string.Empty;
+
+
+        #region menu commands
         public ICommand ManageShowsCommand { get; }
         
         public ICommand ManagePerformancesCommand { get; }
@@ -41,14 +48,15 @@ namespace SingleStage.ViewModels
         public ICommand ReportsCommand { get; }
 
         public ICommand ExitCommand { get; }
+        #endregion
 
-
-        // calendar commands
+        #region calendar commands
         public ICommand PreviousWeekCommand { get; }
 
         public ICommand NextWeekCommand { get; }
 
         public ICommand TodayCommand { get; }
+        #endregion
 
 
         // constructor
@@ -110,10 +118,24 @@ namespace SingleStage.ViewModels
                 shows
                 );
 
+            CalendarWeekViewModel.PropertyChanged += CalendarWeekViewModel_PropertyChanged;
+
             OnPropertyChanged(nameof(CalendarWeekViewModel));
             OnPropertyChanged(nameof(CurrentWeek));
             OnPropertyChanged(nameof(WeekDisplayText));
         }
+
+        private async void CalendarWeekViewModel_PropertyChanged(
+            object? sender,
+            System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CalendarWeekViewModel.SelectedShow))
+            {
+                await UpdateSelectedShowTicketCountAsync();
+                OnPropertyChanged(nameof(SelectedShowSoldOutText));
+            }
+        }
+
 
         private static DateTime GetMonday(DateTime date)
         {
@@ -125,7 +147,6 @@ namespace SingleStage.ViewModels
 
             return date.Date.AddDays(-(day - 1));
         }
-
 
 
         #region calendar navigation
@@ -154,7 +175,24 @@ namespace SingleStage.ViewModels
         }
         #endregion
 
-        // menu actions
+        #region other methods
+        private async Task UpdateSelectedShowTicketCountAsync()
+        {
+            if (Calendar.SelectedShow == null)
+            {
+                SelectedShowTicketCount = 0;
+                OnPropertyChanged(nameof(SelectedShowTicketCount));
+                return;
+            }
+
+            SelectedShowTicketCount =
+                await _showDAC.GetTicketCountAsync(Calendar.SelectedShow.Id);
+
+            OnPropertyChanged(nameof(SelectedShowTicketCount));
+        }
+        #endregion
+
+        #region menu actions
         private async Task ManageShowsAsync()
         {
             var window = _serviceProvider.GetRequiredService<ManageShowsWindow>();
@@ -213,5 +251,6 @@ namespace SingleStage.ViewModels
         {
             Application.Current.Shutdown();
         }
+        #endregion
     }
 }

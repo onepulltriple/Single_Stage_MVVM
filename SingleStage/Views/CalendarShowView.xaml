@@ -13,7 +13,8 @@
     <Border
         Height="{Binding Height}"
         d:Height="80"
-        Style="{StaticResource CalendarShowBorderStyle}">
+        Style="{StaticResource CalendarShowBorderStyle}"
+        MouseLeftButtonUp="ShowBorder_MouseLeftButtonUp">
 
         <StackPanel>
             <TextBlock

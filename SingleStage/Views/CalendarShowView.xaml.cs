@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SingleStage.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SingleStage.Views
 {
@@ -23,6 +14,37 @@ namespace SingleStage.Views
         public CalendarShowView()
         {
             InitializeComponent();
+        }
+
+        private void ShowBorder_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is not CalendarShowViewModel showViewModel)
+                return;
+
+            var calendarWeekView = FindParent<CalendarWeekView>(this);
+
+            if (calendarWeekView?.DataContext is not CalendarWeekViewModel weekViewModel)
+                return;
+
+            weekViewModel.SelectShowCommand.Execute(showViewModel);
+
+            e.Handled = true;
+        }
+
+        private static T? FindParent<T>(DependencyObject child)
+            where T : DependencyObject
+        {
+            DependencyObject? parent = VisualTreeHelper.GetParent(child);
+
+            while (parent != null)
+            {
+                if (parent is T typedParent)
+                    return typedParent;
+
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return null;
         }
     }
 }

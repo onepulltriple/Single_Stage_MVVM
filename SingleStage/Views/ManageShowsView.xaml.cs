@@ -106,21 +106,39 @@ namespace SingleStage.Views
             object? sender,
             DeleteShowConfirmationEventArguments e)
         {
-            string message;
+            var warnings = new List<string>();
 
             if (e.PerformanceCount > 0)
             {
-                message =
+                warnings.Add(
                     $"The show '{e.Show.Name}' has " +
                     $"{e.PerformanceCount} performance" +
                     $"{(e.PerformanceCount == 1 ? "" : "s")} associated with it.\n\n" +
-                    "These performances will also be deleted.\n\n" +
-                    "Are you sure you want to delete this show?";
+                    "These performances will also be deleted.");
+            }
+
+            if (e.TicketCount > 0)
+            {
+                warnings.Add(
+                    $"There " +
+                    $"{(e.TicketCount == 1 ? "is" : "are")} " +
+                    $"{e.TicketCount} ticket" +
+                    $"{(e.TicketCount == 1 ? "" : "s")} sold for this show.\n\n" +
+                    "These tickets will also be deleted.");
+            }
+
+            string message;
+
+            if (warnings.Count > 0)
+            {
+                message =
+                    string.Join("\n\n", warnings) +
+                    "\n\nAre you sure you want to delete this show?";
             }
             else
             {
                 message =
-                    $"The show '{e.Show.Name}' has no performances associated with it.\n\n" +
+                    $"The show '{e.Show.Name}' has no performances or tickets.\n\n" +
                     "Are you sure you want to delete this show?";
             }
 
@@ -133,5 +151,6 @@ namespace SingleStage.Views
 
             e.Confirmed = result == MessageBoxResult.Yes;
         }
+
     }
 }

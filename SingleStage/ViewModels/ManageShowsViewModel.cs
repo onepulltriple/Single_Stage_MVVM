@@ -207,9 +207,13 @@ namespace SingleStage.ViewModels
             var performanceCount =
                 await _showDAC.GetPerformanceCountAsync(show.Id);
 
+            var ticketCount =
+                await _showDAC.GetTicketCountAsync(show.Id);
+
             var args = new DeleteShowConfirmationEventArguments(
                 show,
-                performanceCount);
+                performanceCount,
+                ticketCount);
 
             DeleteShowConfirmationRequested?.Invoke(this, args);
 

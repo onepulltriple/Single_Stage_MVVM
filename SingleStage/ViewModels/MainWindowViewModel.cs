@@ -21,8 +21,11 @@ namespace SingleStage.ViewModels
 
         public DateTime CurrentWeek => Calendar.WeekStart;
 
+        public int CalendarWeek =>
+            System.Globalization.ISOWeek.GetWeekOfYear(CurrentWeek);
+
         public string WeekDisplayText =>
-            $"{CurrentWeek:MMMM d} - {CurrentWeek.AddDays(6):MMMM d}";
+            $"Week {CalendarWeek}:  {CurrentWeek:MMMM d} - {CurrentWeek.AddDays(6):MMMM d}, {CurrentWeek:yyyy}";
 
         public int SelectedShowTicketCount { get; private set; }
 

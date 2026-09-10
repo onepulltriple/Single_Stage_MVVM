@@ -126,12 +126,6 @@
                                              StringFormat='{}{0:HH:mm}'}"/>
                     </TextBlock>
 
-                    <!--<TextBlock FontSize="14">
-                        <Run Text="Tickets sold: "/>
-                        <Run Text="{Binding SelectedShowTicketCount}"/>
-                        <Run Text=" "/>
-                        <Run Text="{Binding SelectedShowSoldOutText}"/>
-                    </TextBlock>-->
                     <TextBlock FontSize="14"
                             Text="{Binding SelectedShowTicketCount,
                           StringFormat='Tickets sold: {0}'}"/>

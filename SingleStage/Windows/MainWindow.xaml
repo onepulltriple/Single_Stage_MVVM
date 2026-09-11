@@ -31,8 +31,8 @@
                           Command="{Binding ManagePerformancesCommand}"/>
                 <MenuItem Header="_Artists"
                           Command="{Binding ManageArtistsCommand}"/>
-                <MenuItem Header="_Employees"
-                          Command="{Binding ManageEmployeesCommand}"/>
+                <!--<MenuItem Header="_Employees"
+                          Command="{Binding ManageEmployeesCommand}"/>-->
                 <MenuItem Header="_Ticketholders"
                           Command="{Binding ManageTicketholdersCommand}"/>
             </MenuItem>

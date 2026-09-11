@@ -435,7 +435,7 @@ namespace SingleStage.ViewModels
                 else
                 {
                     InstructionMessage =
-                        "To add an artist to a performance, select a performance, then click 'Create'.\n\nTo edit an existing artist's performance,\nselect a performance and an artist, then click 'Edit'.";
+                        "To add an artist to a performance, select a performance, then click 'Create'.\n\nTo edit an existing artist's performance,\nselect a performance from the list at the left, and then select the artist from the drop-down list at the upper right. Then click 'Edit'.";
                 }
 
                 return;

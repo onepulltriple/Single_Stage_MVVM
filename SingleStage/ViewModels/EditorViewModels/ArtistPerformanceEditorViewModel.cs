@@ -144,28 +144,28 @@ namespace SingleStage.ViewModels.EditorViewModels
 
             if (!RoyaltyUpFront.HasValue)
             {
-                ErrorMessage = "Up-front royalty must be entered.";
+                ErrorMessage = "Royalty up front must be entered.";
                 RaiseValidityChanged();
                 return;
             }
 
             if (RoyaltyUpFront.Value < 0)
             {
-                ErrorMessage = "Up-front royalty cannot be negative.";
+                ErrorMessage = "Royalty up front cannot be negative.";
                 RaiseValidityChanged();
                 return;
             }
 
             if (!RoyaltyAtEnd.HasValue)
             {
-                ErrorMessage = "End royalty must be entered.";
+                ErrorMessage = "Royalty at end must be entered.";
                 RaiseValidityChanged();
                 return;
             }
 
             if (RoyaltyAtEnd.Value < 0)
             {
-                ErrorMessage = "End royalty cannot be negative.";
+                ErrorMessage = "Royalty at end cannot be negative.";
                 RaiseValidityChanged();
                 return;
             }

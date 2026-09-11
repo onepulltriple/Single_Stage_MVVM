@@ -221,7 +221,7 @@ namespace SingleStage.ViewModels.EditorViewModels
 
             if (!(combinedStart < combinedEnd))
             {
-                ErrorMessage = "Start must be before End.";
+                ErrorMessage = "Start must be before end. Enter times in 24-hour format.";
                 RaiseValidityChanged();
                 return;
             }

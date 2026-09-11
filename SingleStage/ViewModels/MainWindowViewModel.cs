@@ -455,7 +455,7 @@ namespace SingleStage.ViewModels
 
         private void SellTicket()
         {
-            MessageBox.Show("Sell Ticket");
+            MessageBox.Show("Premium feature ;)");
         }
 
         private void Exit()

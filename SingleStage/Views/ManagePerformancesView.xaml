@@ -91,7 +91,7 @@
 
                 <TextBlock Grid.Column="0"
                            Style="{StaticResource PopUpWindowBodyTextStyle}"
-                           Text="For show:"
+                           Text="Filter by show:"
                            VerticalAlignment="Center"/>
 
                 <ComboBox Grid.Column="1"

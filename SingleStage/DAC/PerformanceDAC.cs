@@ -33,5 +33,17 @@ namespace SingleStage.DAC
                     .ThenInclude(ap => ap.Artist)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<List<Performance>> GetByShowIdAsync(int showId)
+        {
+            return await _context.Set<Performance>()
+                .Where(p => p.ShowId == showId)
+                .Include(p => p.ArtistPerformances)
+                    .ThenInclude(ap => ap.Artist)
+                .OrderBy(p => p.StartTime)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
     }
 }

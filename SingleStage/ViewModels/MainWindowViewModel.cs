@@ -2,8 +2,11 @@
 using SingleStage.DAC;
 using SingleStage.Entities;
 using SingleStage.Infrastructure;
+using SingleStage.Models;
+using SingleStage.Printing;
 using SingleStage.Windows;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace SingleStage.ViewModels
@@ -13,6 +16,8 @@ namespace SingleStage.ViewModels
         private readonly IServiceProvider _serviceProvider; 
 
         private readonly ShowDAC _showDAC;
+        private readonly PerformanceDAC _performanceDAC;
+
 
         public CalendarWeekViewModel? CalendarWeekViewModel { get; private set; }
 
@@ -36,6 +41,12 @@ namespace SingleStage.ViewModels
             CalendarWeekViewModel?.SelectedShow?.SoldOut == true
                 ? "(SOLD OUT)"
                 : string.Empty;
+
+        public string PrintFlyerMenuText =>
+            CalendarWeekViewModel?.SelectedShow is null
+                ? "Select show to print flyer"
+                : "Print flyer";
+
 
         private DateTime? _jumpToDate = DateTime.Today;
         public DateTime? JumpToDate
@@ -63,8 +74,6 @@ namespace SingleStage.ViewModels
         }
 
 
-
-
         #region menu commands
         public ICommand ManageShowsCommand { get; }
         
@@ -78,7 +87,7 @@ namespace SingleStage.ViewModels
 
         public ICommand SellTicketCommand { get; }
 
-        public ICommand ReportsCommand { get; }
+        public ICommand PrintFlyerCommand { get; }
 
         public ICommand ExitCommand { get; }
         #endregion
@@ -98,14 +107,19 @@ namespace SingleStage.ViewModels
 
 
         // constructor
-        public MainWindowViewModel(ShowDAC showDAC, IServiceProvider serviceProvider)
+        public MainWindowViewModel(
+            ShowDAC showDAC, 
+            PerformanceDAC performanceDAC,
+            IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider 
-                ?? throw new ArgumentNullException(nameof(serviceProvider));
-
             _showDAC = showDAC  
                 ?? throw new ArgumentNullException(nameof(showDAC));
 
+            _performanceDAC = performanceDAC
+                ?? throw new ArgumentNullException(nameof(performanceDAC));
+
+            _serviceProvider = serviceProvider 
+                ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             #region menu commands
             ManageShowsCommand =
@@ -126,8 +140,11 @@ namespace SingleStage.ViewModels
             SellTicketCommand =
                 new RelayCommand(SellTicket);
 
-            ReportsCommand =
-                new RelayCommand(Reports);
+            PrintFlyerCommand =
+                new RelayCommand(
+                    _ => PrintFlyer(),
+                    _ => CalendarWeekViewModel?.SelectedShow is not null);
+
 
             ExitCommand =
                 new RelayCommand(Exit);
@@ -200,6 +217,9 @@ namespace SingleStage.ViewModels
             {
                 await UpdateSelectedShowTicketCountAsync();
                 OnPropertyChanged(nameof(SelectedShowSoldOutText));
+
+                OnPropertyChanged(nameof(PrintFlyerMenuText));
+                ((RelayCommand)PrintFlyerCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -304,6 +324,20 @@ namespace SingleStage.ViewModels
             NotifyCalendarNavigationProperties();
         }
 
+        private void NotifyCalendarNavigationProperties()
+        {
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
+            OnPropertyChanged(nameof(WeekDisplayText));
+        }
+
+        private void UpdateJumpToDateWithoutNavigation(DateTime? date)
+        {
+            _jumpToDate = date?.Date;
+
+            OnPropertyChanged(nameof(JumpToDate));
+        }
 
         #endregion
 
@@ -323,20 +357,54 @@ namespace SingleStage.ViewModels
             OnPropertyChanged(nameof(SelectedShowTicketCount));
         }
 
-        private void NotifyCalendarNavigationProperties()
+
+        private async void PrintFlyer()
         {
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            Show? selectedShow = Calendar.SelectedShow;
+
+            if (selectedShow is null)
+                return;
+
+            //List<Performance> performances =
+            //    await _performanceDAC.GetAllAsync();
+
+            List<Performance> showPerformances =
+                await _performanceDAC.GetByShowIdAsync(selectedShow.Id);
+
+            var flyer = new FlyerModel
+            {
+                ShowName = selectedShow.Name,
+                StartTime = selectedShow.StartTime,
+                EndTime = selectedShow.EndTime,
+                TicketPrice = selectedShow.TicketPrice,
+
+                Performances = showPerformances
+                    .Select(performance => new FlyerPerformanceModel
+                    {
+                        Description = performance.Description,
+                        StartTime = performance.StartTime,
+                        EndTime = performance.EndTime,
+
+                        Artists = performance.ArtistPerformances
+                            .Select(ap => ap.Artist.Name)
+                            .OrderBy(name => name)
+                            .ToList()
+                    })
+                    .ToList()
+            };
+
+            var builder = new FlyerDocumentBuilder();
+
+            FlowDocument document = builder.Build(flyer);
+
+            var window = new FlyerWindow(document)
+            {
+                Owner = Application.Current.MainWindow
+            };
+
+            window.ShowDialog();
         }
 
-        private void UpdateJumpToDateWithoutNavigation(DateTime? date)
-        {
-            _jumpToDate = date?.Date;
-
-            OnPropertyChanged(nameof(JumpToDate));
-        }
 
         #endregion
 
@@ -388,11 +456,6 @@ namespace SingleStage.ViewModels
         private void SellTicket()
         {
             MessageBox.Show("Sell Ticket");
-        }
-
-        private void Reports()
-        {
-            MessageBox.Show("Reports");
         }
 
         private void Exit()

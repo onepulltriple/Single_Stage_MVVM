@@ -21,32 +21,42 @@
     
     <DockPanel>
         <!--main menu-->
-        <Menu DockPanel.Dock="Top"
-              Height="22"
-              >
-            <MenuItem Header="_Manage">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Manage"
+                      Style="{StaticResource MainMenuItemStyle}">
                 <MenuItem Header="_Shows"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding ManageShowsCommand}"/>
                 <MenuItem Header="_Performances"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding ManagePerformancesCommand}"/>
                 <MenuItem Header="_Artists"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding ManageArtistsCommand}"/>
                 <!--<MenuItem Header="_Employees"
                           Command="{Binding ManageEmployeesCommand}"/>-->
                 <MenuItem Header="_Ticketholders"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding ManageTicketholdersCommand}"/>
             </MenuItem>
 
-            <MenuItem Header="_Tickets">
+            <MenuItem Header="_Tickets"
+                      Style="{StaticResource MainMenuItemStyle}">
                 <MenuItem Header="_Sell Tickets"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding SellTicketCommand}"/>
             </MenuItem>
 
             <MenuItem Header="_Reports"
-                      Command="{Binding ReportsCommand}"/>
+                      Style="{StaticResource MainMenuItemStyle}">
+                <MenuItem Header="{Binding PrintFlyerMenuText}"
+                          Command="{Binding PrintFlyerCommand}"/>
+            </MenuItem>
 
-            <MenuItem Header="_Exit">
+            <MenuItem Header="_Exit"
+                      Style="{StaticResource MainMenuItemStyle}">
                 <MenuItem Header="_Quit"
+                          Style="{StaticResource MainMenuItemStyle}"
                           Command="{Binding ExitCommand}"/>
             </MenuItem>
         </Menu>

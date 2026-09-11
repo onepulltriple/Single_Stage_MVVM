@@ -20,6 +20,7 @@
                 <ResourceDictionary Source="Styles/WindowStyles.xaml"/>
                 <ResourceDictionary Source="Styles/InputStyles.xaml"/>
                 <ResourceDictionary Source="Styles/DataGridStyles.xaml"/>
+                <ResourceDictionary Source="Styles/MenuStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!--provided by WPF-->

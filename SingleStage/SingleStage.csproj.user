@@ -44,6 +44,9 @@
     <Compile Update="Windows\EmployeeLoginWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Windows\FlyerWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\ManageArtistsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

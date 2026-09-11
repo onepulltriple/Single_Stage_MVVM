@@ -52,7 +52,7 @@
         </Menu>
 
         <!--main content-->
-        <Grid Margin="6">
+        <Grid Margin="6,0,6,6">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -70,52 +70,58 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Style="{StaticResource MainWindowButtonStyle}"
+                        Style="{StaticResource MainWindowDynamicButtonStyle}"
                         Command="{Binding PreviousWeekCommand}"
                         >
                     <TextBlock Text="Previous Week"
                        Style="{StaticResource MainWindowButtonTextBlockStyle}"
                        />
                 </Button>
-
                 <Button Grid.Column="1"
-                        Style="{StaticResource MainWindowButtonStyle}"
-                        Command="{Binding PreviousDayCommand}">
-                    <TextBlock Text="&lt;"
-                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
-                </Button>
-
-                <TextBlock Grid.Column="2"
-                           Style="{StaticResource TitleTextStyle}"
-                           Text="{Binding WeekDisplayText}"/>
-
-                <Button Grid.Column="3"
-                        Style="{StaticResource MainWindowButtonStyle}"
-                        Command="{Binding NextDayCommand}">
-                    <TextBlock Text="&gt;"
-                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
-                </Button>
-
-                <Button Grid.Column="4"
-                        Style="{StaticResource MainWindowButtonStyle}"
-                        Command="{Binding TodayCommand}"
-                        >
-                    <TextBlock Text="Today"
-                       Style="{StaticResource MainWindowButtonTextBlockStyle}"
-                       />
-                </Button>
-
-                <Button Grid.Column="5"
-                        Style="{StaticResource MainWindowButtonStyle}"
+                        Style="{StaticResource MainWindowDynamicButtonStyle}"
                         Command="{Binding NextWeekCommand}"
                         >
                     <TextBlock Text="Next Week"
                        Style="{StaticResource MainWindowButtonTextBlockStyle}"
                        />
                 </Button>
+
+                <TextBlock Grid.Column="2"
+                           Style="{StaticResource TitleTextStyle}"
+                           Text="{Binding WeekDisplayText}"/>
+
+                <DatePicker Grid.Column="3"
+                    Style="{StaticResource PopUpWindowDatePickerStyle}"
+                    SelectedDate="{Binding JumpToDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedDateFormat="Short"
+                    FirstDayOfWeek="Monday"
+                    ToolTip="Select a date to jump to that week"/>
+                
+                <Button Grid.Column="4"
+                        Style="{StaticResource MainWindowDynamicButtonStyle}"
+                        Command="{Binding PreviousDayCommand}">
+                    <TextBlock Text="&lt;"
+                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
+                </Button>
+                <Button Grid.Column="5"
+                        Style="{StaticResource MainWindowDynamicButtonStyle}"
+                        Command="{Binding TodayCommand}"
+                        >
+                    <TextBlock Text="Today"
+                       Style="{StaticResource MainWindowButtonTextBlockStyle}"
+                       />
+                </Button>
+                <Button Grid.Column="6"
+                        Style="{StaticResource MainWindowDynamicButtonStyle}"
+                        Command="{Binding NextDayCommand}">
+                    <TextBlock Text="&gt;"
+                               Style="{StaticResource MainWindowButtonTextBlockStyle}"/>
+                </Button>
+
             </Grid>
             
             <!--calendar view-->

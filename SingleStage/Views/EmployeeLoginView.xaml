@@ -83,7 +83,7 @@
             Grid.Column="0" 
             Name="QuitButton" 
             Click="QuitButtonClicked" 
-            Style="{StaticResource MainWindowDynamicButtonStyle}"
+            Style="{StaticResource CrudActionBarButtonStyle}"
             >
             <TextBlock Text="Quit"
                        Style="{StaticResource PopUpWindowButtonTextStyle}"
@@ -94,7 +94,7 @@
             Grid.Column="1" 
             Name="LoginButton" 
             Command="{Binding LoginCommand}"
-            Style="{StaticResource MainWindowDynamicButtonStyle}"
+            Style="{StaticResource CrudActionBarButtonStyle}"
             >
             <TextBlock Text="Login"
                        Style="{StaticResource PopUpWindowButtonTextStyle}"

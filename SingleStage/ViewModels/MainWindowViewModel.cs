@@ -37,6 +37,33 @@ namespace SingleStage.ViewModels
                 ? "(SOLD OUT)"
                 : string.Empty;
 
+        private DateTime? _jumpToDate = DateTime.Today;
+        public DateTime? JumpToDate
+        {
+            get => _jumpToDate;
+
+            set
+            {
+                DateTime? newDate = value?.Date;
+
+                if (_jumpToDate == newDate)
+                    return;
+
+                _jumpToDate = newDate;
+
+                OnPropertyChanged(nameof(JumpToDate));
+
+                if (newDate.HasValue && CalendarWeekViewModel is not null)
+                {
+                    Calendar.CalendarStartDate = GetMonday(newDate.Value);
+
+                    NotifyCalendarNavigationProperties();
+                }
+            }
+        }
+
+
+
 
         #region menu commands
         public ICommand ManageShowsCommand { get; }
@@ -128,7 +155,26 @@ namespace SingleStage.ViewModels
         {
             List<Show> shows = await _showDAC.GetAllAsync();
 
-            DateTime calendarStartDate = GetMonday(DateTime.Today);
+            DateTime calendarStartDate;
+            DateTime? jumpToDate;
+
+            if (CalendarWeekViewModel is null)
+            {
+                calendarStartDate = GetMonday(DateTime.Today);
+                jumpToDate = DateTime.Today;
+            }
+            else
+            {
+                calendarStartDate = Calendar.CalendarStartDate.Date;
+                jumpToDate = JumpToDate;
+
+                if (!jumpToDate.HasValue ||
+                    jumpToDate.Value < calendarStartDate ||
+                    jumpToDate.Value > calendarStartDate.AddDays(6))
+                {
+                    jumpToDate = calendarStartDate;
+                }
+            }
 
             CalendarWeekViewModel = new CalendarWeekViewModel(
                 calendarStartDate,
@@ -139,9 +185,11 @@ namespace SingleStage.ViewModels
             CalendarWeekViewModel.PropertyChanged += CalendarWeekViewModel_PropertyChanged;
             CalendarWeekViewModel.OpenShowRequested += CalendarWeekViewModel_OpenShowRequested;
 
+            _jumpToDate = jumpToDate?.Date;
+
             OnPropertyChanged(nameof(CalendarWeekViewModel));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            OnPropertyChanged(nameof(JumpToDate));
+            NotifyCalendarNavigationProperties();
         }
 
         private async void CalendarWeekViewModel_PropertyChanged(
@@ -191,55 +239,71 @@ namespace SingleStage.ViewModels
 
         private void PreviousWeek()
         {
-            Calendar.CalendarStartDate = Calendar.CalendarStartDate.AddDays(-7);
+            DateTime? currentJumpToDate = JumpToDate;
 
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            Calendar.CalendarStartDate =
+                Calendar.CalendarStartDate.AddDays(-7);
+
+            UpdateJumpToDateWithoutNavigation(
+                currentJumpToDate?.AddDays(-7)
+                ?? Calendar.CalendarStartDate);
+
+            NotifyCalendarNavigationProperties();
         }
 
         private void NextWeek()
         {
-            Calendar.CalendarStartDate = Calendar.CalendarStartDate.AddDays(7);
+            DateTime? currentJumpToDate = JumpToDate;
 
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            Calendar.CalendarStartDate =
+                Calendar.CalendarStartDate.AddDays(7);
+
+            UpdateJumpToDateWithoutNavigation(
+                currentJumpToDate?.AddDays(7)
+                ?? Calendar.CalendarStartDate);
+
+            NotifyCalendarNavigationProperties();
         }
 
         private void Today()
         {
-            Calendar.CalendarStartDate = GetMonday(DateTime.Today);
+            DateTime today = DateTime.Today;
 
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            Calendar.CalendarStartDate = GetMonday(today);
+
+            UpdateJumpToDateWithoutNavigation(today);
+
+            NotifyCalendarNavigationProperties();
         }
 
         private void PreviousDay()
         {
+            DateTime? currentJumpToDate = JumpToDate;
+
             Calendar.CalendarStartDate =
                 Calendar.CalendarStartDate.AddDays(-1);
 
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            UpdateJumpToDateWithoutNavigation(
+                currentJumpToDate?.AddDays(-1)
+                ?? Calendar.CalendarStartDate);
+
+            NotifyCalendarNavigationProperties();
         }
 
         private void NextDay()
         {
+            DateTime? currentJumpToDate = JumpToDate;
+
             Calendar.CalendarStartDate =
                 Calendar.CalendarStartDate.AddDays(1);
 
-            OnPropertyChanged(nameof(CalendarStartDate));
-            OnPropertyChanged(nameof(CurrentWeekMonday));
-            OnPropertyChanged(nameof(CalendarWeek));
-            OnPropertyChanged(nameof(WeekDisplayText));
+            UpdateJumpToDateWithoutNavigation(
+                currentJumpToDate?.AddDays(1)
+                ?? Calendar.CalendarStartDate);
+
+            NotifyCalendarNavigationProperties();
         }
+
 
         #endregion
 
@@ -258,6 +322,22 @@ namespace SingleStage.ViewModels
 
             OnPropertyChanged(nameof(SelectedShowTicketCount));
         }
+
+        private void NotifyCalendarNavigationProperties()
+        {
+            OnPropertyChanged(nameof(CalendarStartDate));
+            OnPropertyChanged(nameof(CurrentWeekMonday));
+            OnPropertyChanged(nameof(CalendarWeek));
+            OnPropertyChanged(nameof(WeekDisplayText));
+        }
+
+        private void UpdateJumpToDateWithoutNavigation(DateTime? date)
+        {
+            _jumpToDate = date?.Date;
+
+            OnPropertyChanged(nameof(JumpToDate));
+        }
+
         #endregion
 
         #region menu actions

@@ -65,6 +65,8 @@ namespace SingleStage.ViewModels
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             LoginCommand = new AsyncRelayCommand(CheckEmployeeAndLogin);
+
+            // string temp = BCrypt.Net.BCrypt.HashPassword("doyoureallythinkiwouldleavethishere?");
         }
 
         private async Task CheckEmployeeAndLogin()

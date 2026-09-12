@@ -294,8 +294,6 @@ namespace SingleStage.ViewModels
             {
                 // the schedule error should persist even while the user modifies the editor
                 OnPropertyChanged(nameof(ErrorMessage));
-
-                OnPropertyChanged(nameof(ArtistPickerItems));
                 UpdateCommandStates();
             };
 
@@ -435,7 +433,7 @@ namespace SingleStage.ViewModels
                 else
                 {
                     InstructionMessage =
-                        "To add an artist to a performance, select a performance, then click 'Create'.\n\nTo edit an existing artist's performance,\nselect a performance from the list at the left, and then select the artist from the drop-down list at the upper right. Then click 'Edit'.";
+                        "To add an artist to a performance, select a performance, then click 'Create'.\n\nTo edit an existing artist's performance, select a performance from the list at the left,\nand then select the artist from the drop-down list at the upper right. Then click 'Edit'.";
                 }
 
                 return;

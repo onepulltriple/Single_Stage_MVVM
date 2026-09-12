@@ -1,0 +1,101 @@
+USE MASTER
+GO
+
+DROP DATABASE Single_Stage_MVVM
+CREATE DATABASE Single_Stage_MVVM
+GO
+
+USE Single_Stage_MVVM
+GO
+
+ALTER AUTHORIZATION ON DATABASE::Single_Stage_MVVM TO sa;
+
+CREATE TABLE Employee (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Username varchar(50) NOT NULL UNIQUE,
+	Password varchar(255) NOT NULL
+	)
+
+CREATE TABLE Artist (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Name varchar(50) NOT NULL UNIQUE
+	)
+
+CREATE TABLE Show (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Name varchar(50) NOT NULL,
+	StartTime datetime NOT NULL,
+	EndTime datetime NOT NULL,
+	TicketPrice decimal,
+	SoldOut bit NOT NULL DEFAULT 0
+	)
+
+CREATE TABLE Performance (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Description varchar(100) NOT NULL,
+	StartTime datetime NOT NULL,
+	EndTime datetime NOT NULL,
+	Show_id int NOT NULL,
+	CONSTRAINT FK_ParentShowChildPerformance
+		FOREIGN KEY (Show_id) 
+			REFERENCES Show(id)
+			ON DELETE CASCADE
+	)
+
+CREATE TABLE ArtistPerformance (
+	id int PRIMARY KEY IDENTITY(1,1),
+	RoyaltyUpFront decimal,
+	RoyaltyAtEnd decimal,
+	Artist_id int NOT NULL,
+	CONSTRAINT FK_ParentArtistChildArtistPerformance
+		FOREIGN KEY (Artist_id) 
+			REFERENCES Artist(id)
+			ON DELETE CASCADE,
+	Performance_id int NOT NULL,
+	CONSTRAINT FK_ParentPerformanceChildArtistPerformance
+		FOREIGN KEY (Performance_id) 
+			REFERENCES Performance(id)
+			ON DELETE CASCADE
+	)
+
+CREATE TABLE Seat (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Row char NOT NULL,
+	Number int NOT NULL
+	)
+
+CREATE TABLE Ticketholder (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Name varchar(50) NOT NULL,
+	Birthdate datetime NOT NULL,
+	Email varchar(100) NOT NULL UNIQUE,
+	Discount bit NOT NULL DEFAULT 0
+	)
+
+CREATE TABLE Ticket (
+	id int PRIMARY KEY IDENTITY(1,1),
+	Ticketholder_id int NOT NULL,
+	CONSTRAINT FK_ParentTicketholderChildTicket
+		FOREIGN KEY (Ticketholder_id) 
+			REFERENCES Ticketholder(id)
+			ON DELETE CASCADE,
+	Seat_id int NOT NULL,
+	CONSTRAINT FK_ParentSeatChildTicket
+		FOREIGN KEY (Seat_id) 
+			REFERENCES Seat(id)
+			ON DELETE CASCADE,
+	Show_id int NOT NULL,
+	CONSTRAINT FK_ParentShowChildTicket
+		FOREIGN KEY (Show_id) 
+			REFERENCES Show(id)
+			ON DELETE CASCADE
+	)
+
+DELETE FROM Employee
+INSERT INTO Employee
+	(Username, Password)
+	VALUES
+	('admin','$2a$11$lLCjSYzZ7oE/7k1xDyn17eHPGyXgM0e7AiCQ7g934I6FrADoQytBe'),
+	('guest','$2a$11$E9HZ6j9guuNk0RYJJwhvKOUNZ3sURUzykmsUEFtMHjvuEH6R2Gsyu')
+
+SELECT * FROM Employee ORDER BY id

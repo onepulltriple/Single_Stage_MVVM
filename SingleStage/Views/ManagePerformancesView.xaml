@@ -67,7 +67,7 @@
                        HorizontalAlignment="Left"
                        TextAlignment="Center"
                        Style="{StaticResource PopUpWindowBodyTextStyle}"
-                       Text="Manage an artist's performances"/>
+                       Text="Assign artists to performances"/>
         </Grid>
 
         <!--first column-->

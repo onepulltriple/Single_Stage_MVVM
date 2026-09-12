@@ -1,6 +1,6 @@
 # SingleStage
 
-SingleStage is a desktop WPF application using MVVM architecture written in C# targeting .NET 8. It manages a single-stage venue's schedule and administrative data (Shows, Performances, Artists, Seats, Tickets, Ticketholders). The project follows a database-first approach. Entity Framework Core scaffolded entity classes and a small DAC (Data Access Component) layer encapsulate data operations. 
+SingleStage is a desktop WPF application using MVVM architecture written in C# targeting .NET 8. It manages a single-stage entertainment venue's schedule and administrative data (Shows, Performances, Artists, Seats, Tickets, Ticketholders). The project follows a database-first approach. Entity Framework Core scaffolded entity classes and a small DAC (Data Access Component) layer encapsulate data operations. 
 
 A calendar week overview displaying the venue's schedule is the main application screen.
 
@@ -67,14 +67,12 @@ Make sure the SQL Server (`SQLEXPRESS`) Windows service is running and that the 
 
 ## Using the application
 
-The following is an example of an end-to-end walkthrough from planning a full evening show to printing that show's flyer.
+The following is an example of an end-to-end walkthrough from planning a full evening show to printing that show's flyer. The workflow in the application is roughly:
 
-The workflow in the application is roughly:
-
-Log in → Create artists → Create a show → Add performances → Assign artists → Print flyer
+**Log in → Create artists → Create a show → Add performances → Assign artists → Print flyer**
 
 
-#### Log in
+#### Step 0 — Log in
 
 Start the application and log in through the Employee Login window. The username is 'guest' and the password is 'stage'. After successful login, the main window opens.
 
@@ -213,8 +211,6 @@ Return to the home screen and find the show in the calendar. Use the date picker
 
 Select this show to see some brief information at the bottom of the home screen.
 
-With this show still selected, go to the upper left docked menu and select 'Print' → 'Print flyer'.
-
-A window will appear with the show's line-up information.
+With this show still selected, go to the upper left docked menu and select 'Print' → 'Print flyer'. A window will appear with the show's line-up information.
 
 If changes to the show are needed, double-click on the show in the home screen.

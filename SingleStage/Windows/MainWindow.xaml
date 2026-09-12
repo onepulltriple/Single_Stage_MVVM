@@ -47,7 +47,7 @@
                           Command="{Binding SellTicketCommand}"/>
             </MenuItem>
 
-            <MenuItem Header="_Reports"
+            <MenuItem Header="_Print"
                       Style="{StaticResource MainMenuItemStyle}">
                 <MenuItem Header="{Binding PrintFlyerMenuText}"
                           Command="{Binding PrintFlyerCommand}"/>

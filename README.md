@@ -38,8 +38,7 @@ This application uses SQL Server Express and expects a SQL Server instance named
 
    During installation, make sure the **.NET desktop development** workload is selected. This is required for the WPF application.
 
-   
-8. Clone the repository to your local drive using:
+8. Clone the repository to your local machine using:
 
    ```bash
    git clone https://github.com/onepulltriple/Single_Stage_MVVM

@@ -63,6 +63,9 @@ This application uses SQL Server Express and expects a SQL Server instance named
 **Cannot connect to SQL Server:** 
 Make sure the SQL Server (`SQLEXPRESS`) Windows service is running and that the server name in `SingleStageMvvmContext.cs` matches the server name you used in SSMS.
 
+**NETSDK1045: The current .NET SDK does not support targeting .NET 8.0:**
+Make sure the .NET 8 SDK is installed. Run dotnet --list-sdks in PowerShell or Command Prompt and verify that an 8.0.xxx SDK is listed. If it is not, install the .NET 8 SDK from Microsoft's .NET 8 [download page](https://dotnet.microsoft.com/en-us/download/dotnet/8.0), then restart Visual Studio. 
+
 
 ## Using the application
 
